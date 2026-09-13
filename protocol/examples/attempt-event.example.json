@@ -1,0 +1,33 @@
+{
+  "$schema": "../schemas/attempt-event.schema.json",
+  "schema_version": 2,
+  "id": "attempt.20260805.example",
+  "type": "attempt.recorded",
+  "occurred_at": "2026-08-05T20:30:00+08:00",
+  "learner_id": "me",
+  "cycle_id": "cycle.2026.spark-bootstrap.20260805",
+  "practice_session_id": "practice-session.20260805.spark.01",
+  "question_id": "q.spark.example",
+  "question_revision": 1,
+  "answer": {
+    "text": "用户的原始回答保存在这里。",
+    "language": "zh-CN"
+  },
+  "hints_used": [1],
+  "evaluation": {
+    "scores": {
+      "recall": 2,
+      "correctness": 3,
+      "depth": 2,
+      "communication": 2
+    },
+    "missing_points": ["缺少的关键点"],
+    "feedback": "Agent 对回答的具体评价。",
+    "improved_answer": "适合面试口述的改进版本。",
+    "evaluator": {
+      "agent": "user-provided-agent",
+      "model": "optional-model-name",
+      "confidence": 0.8
+    }
+  }
+}

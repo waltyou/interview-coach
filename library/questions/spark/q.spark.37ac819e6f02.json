@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.37ac819e6f02",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "explanation",
+  "difficulty": 2,
+  "target_roles": [
+    "data-engineer",
+    "spark-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "Spark RDD 的 Transformation 与 Action 有什么区别？请解释惰性求值、lineage、DAG 和 Job 触发关系，并说明为什么 cache/persist 本身不是 Action，以及重复 Action、宽依赖和副作用代码会带来什么影响。",
+  "rubric": [
+    "Transformation 返回新 RDD 并记录 lineage，Action 触发计算并返回结果或产生外部输出",
+    "惰性求值允许 Spark 在 Action 到来前构建 DAG 和组织执行",
+    "一个 Action 通常触发一个 Job，Job 再按 ShuffleDependency 划分 Stage 和 Task",
+    "cache/persist 只登记缓存策略，数据在后续 Action 执行时才物化",
+    "多个 Action 可能重复计算未持久化 lineage，持久化需权衡内存、磁盘和重算成本",
+    "Transformation 中的外部副作用可能因重试、推测执行或重算而执行多次"
+  ],
+  "hints": [
+    "从“什么时候真正读取数据并启动 Task”开始回答。"
+  ],
+  "follow_ups": [
+    "count() 之后再 collect() 为什么可能重新计算？",
+    "checkpoint 与 cache 在切断 lineage 方面有何不同？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

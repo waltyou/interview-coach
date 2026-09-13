@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.e2d23ccd90d1",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "explanation",
+  "difficulty": 4,
+  "target_roles": [
+    "spark-engineer",
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "PySpark 作业中，Driver 侧的 Python API、Py4J、JVM SparkContext、Executor 上的 Python worker 和 Catalyst 是如何协作的？普通 Python UDF、Pandas UDF 与原生 Spark SQL 表达式的数据传输和执行成本有什么区别，Apache Arrow 为什么能降低跨语言开销？",
+  "rubric": [
+    "说明 Python Driver 通过 Py4J 控制 JVM 中的 Spark 对象，逻辑计划与调度仍主要发生在 JVM",
+    "说明 Executor 对 Python RDD/UDF 启动或复用 Python worker，并在 JVM 与 Python 进程间传输数据",
+    "区分普通 Python UDF 的逐行序列化成本、Pandas UDF 的批量矢量化与原生表达式可被 Catalyst/Codegen 优化的优势",
+    "解释 Arrow 规定跨语言一致的列式内存布局，从而减少对象转换和序列化/反序列化",
+    "讨论 batch size、内存峰值、类型支持、UDF 黑盒效应和调试方法"
+  ],
+  "hints": [
+    "把控制路径和数据路径分别画出来。",
+    "原生表达式、普通 UDF、Pandas UDF 的优化边界不同。"
+  ],
+  "follow_ups": [
+    "为什么 Python UDF 会阻断部分 Catalyst 优化？",
+    "Arrow batch 过大可能出现什么问题？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-08-10T21:35:29+08:00"
+}

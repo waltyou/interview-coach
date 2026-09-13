@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.algorithm.22be7a8d061f",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "algorithm",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "spark-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "实现从 n 个元素中找出最大的 k 个元素，并分析时间与空间复杂度。随后把方案扩展到 Spark RDD：每个分区如何保留局部 Top K，怎样合并结果，如何避免把所有数据收集到 Driver？",
+  "rubric": [
+    "能解释时间复杂度和空间复杂度衡量输入规模增长时资源消耗的方式",
+    "本地方案使用大小为 k 的最小堆，时间 O(n log k)、额外空间 O(k)",
+    "正确处理 k<=0、k>=n、重复值和自定义排序键",
+    "分布式方案在 mapPartitions 中生成局部 Top K，再以树形聚合或受控合并得到全局 Top K",
+    "说明局部 Top K 的并集包含全局 Top K，并分析分区数、序列化和 Driver 内存成本"
+  ],
+  "hints": [
+    "要找最大的 k 个元素，应让堆顶保留当前候选中的最小值。",
+    "先在数据所在分区缩小规模。"
+  ],
+  "follow_ups": [
+    "如果 k 接近 n，排序是否更合适？",
+    "数据倾斜会怎样影响各分区 Top K 的计算？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

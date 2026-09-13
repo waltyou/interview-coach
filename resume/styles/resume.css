@@ -1,0 +1,166 @@
+@page {
+  size: A4;
+  margin: 11mm 13mm;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  background: #ffffff;
+  font-size: 10px;
+}
+
+body.resume {
+  box-sizing: border-box;
+  max-width: none;
+  margin: 0;
+  background: #ffffff;
+  color: #24292f;
+  font-family: "Aptos", "Segoe UI", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+  font-size: 10.25pt;
+  line-height: 1.36;
+  text-rendering: optimizeLegibility;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+body.resume *,
+body.resume *::before,
+body.resume *::after {
+  box-sizing: border-box;
+}
+
+body.resume h1,
+body.resume h2,
+body.resume h3,
+body.resume h4 {
+  color: #24292f;
+  font-weight: 650;
+  line-height: 1.2;
+  break-after: avoid-page;
+  page-break-after: avoid;
+}
+
+body.resume h1 {
+  margin: 0 0 4pt;
+  padding-bottom: 5pt;
+  border-bottom: 1px solid #d8dee4;
+  font-size: 22pt;
+}
+
+body.resume h2 {
+  margin: 12pt 0 5pt;
+  padding-bottom: 2pt;
+  border-bottom: 1px solid #d8dee4;
+  font-size: 14pt;
+}
+
+body.resume h3 {
+  margin: 11pt 0 5pt;
+  font-size: 13pt;
+}
+
+body.resume h4 {
+  margin: 8pt 0 4pt;
+  font-size: 11pt;
+}
+
+body.resume p {
+  margin: 4pt 0;
+  orphans: 2;
+  widows: 2;
+}
+
+body.resume ul,
+body.resume ol {
+  margin: 4pt 0 6pt;
+  padding-left: 19pt;
+}
+
+body.resume p:has(> strong:first-child) {
+  break-after: avoid-page;
+  page-break-after: avoid;
+}
+
+body.resume p:has(> strong:first-child) + ul,
+body.resume p:has(> strong:first-child) + ol {
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+}
+
+body.resume li {
+  margin: 1.8pt 0;
+  orphans: 2;
+  widows: 2;
+}
+
+body.resume li > ul,
+body.resume li > ol {
+  margin-top: 2pt;
+  margin-bottom: 2pt;
+}
+
+body.resume a {
+  color: #0969da;
+  text-decoration: none;
+}
+
+body.resume img {
+  max-width: 100%;
+  vertical-align: -0.16em;
+}
+
+body.resume div[align="center"] {
+  margin-bottom: 9pt;
+  break-inside: avoid-page;
+  page-break-inside: avoid;
+}
+
+body.resume div[align="center"] h1 {
+  margin-bottom: 5pt;
+}
+
+body.resume div[align="center"] > div {
+  line-height: 1.55;
+}
+
+body.resume div[align="center"] span {
+  white-space: nowrap;
+}
+
+body.resume blockquote {
+  margin: 6pt 0;
+  padding: 2pt 9pt;
+  border-left: 3px solid #d0d7de;
+  color: #57606a;
+}
+
+body.resume hr {
+  height: 1px;
+  margin: 9pt 0;
+  border: 0;
+  background: #d8dee4;
+}
+
+body.resume table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+body.resume th,
+body.resume td {
+  padding: 3pt 5pt;
+  border: 1px solid #d8dee4;
+}
+
+body.resume pre,
+body.resume code {
+  font-family: "Cascadia Mono", Consolas, monospace;
+}
+
+body.resume .page-break {
+  break-after: page;
+  page-break-after: always;
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.top-product-by-customer-with-ties",
+  "revision": 2,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 orders(order_id, customer_id)，样例为 (101,1)、(102,1)、(103,2)、(104,2)、(105,2)、(106,3)；order_items(order_id, product_id, quantity)，样例为 (101,'p1',5)、(101,'p2',3)、(102,'p1',2)、(102,'p3',4)、(103,'p1',5)、(103,'p2',5)、(104,'p1',6)、(104,'p2',6)、(105,'p3',1)、(106,'p1',1)。请写 SQL 返回每位客户购买总数量最多的产品，并保留并列第一。输出 customer_id、product_id、total_quantity，按 customer_id、product_id 升序。期望结果为 (1,p1,7)、(2,p1,11)、(2,p2,11)、(3,p1,1)。",
+  "rubric": [
+    "正确连接订单和订单明细，并先按 customer_id、product_id 聚合 SUM(quantity)",
+    "在聚合结果上按 customer_id 分区、total_quantity 降序排名，避免直接对未聚合明细排名",
+    "使用 RANK 或 DENSE_RANK 并过滤第一名，从而保留购买总数量并列第一的全部产品",
+    "窗口函数在独立 CTE、派生表或支持 QUALIFY 的方言中合法过滤，所有派生表具备别名",
+    "输出列顺序符合契约，并显式 ORDER BY customer_id、product_id"
+  ],
+  "hints": [
+    "先把多笔订单中的同一产品数量合并，再比较产品之间的总数量。",
+    "这是先 GROUP BY、再窗口排名的两阶段问题。"
+  ],
+  "follow_ups": [
+    "如果只允许每个客户返回一行，应如何定义并实现 tie-breaker？",
+    "如果数量相同，再按总消费金额决定第一名，查询应怎样扩展？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-04T08:15:11+08:00"
+}

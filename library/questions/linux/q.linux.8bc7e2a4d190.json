@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.linux.8bc7e2a4d190",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "linux",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "java-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一台运行 Java 数据服务的 Linux 机器负载突然升高。你会按什么顺序判断问题来自 CPU、运行队列、内存/Swap、磁盘 I/O、网络还是 JVM？请给出会使用的 Linux/JDK 命令、关键指标、进程与线程关联方法，并补充脚本中判断文件存在和安全替换文本的写法。",
+  "rubric": [
+    "先用 uptime/top 等确认 load、CPU 使用和运行进程，再避免把 load average 直接等同于 CPU 使用率",
+    "用 vmstat、free、pidstat、iostat、sar 或 ss 等工具区分 CPU、内存、I/O 和网络瓶颈",
+    "能从进程定位到线程，并把线程 ID 与 jstack、jcmd、jstat 等 JVM 证据关联",
+    "说明单点采样的局限，使用连续采样、时间窗口和业务指标建立因果关系",
+    "能用 test 或 [ -f ... ] 判断普通文件，并正确引用变量",
+    "能解释 sed 全局替换、转义、备份和先预览后修改的安全做法"
+  ],
+  "hints": [
+    "load average 包含不可中断睡眠任务。",
+    "把系统线程 ID 转为十六进制后可在 jstack 中定位。"
+  ],
+  "follow_ups": [
+    "CPU 不高但 load 很高通常有哪些原因？",
+    "如何判断 JVM 堆外内存或 Direct Buffer 正在增长？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

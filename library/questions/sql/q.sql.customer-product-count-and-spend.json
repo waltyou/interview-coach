@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.customer-product-count-and-spend",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 customers(customer_id, customer_name)、orders(order_id, customer_id, order_date) 和 order_items(order_id, product_id, quantity, unit_price)。样例中 Alice 的两笔订单包含 p1:2*100、p2:1*150、p3:1*200；Bob 购买 p1:1*100、p2:2*100；Carol 购买 p1:3*100、p2:1*200。请写 SQL 找出购买至少 3 种不同产品且总消费金额大于 500 的客户，输出 customer_id、customer_name、total_spent、distinct_products_count，并按 total_spent 降序。期望结果只有 Alice，total_spent 为 550，distinct_products_count 为 3。",
+  "rubric": [
+    "沿 customers、orders、order_items 的正确键连接，避免连接放大或遗漏订单明细",
+    "总消费金额按 quantity * unit_price 对订单明细求和，不能只累加单价",
+    "不同产品数使用 COUNT(DISTINCT product_id)，或先聚合到客户商品粒度后再计数",
+    "在客户粒度 GROUP BY 后使用 HAVING 同时应用至少 3 种产品和消费严格大于 500 的条件",
+    "输出完整列并显式按 total_spent 降序；能说明同额时的稳定排序、退款和 NULL 的业务约定"
+  ],
+  "hints": [
+    "先确认最终结果粒度是每个客户一行。",
+    "金额来自订单明细，产品种类数需要去重。"
+  ],
+  "follow_ups": [
+    "如果退款以负数量记录，总消费和购买过的产品种类应怎样定义？",
+    "如何避免一张订单同时连接多张一对多明细表时造成金额重复计算？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

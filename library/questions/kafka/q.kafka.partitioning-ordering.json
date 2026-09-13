@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.kafka.partitioning-ordering",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "kafka",
+  "kind": "scenario",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一个 Kafka topic 承载用户行为事件，要求同一用户有序、可以水平扩展，并避免热点用户拖慢全局。你会如何设计 message key、partition 数、副本和生产者确认策略？扩分区或 key 分布变化会带来哪些正确性与运维影响？",
+  "rubric": [
+    "说明 Kafka 只保证单 partition 内的记录顺序，同一用户有序通常要求稳定地映射到同一 partition",
+    "根据吞吐、消费者并行度、broker 能力、未来增长和恢复时间估算 partition 数，而不是越多越好",
+    "识别热点 key、空 key、key 倾斜和大消息，并讨论拆 key、局部有序或业务聚合等取舍",
+    "解释 replication factor、min.insync.replicas、acks 和 producer retry 对持久性、可用性与延迟的影响",
+    "指出增加 partition 会改变 key 到 partition 的映射，可能破坏跨变更时段的同 key 顺序假设",
+    "使用 partition 吞吐、produce latency、under-replicated partitions 和 broker 磁盘/网络指标验证设计"
+  ],
+  "hints": [
+    "先明确需要的是全局顺序，还是实体级顺序。",
+    "分区既是并行单位，也是顺序和故障恢复边界。"
+  ],
+  "follow_ups": [
+    "某个超级用户占据单分区 30% 流量，但业务仍要求其事件有序，你会怎么处理？",
+    "为什么随意增加 partition 可能让下游状态计算得到错误结果？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-23T15:08:30+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00"
+}

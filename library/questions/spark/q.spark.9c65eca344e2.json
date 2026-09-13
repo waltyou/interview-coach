@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.9c65eca344e2",
+  "revision": 2,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "scenario",
+  "difficulty": 4,
+  "target_roles": [
+    "spark-engineer",
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一个按 event time 做窗口聚合的流式作业会收到乱序和迟到事件。请区分 event time、arrival/ingestion time 与 processing time，解释 watermark 如何表达事件时间进度以及它与状态清理、output mode 或 trigger 的关系。然后设计一套处理方案，分别说明 watermark 之前、可接受迟到范围内、超过最终迟到阈值以及消息处理失败时应该怎样处理，并重点解释 side output、DLQ、幂等修正、replay/backfill 各自解决什么问题。",
+  "rubric": [
+    "区分 event time、arrival/ingestion time、processing time、乱序与真正的 late event",
+    "说明 watermark 是对 event-time completeness 的进度估计，不是系统当前时间、消息等待队列或绝对完整性保证",
+    "解释 watermark 与 window finalization、旧状态清理以及 append/update/complete output mode 或 trigger 的关系",
+    "说明 watermark 前的数据正常处理，可接受迟到范围内的数据可以更新旧窗口或产生 late firing，并讨论下游 upsert 或去重要求",
+    "对超过最终迟到阈值但仍然合法的数据提出 drop、late-event side output、quarantine topic、reconciliation 和 batch backfill 等方案",
+    "说明 DLQ 主要隔离解析失败、schema/业务校验失败和重试耗尽等处理异常；若用它承载超迟到事件，应使用独立 reason code 与 replay 流程",
+    "说明 event ID、checkpoint/offset、幂等或事务性 sink 如何支持安全 replay、故障恢复和结果修正",
+    "根据真实延迟分布、结果完整性、延迟 SLA、state size 和修正成本选择阈值，并给出 watermark lag、late ratio、DLQ rate 等监控"
+  ],
+  "hints": [
+    "先按事件是否越过 watermark，以及是否处理失败，画出两个互相独立的分类轴。",
+    "Watermark 决定主计算愿意为完整性保留多久的 state；DLQ 决定失败消息怎样退出主处理路径。",
+    "最终正确通常需要实时结果加后续 reconciliation，而不是把 watermark 设得无限长。"
+  ],
+  "follow_ups": [
+    "面试官把超迟到事件进入独立队列称为 DLQ 时，你会如何既认可这个实现，又澄清它与传统 DLQ 的语义差异？",
+    "两个流做 stream-stream join 时，其中一个 partition 长时间空闲，watermark 和 state cleanup 会发生什么？",
+    "如果下游只能 append、不能 update，你会怎样发布快速结果并在之后修正超迟到数据？",
+    "为什么声明 exactly-once 仍要关注 sink 的提交语义和补偿任务的幂等性？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-08-19T21:59:41+08:00"
+}

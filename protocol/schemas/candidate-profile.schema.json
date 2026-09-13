@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "candidate-profile.schema.json",
+  "title": "Interview Coach Candidate Profile",
+  "type": "object",
+  "required": [
+    "schema_version", "learner_id", "revision", "created_at", "updated_at",
+    "last_confirmed_at", "discovery", "goals", "background", "preferences",
+    "materials", "open_questions"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "learner_id": { "type": "string", "minLength": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "last_confirmed_at": { "type": ["string", "null"], "format": "date-time" },
+    "discovery": {
+      "type": "object",
+      "required": ["status", "methods_used", "started_at", "completed_at"],
+      "properties": {
+        "status": { "enum": ["in_progress", "complete", "paused"] },
+        "methods_used": {
+          "type": "array",
+          "items": { "enum": ["conversation", "resume", "files", "practice_history", "interview_history"] },
+          "uniqueItems": true
+        },
+        "started_at": { "type": "string", "format": "date-time" },
+        "completed_at": { "type": ["string", "null"], "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+    "goals": {
+      "type": "object",
+      "required": ["target_roles", "target_levels", "target_companies", "target_date", "motivations", "constraints"],
+      "properties": {
+        "target_roles": { "$ref": "#/$defs/stringArray" },
+        "target_levels": { "$ref": "#/$defs/stringArray" },
+        "target_companies": { "$ref": "#/$defs/stringArray" },
+        "target_date": { "type": ["string", "null"], "minLength": 1 },
+        "motivations": { "$ref": "#/$defs/stringArray" },
+        "constraints": { "$ref": "#/$defs/stringArray" }
+      },
+      "additionalProperties": false
+    },
+    "background": {
+      "type": "object",
+      "required": ["summary", "years_experience", "domains", "technologies", "leadership_scope"],
+      "properties": {
+        "summary": { "type": ["string", "null"], "minLength": 1 },
+        "years_experience": { "type": ["number", "null"], "minimum": 0 },
+        "domains": { "$ref": "#/$defs/stringArray" },
+        "technologies": { "$ref": "#/$defs/stringArray" },
+        "leadership_scope": { "type": ["string", "null"], "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "preferences": {
+      "type": "object",
+      "required": ["coaching_language", "answer_languages", "session_minutes", "coaching_style"],
+      "properties": {
+        "coaching_language": { "type": ["string", "null"], "minLength": 1 },
+        "answer_languages": { "$ref": "#/$defs/stringArray" },
+        "session_minutes": { "type": ["integer", "null"], "minimum": 5 },
+        "coaching_style": { "enum": ["supportive", "balanced", "challenging", null] }
+      },
+      "additionalProperties": false
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "root", "path", "status", "added_at", "notes"],
+        "properties": {
+          "kind": { "enum": ["resume", "private_question_bank", "knowledge_notes", "job_description", "interview_feedback", "project_material", "interview_experience", "other"] },
+          "root": { "enum": ["context_pack", "repository"] },
+          "path": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["available", "indexed", "reviewed"] },
+          "added_at": { "type": "string", "format": "date-time" },
+          "notes": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "open_questions": { "$ref": "#/$defs/stringArray" }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

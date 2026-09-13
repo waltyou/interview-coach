@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.never-purchased-product",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 2,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 customers(customer_id, customer_name)，样例为 (1,'Alice')、(2,'Bob')、(3,'Carol')、(4,'Dave')；orders(order_id, customer_id)，样例为 (101,1)、(102,1)、(103,2)、(104,3)；order_items(order_id, product_id)，其中 Alice 买过 p1、p2、p3，Bob 只买过 p2，Carol 买过 p1、p3，Dave 没有订单。请写 SQL 找出从未购买过产品 p1 的客户，输出 customer_id、customer_name；期望结果为 Bob 和 Dave。",
+  "rubric": [
+    "以 customers 为外层驱动表，使完全没有订单的客户仍然具备返回资格",
+    "使用相关 NOT EXISTS、可靠的反连接，或在确保子查询不含 NULL 时使用 NOT IN",
+    "购买 p1 的判断正确连接 orders 与 order_items，并通过 customer_id 与外层客户关联",
+    "能够解释 NOT IN 遇到 NULL 时的三值逻辑陷阱，以及为什么 NOT EXISTS 更稳健",
+    "结果不因同一客户多次购买 p1 或其他产品的重复明细而产生重复客户"
+  ],
+  "hints": [
+    "先找出某个客户是否存在一条 p1 购买记录，再对存在性取反。",
+    "需要保留没有任何订单的客户，因此 customers 应作为查询入口。"
+  ],
+  "follow_ups": [
+    "如果要找买过 p2 但从未买过 p1 的客户，应怎样组合两个存在性条件？",
+    "LEFT JOIN ... IS NULL 的反连接写法在哪些情况下容易因过滤位置错误而改变语义？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

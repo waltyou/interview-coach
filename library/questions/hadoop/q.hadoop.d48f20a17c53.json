@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.hadoop.d48f20a17c53",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "hadoop",
+  "kind": "explanation",
+  "difficulty": 4,
+  "target_roles": [
+    "data-engineer",
+    "big-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请结合 HDFS 架构解释客户端读写文件的完整路径：NameNode 与 DataNode 如何分工，Block、副本、Packet、Chunk Checksum、写入 Pipeline 和 ACK 队列如何协作。客户端、DataNode 或 NameNode 在写入时失败，lease、pipeline、block 与 HA 恢复分别怎样工作？",
+  "rubric": [
+    "说明 NameNode 管理命名空间和 Block 元数据，DataNode 存储并上报副本，数据路径通常不经过 NameNode",
+    "写路径包含权限与路径检查、Block 分配、拓扑感知的副本 Pipeline、Packet/Checksum 和反向 ACK",
+    "读路径从 NameNode 获得副本位置，优先读取就近 DataNode，校验失败时切换副本",
+    "DataNode 失败时客户端重建 Pipeline 并重发未确认 Packet，NameNode 后续补足副本",
+    "客户端失败后通过 lease recovery 与 block recovery 统一最后一个 Block 的副本状态和长度",
+    "区分传统单 NameNode 描述与现代 Active/Standby、JournalNodes、Failover Controller 下的 HA 恢复"
+  ],
+  "hints": [
+    "元数据控制路径和实际数据路径要分开描述。",
+    "按 pipeline setup、data streaming、close 三阶段分析故障。"
+  ],
+  "follow_ups": [
+    "为什么 HDFS 采用 Packet ACK 队列？",
+    "NameNode 切换后如何避免两个 Active 同时提供写服务？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

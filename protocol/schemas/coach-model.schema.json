@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "coach-model.schema.json",
+  "title": "Interview Coach Model Projection",
+  "type": "object",
+  "required": ["schema_version", "learner_id", "generated_at", "candidate_profile_revision", "subjects", "strengths", "gaps", "risks", "derived_from_observations"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "learner_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "candidate_profile_revision": { "type": ["integer", "null"], "minimum": 1 },
+    "subjects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["dimension", "subject", "classification", "evidence_level", "observation_count", "last_observed_at", "claims", "observation_ids", "evidence_refs"],
+        "properties": {
+          "dimension": { "type": "string", "minLength": 1 },
+          "subject": { "type": "string", "minLength": 1 },
+          "classification": { "enum": ["strength", "gap", "risk", "mixed", "unclassified"] },
+          "evidence_level": { "enum": ["emerging", "supported", "well_supported"] },
+          "observation_count": { "type": "integer", "minimum": 1 },
+          "last_observed_at": { "type": "string", "format": "date-time" },
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["observation_id", "signal", "confidence", "claim"],
+              "properties": {
+                "observation_id": { "type": "string", "minLength": 1 },
+                "signal": { "enum": ["strength", "gap", "risk", "neutral"] },
+                "confidence": { "enum": ["low", "medium", "high"] },
+                "claim": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          },
+          "observation_ids": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "reference"],
+              "properties": {
+                "kind": { "type": "string", "minLength": 1 },
+                "reference": { "type": "string", "minLength": 1 }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "strengths": { "$ref": "#/$defs/subjectKeys" },
+    "gaps": { "$ref": "#/$defs/subjectKeys" },
+    "risks": { "$ref": "#/$defs/subjectKeys" },
+    "derived_from_observations": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+  },
+  "$defs": {
+    "subjectKeys": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+  },
+  "additionalProperties": false
+}

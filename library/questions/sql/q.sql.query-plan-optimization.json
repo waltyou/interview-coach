@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.query-plan-optimization",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "scenario",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一条原本 10 分钟完成的分析 SQL 变成 90 分钟。请给出从结果正确性、数据变化、统计信息和执行计划入手的诊断流程，并说明如何判断瓶颈来自扫描、过滤、Join、聚合、排序、数据倾斜还是资源竞争。",
+  "rubric": [
+    "固定 SQL、输入快照、引擎版本、配置和资源建立可重复基线，并先确认结果与数据规模是否发生变化",
+    "比较逻辑与物理计划、表与列统计、分区裁剪、谓词下推、列裁剪和实际各算子行数",
+    "检查 join 顺序与算法、广播阈值、shuffle、倾斜、基数估计误差，以及聚合和排序的 spill",
+    "结合 stage/task、CPU、I/O、网络、内存、队列等待和并发 workload 区分 SQL 问题与资源竞争",
+    "根据证据选择重写 SQL、更新统计、调整数据布局/分区、预聚合、改变 join 策略或隔离资源",
+    "一次改变一个主要变量，验证正确性、延迟、稳定性和成本，并沉淀统计刷新与回归监控"
+  ],
+  "hints": [
+    "先回答读了多少数据、每个算子实际产出多少行。",
+    "优化器估计与运行时事实之间的差异通常很有价值。"
+  ],
+  "follow_ups": [
+    "执行计划没有变化，但耗时突然增加，你会优先检查什么？",
+    "过滤条件已经下推，扫描仍很慢，数据布局可能有哪些问题？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-23T15:08:30+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00"
+}

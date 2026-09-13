@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.72f0be3a914d",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "spark-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "同一条批处理数据链路既可以用 Hadoop MapReduce，也可以用 Spark。你会如何从执行模型、DAG 表达能力、中间结果物化、迭代计算、容错、资源与运维成本来选择？请给出一个 Spark 更合适和一个 MapReduce 仍可能合理的场景。",
+  "rubric": [
+    "MapReduce 以固定 Map-Shuffle-Reduce 阶段和磁盘物化为核心，Spark 用更通用 DAG 与流水线 Stage",
+    "Spark 可缓存或复用中间结果，通常更适合迭代算法、交互分析和多阶段管线",
+    "两者都依赖分区、Shuffle 和重算/重试，但故障恢复粒度及中间数据保存方式不同",
+    "比较内存压力、长 lineage、Shuffle 稳定性、启动开销和成熟运维体系",
+    "选择应基于工作负载、SLA、成本、团队能力和生态依赖，而不是笼统地认为 Spark 永远更快"
+  ],
+  "hints": [
+    "先比较执行图和中间结果存放位置。",
+    "再讨论性能收益换来的内存与复杂性成本。"
+  ],
+  "follow_ups": [
+    "Spark 在什么情况下也会大量落盘？",
+    "如何把一个多阶段 MapReduce 工作流迁移到 Spark 并验证语义一致？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

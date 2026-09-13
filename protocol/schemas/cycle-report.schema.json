@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cycle-report.schema.json",
+  "title": "CycleReport",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "cycle_id",
+    "generated_at",
+    "cycle",
+    "totals",
+    "statistics",
+    "highlights",
+    "questions",
+    "derived_from_events"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 2 },
+    "cycle_id": { "type": "string", "pattern": "^cycle\\." },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "cycle": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "learner_id",
+        "status",
+        "created_at",
+        "started_at",
+        "completed_at",
+        "target_roles",
+        "topics",
+        "review_policy"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^cycle\\." },
+        "name": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["baseline", "maintenance", "job_targeted", "stage_targeted"] },
+        "learner_id": { "type": "string", "minLength": 1 },
+        "status": { "const": "completed" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "started_at": { "type": ["string", "null"], "format": "date-time" },
+        "completed_at": { "type": "string", "format": "date-time" },
+        "target_roles": { "type": "array", "items": { "type": "string" } },
+        "topics": { "type": "array", "items": { "type": "string" } },
+        "review_policy": { "enum": ["coverage_once", "spaced", "coverage_then_spaced"] }
+      },
+      "additionalProperties": false
+    },
+    "totals": { "$ref": "cycle-progress.schema.json#/properties/totals" },
+    "statistics": { "$ref": "cycle-progress.schema.json#/properties/statistics" },
+    "highlights": {
+      "type": "object",
+      "required": ["strong_question_ids", "weak_question_ids", "recurring_missing_points"],
+      "properties": {
+        "strong_question_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^q\\." },
+          "uniqueItems": true
+        },
+        "weak_question_ids": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^q\\." },
+          "uniqueItems": true
+        },
+        "recurring_missing_points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["point", "count"],
+            "properties": {
+              "point": { "type": "string", "minLength": 1 },
+              "count": { "type": "integer", "minimum": 1 }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "question_id",
+          "question_revision",
+          "topic",
+          "prompt",
+          "status",
+          "attempt_count",
+          "scores",
+          "knowledge_score",
+          "review_interval_days",
+          "last_attempt_at",
+          "next_due_at",
+          "last_event_id",
+          "missing_points",
+          "event_ids"
+        ],
+        "properties": {
+          "question_id": { "type": "string", "pattern": "^q\\." },
+          "question_revision": { "type": "integer", "minimum": 1 },
+          "topic": { "type": "string", "minLength": 1 },
+          "prompt": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["unseen", "covered", "due"] },
+          "attempt_count": { "type": "integer", "minimum": 0 },
+          "scores": { "type": ["object", "null"] },
+          "knowledge_score": { "type": ["integer", "null"], "minimum": 0, "maximum": 4 },
+          "review_interval_days": { "type": ["integer", "null"], "minimum": 1 },
+          "last_attempt_at": { "type": ["string", "null"], "format": "date-time" },
+          "next_due_at": { "type": ["string", "null"], "format": "date" },
+          "last_event_id": { "type": ["string", "null"] },
+          "missing_points": { "type": "array", "items": { "type": "string" } },
+          "event_ids": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^attempt\\." },
+            "uniqueItems": true
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "derived_from_events": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^attempt\\." },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

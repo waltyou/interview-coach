@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "coach-observation.schema.json",
+  "title": "Interview Coach Observation",
+  "type": "object",
+  "required": ["schema_version", "id", "occurred_at", "learner_id", "dimension", "subject", "signal", "claim", "confidence", "evidence_refs", "supersedes", "observer"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 1 },
+    "id": { "type": "string", "pattern": "^observation\\." },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "learner_id": { "type": "string", "minLength": 1 },
+    "dimension": { "enum": ["technical", "problem_solving", "system_design", "communication", "behavioral", "leadership", "domain", "career_narrative", "interview_strategy", "work_style"] },
+    "subject": { "type": "string", "minLength": 1 },
+    "signal": { "enum": ["strength", "gap", "risk", "neutral"] },
+    "claim": { "type": "string", "minLength": 1 },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["kind", "reference"],
+        "properties": {
+          "kind": { "enum": ["conversation", "candidate_profile", "resume", "source", "attempt_event", "interview_experience", "job", "user_feedback"] },
+          "reference": { "type": "string", "minLength": 1 }
+        },
+        "additionalProperties": false
+      }
+    },
+    "supersedes": { "type": "array", "items": { "type": "string", "pattern": "^observation\\." }, "uniqueItems": true },
+    "observer": {
+      "type": "object",
+      "required": ["agent", "model"],
+      "properties": {
+        "agent": { "type": "string", "minLength": 1 },
+        "model": { "type": ["string", "null"], "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

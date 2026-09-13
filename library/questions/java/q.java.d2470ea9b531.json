@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.java.d2470ea9b531",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "java",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "java-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "怎样判断一段 Java 代码是否线程安全，并选择合适的实现方式？请从共享可变状态、原子性、可见性和有序性出发，比较不可变对象、线程封闭、锁、volatile、原子类和并发容器的适用边界。",
+  "rubric": [
+    "以是否存在跨线程共享的可变状态作为分析起点",
+    "区分原子性、可见性、有序性以及 happens-before 关系",
+    "优先考虑不可变、无共享或线程封闭，再考虑同步机制",
+    "说明 synchronized/Lock、volatile、CAS 原子类和并发容器各自能保证什么",
+    "识别发布逃逸、检查后执行、复合操作和死锁等常见风险",
+    "给出并发测试、压力测试和可观测性方案，而不只依靠代码目测"
+  ],
+  "hints": [
+    "先列出状态、访问线程和不变量。",
+    "volatile 不能把任意复合操作变成原子操作。"
+  ],
+  "follow_ups": [
+    "双重检查锁定为什么需要 volatile？",
+    "无状态对象为什么通常天然线程安全？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

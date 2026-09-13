@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.hive.30b9e6f12a74",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "hive",
+  "kind": "explanation",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "big-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请解释 Hive 的核心架构和一条 SQL 的执行路径，并比较 Managed Table 与 External Table 的生命周期。分区目录已经存在但 Metastore 中没有记录，或记录与文件系统不一致时，你会如何安全地同步和修复分区元数据？",
+  "rubric": [
+    "说明 Client/Server、Driver、Compiler/Optimizer、Execution Engine、Metastore 和存储系统的职责",
+    "描述 SQL 解析、语义分析、逻辑/物理计划生成以及提交到底层执行引擎的路径",
+    "比较 Managed 与 External 表在数据所有权、DROP 行为、LOCATION 和迁移场景上的差异",
+    "说明静态/动态分区以及分区列如何帮助裁剪扫描",
+    "能使用 ALTER TABLE ADD/DROP PARTITION 或 MSCK REPAIR 等方式同步元数据，并先验证目录布局和影响范围",
+    "指出不同 Hive 版本和表格式对 DROP、PURGE、事务与元数据修复语义的影响"
+  ],
+  "hints": [
+    "Hive 表同时涉及 Metastore 元数据和底层文件，两者可能不一致。",
+    "先明确谁拥有数据，再谈 DROP 的结果。"
+  ],
+  "follow_ups": [
+    "为什么分区过多也会降低性能？",
+    "Iceberg/Hudi/Delta 的元数据管理与传统 Hive 分区有何不同？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

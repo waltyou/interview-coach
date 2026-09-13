@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.7fcdc6255018",
+  "revision": 2,
+  "status": "active",
+  "topic": "sql",
+  "kind": "explanation",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "请解释 SQL 窗口函数的语义和执行方式。PARTITION BY、ORDER BY 与 window frame 分别控制什么？它与 GROUP BY 有什么本质区别？请用排名、累计值或滑动窗口举例，并说明常见的正确性与性能陷阱。",
+  "rubric": [
+    "说明窗口函数在保留输入行粒度的同时，基于相关行集合计算结果，与 GROUP BY 压缩行数不同",
+    "准确解释 PARTITION BY 划分窗口、ORDER BY 建立窗口内顺序、frame 决定当前行参与计算的范围",
+    "能区分 ranking、aggregate、offset/value 等常见窗口函数，并给出合理用例",
+    "指出默认 frame 可能随 SQL 方言和 ORDER BY 改变，ROWS 与 RANGE 在重复排序值下语义不同",
+    "说明排名并列、排序不稳定、NULL、分区过大和全局排序等正确性或性能风险",
+    "能结合执行计划讨论 repartition、sort、数据倾斜和可复用窗口定义，而不是只给语法"
+  ],
+  "hints": [
+    "把输出行数是否改变作为窗口函数与 GROUP BY 的第一条边界。",
+    "不要忽略 frame，尤其是有重复 ORDER BY 值时。"
+  ],
+  "follow_ups": [
+    "ROWS BETWEEN 6 PRECEDING AND CURRENT ROW 与按最近七个自然日统计有什么差别？",
+    "多个窗口函数的分区键和排序键不同时，执行计划可能发生什么？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00",
+  "visibility": "public"
+}

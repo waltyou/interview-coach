@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.incremental-deduplication",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一张增量事件表 events(event_id, entity_id, event_time, ingest_time, operation, payload) 可能重复、乱序并包含更新与删除。请用 SQL 产出每个 entity 的最新有效状态，并说明你的去重顺序、迟到数据、相同时间戳、增量重跑和幂等策略。",
+  "rubric": [
+    "先明确 event_id、entity_id、事件时间与摄取时间的业务语义，以及什么叫重复和最新",
+    "使用窗口函数按实体分区，并用确定性的 event_time、ingest_time 和唯一键排序选择版本",
+    "正确处理 delete/tombstone、同时间戳冲突、NULL 和缺失前序事件，而不是只过滤重复行",
+    "区分 append-only 事件历史与 current-state 输出，说明 MERGE/upsert 或快照重建的适用条件",
+    "设计 watermark、回看窗口或受影响分区重算，使迟到数据能够修正结果且增量作业可重跑",
+    "通过唯一约束、审计列、输入输出计数和对账保证幂等与可验证性，并讨论大表 shuffle/partition pruning"
+  ],
+  "hints": [
+    "最新必须由完整、稳定的排序键定义。",
+    "考虑同一批输入执行两次后结果是否完全相同。"
+  ],
+  "follow_ups": [
+    "迟到一周的更正事件到达时，如何只重算必要范围？",
+    "如果 event_id 也不可靠，你还能依据哪些事实识别重复？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-23T15:08:30+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00"
+}

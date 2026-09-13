@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "question.schema.json",
+  "title": "Question",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "revision",
+    "status",
+    "visibility",
+    "topic",
+    "kind",
+    "difficulty",
+    "origin",
+    "prompt",
+    "rubric",
+    "hints",
+    "follow_ups",
+    "source_refs",
+    "evaluation_basis",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 3 },
+    "id": { "type": "string", "pattern": "^q\\.[a-z0-9][a-z0-9.-]+$" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "status": { "enum": ["active", "archived"] },
+    "visibility": { "enum": ["public", "private"] },
+    "topic": { "type": "string", "minLength": 1 },
+    "kind": {
+      "enum": ["concept", "explanation", "scenario", "coding", "system-design", "behavioral"]
+    },
+    "difficulty": { "type": "integer", "minimum": 1, "maximum": 5 },
+    "target_roles": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "origin": { "enum": ["explicit-heading", "real-interview", "generated", "manual"] },
+    "prompt": { "type": "string", "minLength": 1 },
+    "rubric": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "hints": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "follow_ups": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["root", "path", "heading"],
+        "properties": {
+          "root": { "type": "string", "minLength": 1 },
+          "path": { "type": "string", "minLength": 1 },
+          "heading": { "type": "string", "minLength": 1 },
+          "line": { "type": "integer", "minimum": 1 },
+          "unit": { "type": "integer", "minimum": 1 },
+          "unit_label": { "enum": ["document", "page", "slide", "sheet"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "evaluation_basis": { "enum": ["rubric", "source-section", "both"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "archived_at": { "type": ["string", "null"], "format": "date-time" },
+    "archive_reason": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

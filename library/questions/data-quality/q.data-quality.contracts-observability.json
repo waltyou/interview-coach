@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.data-quality.contracts-observability",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "data-quality",
+  "kind": "system-design",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "你负责的平台频繁因上游 schema 变化、数据延迟和业务口径漂移产出错误报表。请设计一套数据契约、质量检查和可观测性机制：哪些问题在写入前阻断，哪些允许隔离或降级，怎样定位影响范围并推动长期改进？",
+  "rubric": [
+    "把技术 schema、业务语义、owner、SLA、新鲜度、完整性和兼容策略纳入可版本化的数据契约",
+    "区分结构、唯一性、引用完整性、范围、分布、业务规则与跨表对账等质量检查，并选择合适执行位置",
+    "根据影响把失败策略设计为阻断、隔离、降级、告警或人工审批，避免所有异常采用同一处理方式",
+    "建立端到端 lineage、运行元数据、数据新鲜度和质量趋势，使事故能定位生产者、消费者和受影响指标",
+    "说明迟到、重放、回补、schema evolution 与历史重算如何保持幂等和可审计",
+    "用 SLO、误报率、发现时间、恢复时间和重复事故率衡量体系效果，并把高频事故转成契约或平台能力"
+  ],
+  "hints": [
+    "先区分数据已经坏了和数据只是晚了。",
+    "质量规则必须同时有 owner、严重级别和失败动作。"
+  ],
+  "follow_ups": [
+    "上游新增可空列和修改既有列类型，分别应如何兼容？",
+    "质量检查全部通过，但业务指标仍然错误，体系中还缺什么？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-23T15:08:30+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00"
+}

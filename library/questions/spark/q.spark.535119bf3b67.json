@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.535119bf3b67",
+  "revision": 2,
+  "status": "active",
+  "topic": "spark",
+  "kind": "system-design",
+  "difficulty": 3,
+  "target_roles": [
+    "spark-engineer",
+    "senior-data-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "在实际生产环境中，Spark Streaming 和 Structured Streaming 是两种处理流数据的技术。请详细阐述这两种技术的核心设计思想、编程模型、容错机制和执行效率上的区别。你认为在什么场景下应该选择哪种技术？",
+  "rubric": [
+    "说明 Spark Streaming 以 DStream 和 micro-batch RDD 序列为核心，Structured Streaming 把流建模为持续追加的无界表",
+    "比较两者 API、Catalyst/Spark SQL 优化能力、状态管理、事件时间和 watermark 支持",
+    "说明 checkpoint、WAL/offset、状态存储和 sink 提交如何影响容错与 exactly-once",
+    "比较 micro-batch 与 continuous processing 等执行模式的延迟、吞吐和功能限制",
+    "根据已有代码资产、事件时间需求、状态复杂度、延迟 SLA 与 sink 语义选择并给出迁移方案"
+  ],
+  "hints": [
+    "分别比较编程模型、执行模型、状态、时间语义和恢复。"
+  ],
+  "follow_ups": [
+    "Structured Streaming 的无界表模型如何复用 DataFrame API？",
+    "exactly-once 为什么依赖 source 与 sink？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-10T21:35:29+08:00",
+  "visibility": "public"
+}

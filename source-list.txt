@@ -1,0 +1,4 @@
+# Add repository-relative Source paths or glob patterns here.
+# Sources remain private when this repository is private.
+workspace/sources/**/*
+workspace/resume/Markdown/master/*.md

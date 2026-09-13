@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.java.6de9418a2c7f",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "java",
+  "kind": "explanation",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "java-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请从源码思路解释 Java 8+ HashMap 的数据结构以及 put/get 流程：hash 如何计算、数组下标如何定位、碰撞如何处理、何时扩容、链表何时树化或退化。equals/hashCode 的实现质量会怎样影响正确性和性能？",
+  "rubric": [
+    "说明数组桶、链表和红黑树的组合结构",
+    "解释 hash 扰动、位与定位和容量为 2 的幂之间的关系",
+    "按首次插入、同 key 覆盖、碰撞追加和 resize 描述 put",
+    "按桶定位、首节点比较、链表或树查找描述 get",
+    "给出树化阈值、最小容量与退化条件的意义，而非只背数字",
+    "说明可变 key、低质量 hashCode 和不一致 equals/hashCode 会造成的问题"
+  ],
+  "hints": [
+    "先画出 table[i] 下可能是链表或红黑树。",
+    "扩容时旧容量的那一位决定节点留在原索引还是移动。"
+  ],
+  "follow_ups": [
+    "HashMap 为什么允许一个 null key？",
+    "为什么容量通常保持为 2 的幂？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

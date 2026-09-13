@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.java.c9e52d74a018",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "java",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "java-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "你要为一个突发流量明显、任务耗时不稳定的 Java 服务配置 ThreadPoolExecutor。请解释 corePoolSize、maximumPoolSize、keepAliveTime、workQueue、ThreadFactory 和 RejectedExecutionHandler 如何共同决定行为，并给出容量估算、背压、监控与优雅关闭方案。",
+  "rubric": [
+    "准确描述提交任务时核心线程、队列、最大线程和拒绝策略的决策顺序",
+    "比较有界队列、无界队列和直接移交队列对吞吐、延迟与内存的影响",
+    "根据 CPU 密集或 I/O 密集、到达率和任务耗时估算并验证池大小",
+    "说明 CallerRuns、Abort、Discard 等拒绝策略的业务后果并设计背压",
+    "使用有意义的线程名、未捕获异常处理和上下文传播",
+    "监控活跃线程、队列长度、拒绝数和任务延迟，并正确 shutdown/awaitTermination"
+  ],
+  "hints": [
+    "先说清 execute() 在每个容量区间会做什么。",
+    "无界队列可能让 maximumPoolSize 形同虚设。"
+  ],
+  "follow_ups": [
+    "为什么不建议直接使用 Executors.newFixedThreadPool 的默认无界队列？",
+    "任务依赖同一个线程池中的其他任务时有什么风险？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

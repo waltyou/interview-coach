@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.algorithm.58cf31a9e620",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "algorithm",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "java-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "实现一个固定容量的 LRU Cache，要求 get 和 put 平均 O(1)。请说明哈希表与双向链表如何协作、更新访问顺序、淘汰最久未使用项，并讨论容量为 0、并发访问和 LinkedHashMap 实现。",
+  "rubric": [
+    "哈希表提供 key 到节点的 O(1) 定位，双向链表维护从新到旧的访问顺序",
+    "get 命中和 put 更新都将节点移动到链表头部",
+    "容量超限时删除尾部节点，并同步从哈希表移除",
+    "正确处理覆盖已有 key、容量为 0 和不存在 key",
+    "说明普通实现不具备线程安全性，以及加锁、分段或使用成熟缓存库的取舍",
+    "能说明 LinkedHashMap accessOrder=true 的简化实现"
+  ],
+  "hints": [
+    "链表节点需要同时保存 key 和 value，淘汰时才能更新 Map。"
+  ],
+  "follow_ups": [
+    "LRU 与 LFU 的适用场景有何不同？",
+    "如何加入过期时间或按权重淘汰？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

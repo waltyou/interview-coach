@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.monthly-threshold-conditional-aggregation",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 2,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 orders(order_id, customer_id, order_date, total_amount)，样例数据为 (1,101,'2024-01-05',120.50)、(2,102,'2024-01-06',80.00)、(3,101,'2024-01-10',200.00)、(4,103,'2024-01-12',45.00)、(5,102,'2024-01-15',150.00)、(6,101,'2024-02-01',300.00)、(7,103,'2024-02-05',95.00)、(8,102,'2024-02-10',210.00)。请写 SQL 找出 2024 年 1 月和 2 月的订单总金额分别都大于 150 的客户，输出 customer_id；期望结果为 101、102。order_date 可能是包含时间的 timestamp。",
+  "rubric": [
+    "先用 2024-01-01 含、2024-03-01 不含的半开区间限制扫描范围，正确覆盖一月和二月",
+    "按 customer_id 分组，并通过两个独立的条件聚合判断一月和二月，而不是只判断两个月的合计",
+    "两个阈值条件都使用严格大于 150，边界值 150 本身不满足条件",
+    "避免为了提取月份而无条件包裹 order_date 列，能够说明这种写法对索引和分区裁剪的影响",
+    "当 order_date 是 timestamp 时，说明业务月份所依据的时区，并用对应时区的起止时间处理边界"
+  ],
+  "hints": [
+    "先把数据限制在两个月内，再在 HAVING 中分别计算每个月的金额。",
+    "SUM(CASE WHEN ... THEN total_amount ELSE 0 END) 可以完成条件聚合。"
+  ],
+  "follow_ups": [
+    "如果月份范围由参数决定，如何写成不依赖固定月份数量的方案？",
+    "如果要求连续六个月每月都超过阈值，你会怎样改写并检查缺失月份？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

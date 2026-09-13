@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.kafka.delivery-reprocessing",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "kafka",
+  "kind": "system-design",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请设计一个消费 Kafka 事件并写入数据湖或数据库的管道。你会如何处理 offset、重试、重复、乱序、毒消息、consumer rebalance 和历史重放？请准确说明 at-most-once、at-least-once 与 end-to-end exactly-once 分别需要什么条件。",
+  "rubric": [
+    "准确解释消费处理与 offset 提交顺序如何产生丢失或重复，并根据业务选择交付语义",
+    "以幂等写入、业务唯一键、去重表、事务写入或原子提交协调输出与消费进度",
+    "区分 broker/客户端提供的事务能力与端到端 exactly-once，指出外部 sink 必须共同参与语义保证",
+    "处理临时失败的有限重试与退避、不可恢复毒消息的隔离/DLQ，以及修复后的可审计回放",
+    "说明 consumer group、partition assignment、rebalance、心跳和长处理时间如何影响暂停与重复处理",
+    "设计 replay/backfill 的资源隔离、版本兼容、结果校验和下游影响控制，而不是简单重置 offset"
+  ],
+  "hints": [
+    "沿着读取、处理、写出、提交 offset 的时间线寻找故障窗口。",
+    "exactly-once 是端到端属性，不是单个 Kafka 配置项。"
+  ],
+  "follow_ups": [
+    "数据库写入成功但 offset 提交失败时，下一次消费如何避免重复副作用？",
+    "大规模 replay 如何避免挤占实时消费的 SLA？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-23T15:08:30+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00"
+}

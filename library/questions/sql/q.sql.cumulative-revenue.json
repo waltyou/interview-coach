@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.cumulative-revenue",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 sales(sale_id, product_id, sale_date, quantity, price)，样例数据为 (1,100,'2024-01-01',2,10.00)、(2,100,'2024-01-05',1,10.00)、(3,100,'2024-02-01',3,10.00)、(4,200,'2024-01-03',5,20.00)、(5,200,'2024-02-02',2,20.00)、(6,200,'2024-02-10',4,20.00)、(7,300,'2024-01-10',1,30.00)、(8,300,'2024-03-01',2,30.00)。请写 SQL 按 sale_date 升序计算每个产品的累计销售额，销售额为 quantity * price，输出 product_id、sale_date、cumulative_revenue。还需说明同一产品同一天有多条记录时的结果语义。",
+  "rubric": [
+    "使用 SUM(quantity * price) 窗口聚合，并按 product_id 分区",
+    "窗口内按 sale_date 排序，若要求逐行累计则增加 sale_id 等稳定且唯一的 tie-breaker",
+    "显式使用 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW，准确表达逐行累计窗口",
+    "说明默认 RANGE 与 ROWS 在重复 sale_date 下的差异，并根据按交易累计或按日累计选择语义",
+    "最终输出顺序使用显式 ORDER BY，且考虑 decimal 精度、NULL 数量或价格的处理"
+  ],
+  "hints": [
+    "累计聚合仍然保留每条销售记录，因此应使用带 ORDER BY 的窗口 SUM。",
+    "检查同一天多行时排序是否确定，以及 ROWS 和 RANGE 是否会得到不同结果。"
+  ],
+  "follow_ups": [
+    "如果要求每个产品每天只输出一行日末累计销售额，应怎样先聚合再开窗？",
+    "如何计算最近 30 个自然日的滚动销售额，而不是最近 30 行？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.85bf856034cf",
+  "revision": 2,
+  "status": "active",
+  "topic": "spark",
+  "kind": "explanation",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer",
+    "spark-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "从源码角度，详细阐述一下 Spark 的 宽窄依赖 (Wide vs. Narrow Dependencies) 机制。宽窄依赖是如何影响 Spark 的任务调度和容错性的？请尽量结合源码中的关键类和方法进行说明。",
+  "rubric": [
+    "窄依赖中父分区只被少量子分区使用，宽依赖中一个父分区会被多个子分区使用",
+    "说明 OneToOneDependency、RangeDependency 与 ShuffleDependency 的典型关系",
+    "解释 DAGScheduler 为什么通常以 ShuffleDependency 作为 Stage 边界",
+    "比较窄依赖的流水线执行与宽依赖的 Shuffle 读写、网络和磁盘成本",
+    "说明分区丢失时两类依赖对重算范围和容错成本的影响"
+  ],
+  "hints": [
+    "从一个父分区会被多少个子分区消费开始判断。",
+    "再把依赖类型映射到 Stage 边界和重算范围。"
+  ],
+  "follow_ups": [
+    "groupByKey 和 mapPartitions 分别属于哪类依赖？",
+    "窄依赖是否意味着一定不会发生网络传输？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00",
+  "visibility": "public"
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.conditional-aggregation-pivot",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 2,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 monthly_sales(product_id, month, revenue)，其中 month 只取 1、2、3。样例数据为 (100,1,100.00)、(100,2,150.00)、(100,3,200.00)、(200,1,80.00)、(200,2,120.00)、(200,3,90.00)。请写 SQL 把月份行转换为 m1、m2、m3 三列，每个 product_id 输出一行；期望结果为产品 100 对应 100、150、200，产品 200 对应 80、120、90。",
+  "rubric": [
+    "按 product_id 分组，并为每个月使用条件聚合生成独立输出列",
+    "使用 SUM 或适合数据唯一性约束的聚合函数，能够解释同一产品月份出现多行时如何处理",
+    "明确缺失月份应输出 0 还是 NULL，并通过 ELSE 或 COALESCE 实现约定",
+    "输出列命名和顺序与 m1、m2、m3 的契约一致",
+    "能够说明 CASE 条件聚合、PostgreSQL FILTER 和方言特有 PIVOT 的可移植性差异"
+  ],
+  "hints": [
+    "每个目标月份对应一个 CASE 表达式，再由 GROUP BY 把产品压缩为一行。",
+    "先决定缺少某个月份时应显示 0 还是 NULL。"
+  ],
+  "follow_ups": [
+    "如果月份集合动态变化，静态 SQL 与动态 SQL 分别怎样实现？",
+    "如果输入中同一产品同一月份有多行，如何检测重复并定义聚合语义？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

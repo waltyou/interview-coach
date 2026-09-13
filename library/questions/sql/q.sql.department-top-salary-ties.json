@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.department-top-salary-ties",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 2,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 employees(emp_id, emp_name, dept_id, salary)，样例数据为 (1,'Alice',10,9000)、(2,'Bob',10,8000)、(3,'Carol',10,9500)、(4,'Dave',20,7000)、(5,'Eve',20,7200)、(6,'Frank',20,7200)、(7,'Grace',30,6000)、(8,'Heidi',30,6100)。请写 SQL 返回每个部门薪资最高的全部员工，最高薪资并列时全部保留。输出 dept_id、emp_name、salary；期望结果包括 Carol，Eve 与 Frank，以及 Heidi。",
+  "rubric": [
+    "按 dept_id 分区并按 salary 降序计算部门内排名，随后在外层查询过滤第一名",
+    "使用 RANK 或 DENSE_RANK 保留并列最高薪资，说明 ROW_NUMBER 为什么不满足并列保留要求",
+    "也可以先按部门求 MAX(salary) 再连接回员工表，但必须正确返回所有并列员工",
+    "窗口结果在子查询、CTE 或支持 QUALIFY 的方言中被合法过滤",
+    "能够说明 salary 为 NULL、重复员工行以及大分区排序的正确性和性能影响"
+  ],
+  "hints": [
+    "这是分组 Top 1，并列语义决定窗口函数的选择。",
+    "窗口函数结果通常需要放到外层查询再过滤。"
+  ],
+  "follow_ups": [
+    "如果每个部门必须恰好返回一名员工，如何定义稳定且可解释的 tie-breaker？",
+    "如果要返回前三个薪资档位，RANK 与 DENSE_RANK 的结果有什么差异？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

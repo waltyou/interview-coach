@@ -1,0 +1,70 @@
+{
+  "$schema": "protocol/schemas/manifest.schema.json",
+  "protocol": "interview-coach-context-pack",
+  "protocol_version": "0.10.0",
+  "instructions": "protocol/COACHING.md",
+  "terminology": "protocol/TERMS.md",
+  "onboarding": {
+    "instructions": "protocol/ONBOARDING.md",
+    "guide": "docs/HANDBOOK.md",
+    "state": "workspace/onboarding.json"
+  },
+  "candidate": {
+    "discovery": "protocol/DISCOVERY.md",
+    "profile": "workspace/profile/candidate.json",
+    "observations": "workspace/profile/observations",
+    "model": "workspace/state/coach-model.json"
+  },
+  "roots": {
+    "source_catalog": "library/sources/catalog.json",
+    "source_list": "source-list.txt",
+    "questions": "library/questions",
+    "private_questions": "workspace/questions",
+    "jobs": "workspace/jobs",
+    "cycles": "workspace/cycles",
+    "events": "workspace/events",
+    "state": "workspace/state",
+    "reports": "workspace/reports",
+    "resume": "workspace/resume",
+    "resume_tool": "resume",
+    "dashboard": "dashboard"
+  },
+  "source_roots": {
+    "repository": ".",
+    "interview_notes": "workspace/sources/interview"
+  },
+  "capabilities": [
+    "source.discover",
+    "source.select",
+    "source.track_changes",
+    "source.extract_text",
+    "source.inspect_visual",
+    "question.select",
+    "question.hint",
+    "question.propose",
+    "question.archive",
+    "job.define",
+    "job.target",
+    "resume.facts.maintain",
+    "resume.tailor",
+    "resume.export",
+    "interview-experience.capture",
+    "interview-experience.associate",
+    "cycle.start",
+    "cycle.complete",
+    "attempt.record",
+    "state.rebuild",
+    "progress.review",
+    "report.generate",
+    "review.notebook.generate",
+    "dashboard.generate",
+    "history.review",
+    "onboarding.guide",
+    "onboarding.persist",
+    "candidate.discover",
+    "candidate.profile.maintain",
+    "coach.observe",
+    "coach-model.rebuild"
+  ],
+  "default_review_policy": "coverage_then_spaced"
+}

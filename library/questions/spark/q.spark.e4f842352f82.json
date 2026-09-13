@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.e4f842352f82",
+  "revision": 2,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "scenario",
+  "difficulty": 4,
+  "target_roles": [
+    "spark-engineer",
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "给定每个节点的 CPU、内存和实例单价，你会怎样设计一组成本有效的 Spark executor 配置，并证明成本下降没有以吞吐量或稳定性为代价？请讨论 executor 数、cores、memory、memoryOverhead、driver、shuffle partitions 与 dynamic allocation。",
+  "rubric": [
+    "预留操作系统和集群管理器资源，再根据可用 CPU/内存估算每节点 executor 数量",
+    "解释 executor cores 过多会放大 GC 和并发竞争，过少会增加进程开销并浪费 CPU",
+    "正确区分 executor heap 与 memoryOverhead，并根据容器超限、Python/堆外使用调整",
+    "调整 cores 时同步调整 executor 数和 shuffle partitions，保证比较的是相近并行度",
+    "调参实验期间控制 dynamic allocation 等变量，用运行时间、处理量、失败率、CPU/内存利用率和实例成本比较",
+    "承认不存在 one-size-fits-all，并给出 CPU wait、内存密集、倾斜和动态负载下的不同策略"
+  ],
+  "hints": [
+    "先算单节点能放下几个 executor，再算整个集群。",
+    "成本指标至少要同时包含节点小时数和处理量。"
+  ],
+  "follow_ups": [
+    "Container killed for exceeding memory limits 时应该先改 heap 还是 memoryOverhead？",
+    "为什么测试新配置时常先关闭 dynamic allocation？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

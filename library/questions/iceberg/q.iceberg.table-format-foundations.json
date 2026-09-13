@@ -1,0 +1,42 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.iceberg.table-format-foundations",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "iceberg",
+  "kind": "explanation",
+  "difficulty": 4,
+  "target_roles": [
+    "data-engineer",
+    "senior-data-engineer",
+    "data-platform-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "什么是 Apache Iceberg，它如何把对象存储或分布式文件系统中的不可变数据文件组织成一张支持事务和演进的分析表？请从 catalog、metadata JSON、snapshot、manifest list、manifest、data/delete files 的层级解释一次读取和一次写入，并说明 schema evolution、hidden partitioning、time travel、并发提交和 row-level update/delete 分别如何实现。",
+  "rubric": [
+    "准确定位 Iceberg 是开放 table format，不是对象存储、file format、compute engine 或数据湖本身",
+    "说明 catalog 指向当前 metadata，metadata 保存 schema、partition spec 和 snapshot log，snapshot 通过 manifest list 与 manifests 定义完整文件集合",
+    "解释 manifest 的 partition tuple 与列级统计如何支持 scan planning、partition pruning 和 data skipping",
+    "说明数据与 metadata 大多不可变，提交通过原子切换 metadata pointer 与 optimistic concurrency validation 实现一致性",
+    "说明稳定 field ID 支撑 schema evolution，hidden partition transforms 使查询与物理分区布局解耦",
+    "区分 copy-on-write 与 merge-on-read/delete files，并指出 update/delete 仍有文件重写、读时合并与 compaction 成本",
+    "说明 snapshots 带来 snapshot isolation、time travel 和 rollback，同时需要 snapshot expiration、orphan cleanup、compaction 等维护"
+  ],
+  "hints": [
+    "从 catalog 一直画到 Parquet data file，先解释一次 scan planning。",
+    "把逻辑删除与物理文件删除分开。",
+    "Metadata commit 很轻，不代表任意行级修改没有数据维护成本。"
+  ],
+  "follow_ups": [
+    "两个 writer 同时基于同一个 snapshot 写入时，哪些冲突可以安全重试，哪些必须失败？",
+    "Iceberg 为什么能够在不重写历史数据的情况下演进 partition spec？",
+    "如果从不做 compaction 和 snapshot expiration，表会出现哪些性能与成本问题？",
+    "Iceberg、Parquet 和 REST Catalog 各自解决什么问题？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-19T21:59:41+08:00",
+  "updated_at": "2026-08-19T21:59:41+08:00"
+}

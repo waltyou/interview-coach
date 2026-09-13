@@ -1,0 +1,34 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.java.ba242c599d32",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "java",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "Java Web 服务的进程仍然存活、CPU 不高，但请求全部无响应。你会如何从线程转储开始定位问题？如果多次 jstack 都显示所有 selector 线程长期停在同一 RUNNABLE 栈帧，你会怎样验证它是应用死锁、I/O 事件循环卡死，还是框架版本缺陷？",
+  "rubric": [
+    "先确认端口、健康检查、CPU、GC、文件描述符和网络连接等外部症状",
+    "连续采集多份 jstack，比较线程状态与栈帧是否变化，而不是把 RUNNABLE 直接等同于正常",
+    "检查 selector/event-loop 线程是否全部卡在相同调用路径，并区分锁等待、系统调用和忙循环",
+    "用最小复现、依赖版本、框架 issue 与升级对比验证根因",
+    "提出可回滚升级、监控告警和线程转储自动采集等修复与预防措施"
+  ],
+  "hints": [
+    "线程状态只是线索，栈是否随时间变化更重要。"
+  ],
+  "follow_ups": [
+    "为什么 RUNNABLE 线程也可能导致服务不可用？",
+    "线上升级框架版本前怎样降低回归风险？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-08-10T21:35:29+08:00"
+}

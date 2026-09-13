@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Interview Coach · 回答复习</title>
+  <style>
+    :root {
+      --ink: #17211b;
+      --muted: #6c756e;
+      --line: #d4dad4;
+      --paper: #f2f0e8;
+      --panel: #fffdf7;
+      --green: #275d45;
+      --green-soft: #e4efe6;
+      --amber-soft: #fff2da;
+      --shadow: 0 16px 48px rgba(30, 42, 33, .08);
+      --sans: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --serif: Georgia, "Noto Serif SC", "Songti SC", serif;
+      --mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); }
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid #c8cec8;
+      background: rgba(242, 240, 232, .94);
+      backdrop-filter: blur(14px);
+    }
+    .top-inner, .page { width: min(1240px, calc(100% - 48px)); margin: 0 auto; }
+    .top-inner { display: flex; align-items: center; gap: 18px; min-height: 68px; }
+    .back { color: var(--green); font: 700 10px/1 var(--mono); text-decoration-color: #8eaa98; text-underline-offset: 3px; white-space: nowrap; }
+    .brand { min-width: 0; font: 750 12px/1.2 var(--mono); letter-spacing: -.02em; }
+    .brand small { display: block; margin-top: 4px; color: #7e877f; font-size: 8px; letter-spacing: .1em; }
+    .top-meta { margin-left: auto; color: #737d75; font: 9px/1.5 var(--mono); text-align: right; }
+
+    .page { padding: 48px 0 90px; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: end; }
+    .eyebrow { color: var(--green); font: 700 10px/1.4 var(--mono); letter-spacing: .13em; text-transform: uppercase; }
+    h1 { max-width: 760px; margin: 10px 0 0; font: 500 clamp(38px, 5vw, 64px)/1 var(--serif); letter-spacing: -.045em; }
+    .hero p { max-width: 680px; margin: 16px 0 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .hero-stats { display: grid; grid-template-columns: repeat(2, 110px); border: 1px solid var(--line); border-radius: 14px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
+    .stat { padding: 18px; text-align: center; }
+    .stat + .stat { border-left: 1px solid var(--line); }
+    .stat strong { display: block; font: 500 31px/1 var(--serif); }
+    .stat span { display: block; margin-top: 7px; color: var(--muted); font: 8px/1 var(--mono); text-transform: uppercase; }
+
+    .toolbar { position: sticky; top: 68px; z-index: 9; display: flex; align-items: center; gap: 10px; margin: 34px 0 18px; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255, 253, 247, .95); box-shadow: 0 8px 28px rgba(30, 42, 33, .07); backdrop-filter: blur(12px); }
+    .search { flex: 1; min-width: 180px; padding: 10px 12px; border: 1px solid #c4ccc5; border-radius: 8px; color: var(--ink); background: white; font-size: 11px; }
+    .filter, .button { min-height: 38px; padding: 8px 11px; border: 1px solid #c4ccc5; border-radius: 8px; color: var(--ink); background: white; font-size: 10px; }
+    .button { color: var(--green); cursor: pointer; }
+    .search:focus, .filter:focus, .button:focus-visible { border-color: #6f947d; box-shadow: 0 0 0 3px rgba(39,93,69,.11); outline: none; }
+    .result-count { color: #758078; font: 9px/1.4 var(--mono); white-space: nowrap; }
+
+    .question { margin-top: 13px; border: 1px solid var(--line); border-radius: 15px; background: var(--panel); box-shadow: var(--shadow); overflow: hidden; }
+    .question > summary { display: grid; grid-template-columns: minmax(0, 1fr) auto 20px; gap: 20px; align-items: center; padding: 19px 20px; cursor: pointer; list-style: none; }
+    .question > summary::-webkit-details-marker { display: none; }
+    .question > summary::after { content: "+"; color: var(--green); font: 700 18px/1 var(--mono); }
+    .question[open] > summary::after { content: "−"; }
+    .question-title { min-width: 0; }
+    .question-title b { display: block; font-size: 14px; line-height: 1.55; }
+    .question-title small { display: block; margin-top: 5px; color: #808981; font: 9px/1.5 var(--mono); overflow-wrap: anywhere; }
+    .question-latest { color: #758078; font: 9px/1.5 var(--mono); text-align: right; }
+    .attempts { padding: 0 18px 5px; border-top: 1px solid var(--line); background: #f8f7f1; }
+    .attempt { margin: 17px 0; border: 1px solid #d5dbd5; border-radius: 12px; background: white; overflow: hidden; }
+    .attempt-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding: 14px 16px; border-bottom: 1px solid #dfe3dd; background: #eff1ea; }
+    .attempt-head h2 { margin: 0; font-size: 13px; }
+    .attempt-meta { display: block; margin-top: 5px; color: #7a837c; font: 9px/1.55 var(--mono); overflow-wrap: anywhere; }
+    .scores { display: flex; justify-content: flex-end; gap: 5px; flex-wrap: wrap; }
+    .score { padding: 5px 7px; border-radius: 5px; color: #315743; background: #dce9df; font: 700 8px/1 var(--mono); }
+    .revision-note { margin-top: 7px; color: #8a531e; font-size: 10px; line-height: 1.5; }
+
+    .comparison { display: grid; grid-template-columns: 1fr 1fr; }
+    .answer { min-width: 0; padding: 18px; }
+    .answer + .answer { border-left: 1px solid #dfe3dd; background: #f4f8f1; }
+    .label { margin: 0 0 10px; color: #637068; font: 700 9px/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+    .answer pre { margin: 0; color: #2e3730; font: 12px/1.78 var(--sans); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .attention, .feedback { padding: 15px 18px; border-top: 1px solid #dfe3dd; }
+    .attention { background: var(--amber-soft); }
+    .attention ul { margin: 0; padding-left: 20px; color: #594b37; font-size: 11px; line-height: 1.72; }
+    .attention li + li { margin-top: 6px; }
+    .feedback p { margin: 0; color: #4f5a52; font-size: 11px; line-height: 1.75; white-space: pre-wrap; }
+    .attempt-footer { display: flex; gap: 14px; padding: 0 18px 15px; }
+    .event-link { color: var(--green); font: 9px/1.5 var(--mono); text-decoration-color: #8eaa98; text-underline-offset: 3px; }
+    .empty { padding: 54px 20px; border: 1px solid var(--line); border-radius: 14px; color: var(--muted); background: var(--panel); text-align: center; font-size: 12px; }
+
+    @media (max-width: 820px) {
+      .top-inner, .page { width: min(100% - 26px, 680px); }
+      .hero { grid-template-columns: 1fr; }
+      .hero-stats { width: 100%; grid-template-columns: 1fr 1fr; }
+      .toolbar { align-items: stretch; flex-direction: column; top: 0; }
+      .result-count { padding: 4px 2px; }
+      .question > summary { grid-template-columns: minmax(0, 1fr) 18px; }
+      .question-latest { display: none; }
+      .attempt-head { display: block; }
+      .scores { justify-content: flex-start; margin-top: 10px; }
+      .comparison { grid-template-columns: 1fr; }
+      .answer + .answer { border-top: 1px solid #dfe3dd; border-left: 0; }
+      .top-meta { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a id="dashboard-link" class="back" href="index.html#answer-review">← 返回 Dashboard</a>
+      <div class="brand">INTERVIEW COACH<small>ANSWER REVIEW</small></div>
+      <div id="top-meta" class="top-meta"></div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Review what changed, not only what to memorize</div>
+        <h1>原回答与建议表达，<br>放在一起复习。</h1>
+        <p>先看自己的真实表达，再看建议版本，最后只练习注意点。同一道题的多次回答按时间保留，避免把复习变成背诵一份标准答案。</p>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><strong id="question-count">0</strong><span>questions</span></div>
+        <div class="stat"><strong id="attempt-count">0</strong><span>attempts</span></div>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="回答复习筛选">
+      <input id="search" class="search" type="search" placeholder="搜索题目、原回答、建议表达、注意点或反馈" aria-label="搜索回答复习">
+      <select id="cycle-filter" class="filter" aria-label="按准备周期筛选"><option value="all">全部准备周期</option></select>
+      <button id="expand-all" class="button" type="button">全部展开</button>
+      <button id="collapse-all" class="button" type="button">全部收起</button>
+      <span id="result-count" class="result-count"></span>
+    </section>
+
+    <div id="review-list"></div>
+  </main>
+
+  <script>
+    const reviewData = __INTERVIEW_COACH_REVIEW_DATA__;
+    const byId = id => document.getElementById(id);
+    const normalized = value => String(value ?? "").toLocaleLowerCase("zh-CN");
+    const formatDate = value => value ? new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) : "未记录";
+
+    function create(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function filteredGroups(query, cycleId) {
+      const needle = normalized(query).trim();
+      return reviewData.review_groups.map(group => {
+        const cycleAttempts = group.attempts.filter(attempt => cycleId === "all" || attempt.cycle_id === cycleId);
+        if (!needle) return { ...group, attempts: cycleAttempts };
+        if (normalized([group.prompt, group.question_id, group.topic].join(" ")).includes(needle)) return { ...group, attempts: cycleAttempts };
+        const attempts = cycleAttempts.filter(attempt => normalized([
+          attempt.answer_text,
+          attempt.improved_answer,
+          attempt.feedback,
+          ...(attempt.missing_points ?? []),
+        ].join(" ")).includes(needle));
+        return { ...group, attempts };
+      }).filter(group => group.attempts.length);
+    }
+
+    function render() {
+      const query = byId("search").value;
+      const groups = filteredGroups(query, byId("cycle-filter").value);
+      const container = byId("review-list");
+      container.replaceChildren();
+      const visibleAttempts = groups.reduce((total, group) => total + group.attempts.length, 0);
+      byId("result-count").textContent = `${groups.length} questions · ${visibleAttempts} attempts`;
+      if (!groups.length) {
+        container.append(create("div", "empty", reviewData.attempt_count ? "没有符合筛选条件的回答。" : "完成第一道题后，这里会显示完整复习内容。"));
+        return;
+      }
+
+      groups.forEach((group, groupIndex) => {
+        const details = create("details", "question");
+        details.open = Boolean(query.trim()) || groupIndex === 0;
+        const summary = create("summary");
+        const title = create("div", "question-title");
+        title.append(create("b", "", group.prompt), create("small", "", `${group.question_id} · ${group.topic} · ${group.attempts.length} attempts`));
+        const latest = group.attempts[group.attempts.length - 1];
+        summary.append(title, create("span", "question-latest", `最近 ${formatDate(latest.occurred_at)}`));
+        details.append(summary);
+
+        const attempts = create("div", "attempts");
+        [...group.attempts].reverse().forEach(attempt => {
+          const card = create("article", "attempt");
+          const head = create("div", "attempt-head");
+          const heading = create("div");
+          const hintText = attempt.hints_used?.length ? ` · hints ${attempt.hints_used.join(",")}` : "";
+          heading.append(create("h2", "", `第 ${attempt.sequence} 次回答`), create("span", "attempt-meta", `${formatDate(attempt.occurred_at)} · ${attempt.cycle_name} · revision ${attempt.question_revision}${hintText}`));
+          if (group.current_revision && attempt.question_revision !== group.current_revision) heading.append(create("div", "revision-note", `本次基于题目 revision ${attempt.question_revision}，当前题目为 revision ${group.current_revision}。`));
+          const scores = create("div", "scores");
+          reviewData.score_fields.forEach(field => scores.append(create("span", "score", `${field} ${attempt.scores[field] ?? "—"}`)));
+          head.append(heading, scores);
+          card.append(head);
+
+          const comparison = create("div", "comparison");
+          const raw = create("section", "answer");
+          raw.append(create("h3", "label", "我的原回答"), create("pre", "", attempt.answer_text || "尚未提供"));
+          const improved = create("section", "answer");
+          improved.append(create("h3", "label", "建议的完整表达"), create("pre", "", attempt.improved_answer || "尚未提供"));
+          comparison.append(raw, improved);
+          card.append(comparison);
+
+          const attention = create("section", "attention");
+          attention.append(create("h3", "label", "需要注意"));
+          const points = create("ul");
+          (attempt.missing_points?.length ? attempt.missing_points : ["当前评价没有记录额外注意点。"]).forEach(point => points.append(create("li", "", point)));
+          attention.append(points);
+          card.append(attention);
+
+          const feedback = create("section", "feedback");
+          feedback.append(create("h3", "label", "教练反馈"), create("p", "", attempt.feedback || "尚未提供。"));
+          card.append(feedback);
+          if (attempt.event_href) {
+            const footer = create("footer", "attempt-footer");
+            const eventLink = create("a", "event-link", "查看原始 AttemptEvent");
+            eventLink.href = attempt.event_href;
+            footer.append(eventLink);
+            card.append(footer);
+          }
+          attempts.append(card);
+        });
+        details.append(attempts);
+        container.append(details);
+      });
+    }
+
+    function initialize() {
+      byId("dashboard-link").href = reviewData.dashboard_href;
+      byId("top-meta").textContent = `GENERATED ${formatDate(reviewData.generated_at)}`;
+      byId("question-count").textContent = reviewData.question_count;
+      byId("attempt-count").textContent = reviewData.attempt_count;
+      const cycles = new Map();
+      reviewData.review_groups.forEach(group => group.attempts.forEach(attempt => cycles.set(attempt.cycle_id, attempt.cycle_name)));
+      [...cycles.entries()].sort((left, right) => left[1].localeCompare(right[1], "zh-CN")).forEach(([id, name]) => {
+        const option = create("option", "", name);
+        option.value = id;
+        byId("cycle-filter").append(option);
+      });
+      byId("search").addEventListener("input", render);
+      byId("cycle-filter").addEventListener("change", render);
+      byId("expand-all").addEventListener("click", () => document.querySelectorAll("details.question").forEach(item => item.open = true));
+      byId("collapse-all").addEventListener("click", () => document.querySelectorAll("details.question").forEach(item => item.open = false));
+      render();
+    }
+
+    initialize();
+  </script>
+</body>
+</html>

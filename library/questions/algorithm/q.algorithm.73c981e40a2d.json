@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.algorithm.73c981e40a2d",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "algorithm",
+  "kind": "coding",
+  "difficulty": 2,
+  "target_roles": [
+    "data-engineer",
+    "java-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "实现 Unix 绝对路径规范化：合并重复的 /，忽略 .，让 .. 返回上一级但不能越过根目录，并保留普通目录名。请给出测试用例并分析复杂度。",
+  "rubric": [
+    "按 / 切分路径并忽略空片段和 .",
+    "遇到 .. 时仅在栈非空时弹出，普通目录名入栈",
+    "最终从根路径开始连接各片段，正确处理 /、尾部斜杠和连续斜杠",
+    "给出包含 .、..、多余斜杠和越界 .. 的测试",
+    "时间与输出空间复杂度均为 O(n)"
+  ],
+  "hints": [
+    "把每个路径片段看作对目录栈的一次操作。"
+  ],
+  "follow_ups": [
+    "如果输入允许相对路径，语义会怎样变化？",
+    "符号链接为什么会让纯字符串规范化与真实文件系统解析不同？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

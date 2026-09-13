@@ -1,0 +1,556 @@
+{
+  "schema_version": 2,
+  "generated_at": "2026-09-04T08:15:11+08:00",
+  "visibility": "public",
+  "questions": [
+    {
+      "id": "q.algorithm.22be7a8d061f",
+      "status": "active",
+      "visibility": "public",
+      "topic": "algorithm",
+      "kind": "coding",
+      "prompt": "实现从 n 个元素中找出最大的 k 个元素，并分析时间与空间复杂度。随后把方案扩展到 Spark RDD：每个分区如何保留局部 Top K，怎样合并结果，如何避免把所有数据收集到 Driver？",
+      "file": "algorithm/q.algorithm.22be7a8d061f.json"
+    },
+    {
+      "id": "q.algorithm.58cf31a9e620",
+      "status": "active",
+      "visibility": "public",
+      "topic": "algorithm",
+      "kind": "coding",
+      "prompt": "实现一个固定容量的 LRU Cache，要求 get 和 put 平均 O(1)。请说明哈希表与双向链表如何协作、更新访问顺序、淘汰最久未使用项，并讨论容量为 0、并发访问和 LinkedHashMap 实现。",
+      "file": "algorithm/q.algorithm.58cf31a9e620.json"
+    },
+    {
+      "id": "q.algorithm.73c981e40a2d",
+      "status": "active",
+      "visibility": "public",
+      "topic": "algorithm",
+      "kind": "coding",
+      "prompt": "实现 Unix 绝对路径规范化：合并重复的 /，忽略 .，让 .. 返回上一级但不能越过根目录，并保留普通目录名。请给出测试用例并分析复杂度。",
+      "file": "algorithm/q.algorithm.73c981e40a2d.json"
+    },
+    {
+      "id": "q.big-data-architecture.8f3e589a35db",
+      "status": "active",
+      "visibility": "public",
+      "topic": "big-data-architecture",
+      "kind": "concept",
+      "prompt": "什么是数据仓库，企业为什么不能只依赖业务数据库做分析？请从目标、数据组织、典型建模方式、数据进入流程和查询负载几个方面说明，并讨论数据仓库、数据湖与湖仓一体各自适合解决什么问题。",
+      "file": "big-data-architecture/q.big-data-architecture.8f3e589a35db.json"
+    },
+    {
+      "id": "q.big-data-architecture.warehouse-lake-lakehouse",
+      "status": "active",
+      "visibility": "public",
+      "topic": "big-data-architecture",
+      "kind": "concept",
+      "prompt": "请比较数据仓库、数据湖与 Lakehouse 的目标、数据组织方式、事务与治理能力、查询性能和典型工作负载。Iceberg、Delta Lake、Hudi 这类 table format 在其中位于哪一层？为什么说 Iceberg 既不是数据湖本身，也不是一个完整的 Lakehouse？",
+      "file": "big-data-architecture/q.big-data-architecture.warehouse-lake-lakehouse.json"
+    },
+    {
+      "id": "q.data-modeling.dimensional-modeling",
+      "status": "active",
+      "visibility": "public",
+      "topic": "data-modeling",
+      "kind": "system-design",
+      "prompt": "请为一个电商分析场景设计维度模型，支持订单金额、转化率、复购和按商品、用户、地区、渠道的历史分析。你会如何确定业务过程与事实表粒度，区分事实和维度，处理多币种、退货、迟到事实以及 Slowly Changing Dimension？",
+      "file": "data-modeling/q.data-modeling.dimensional-modeling.json"
+    },
+    {
+      "id": "q.data-quality.contracts-observability",
+      "status": "active",
+      "visibility": "public",
+      "topic": "data-quality",
+      "kind": "system-design",
+      "prompt": "你负责的平台频繁因上游 schema 变化、数据延迟和业务口径漂移产出错误报表。请设计一套数据契约、质量检查和可观测性机制：哪些问题在写入前阻断，哪些允许隔离或降级，怎样定位影响范围并推动长期改进？",
+      "file": "data-quality/q.data-quality.contracts-observability.json"
+    },
+    {
+      "id": "q.distributed-systems.0d67c05a8185",
+      "status": "active",
+      "visibility": "public",
+      "topic": "distributed-systems",
+      "kind": "explanation",
+      "prompt": "为什么需要分布式系统？请从并行扩展、容错、地理分布和隔离性出发说明收益，再解释并发、部分失败、一致性与通信成本如何限制这些收益。设计系统时，你会如何在强一致性、可用性、吞吐量和恢复能力之间做取舍？",
+      "file": "system-design/q.distributed-systems.0d67c05a8185.json"
+    },
+    {
+      "id": "q.distributed-systems.d83ad8e9cbfb",
+      "status": "active",
+      "visibility": "public",
+      "topic": "distributed-systems",
+      "kind": "system-design",
+      "prompt": "以 GFS 风格的大文件存储系统为例，说明 Master 与 Chunk Server 如何分工，客户端读写为什么尽量绕过 Master，以及 Primary-Backup 复制如何保证多个副本以相同顺序执行写入。请同时讨论 lease、版本号、确认时机和故障切换。",
+      "file": "system-design/q.distributed-systems.d83ad8e9cbfb.json"
+    },
+    {
+      "id": "q.elasticsearch.84d2c09a713f",
+      "status": "active",
+      "visibility": "public",
+      "topic": "elasticsearch",
+      "kind": "scenario",
+      "prompt": "一个 Elasticsearch 集群执行高基数聚合时频繁 GC，查询延迟明显升高。你会如何检查 JVM heap、off-heap、page cache、fielddata/doc values、bucket 数和 circuit breaker，并在索引设计、聚合参数与节点资源之间调优？",
+      "file": "elasticsearch/q.elasticsearch.84d2c09a713f.json"
+    },
+    {
+      "id": "q.hadoop.71a30d9e4c26",
+      "status": "active",
+      "visibility": "public",
+      "topic": "hadoop",
+      "kind": "explanation",
+      "prompt": "请从 InputSplit 开始完整解释一个 MapReduce 作业直到输出文件落盘的过程，重点说明 Map 端 buffer、spill、sort、combiner、partition，Shuffle 拉取与归并，以及 Reduce 端执行。哪些阶段会产生磁盘 I/O？数据倾斜如何识别和缓解？",
+      "file": "hadoop/q.hadoop.71a30d9e4c26.json"
+    },
+    {
+      "id": "q.hadoop.d48f20a17c53",
+      "status": "active",
+      "visibility": "public",
+      "topic": "hadoop",
+      "kind": "explanation",
+      "prompt": "请结合 HDFS 架构解释客户端读写文件的完整路径：NameNode 与 DataNode 如何分工，Block、副本、Packet、Chunk Checksum、写入 Pipeline 和 ACK 队列如何协作。客户端、DataNode 或 NameNode 在写入时失败，lease、pipeline、block 与 HA 恢复分别怎样工作？",
+      "file": "hadoop/q.hadoop.d48f20a17c53.json"
+    },
+    {
+      "id": "q.hadoop.f2918bc640ae",
+      "status": "active",
+      "visibility": "public",
+      "topic": "hadoop",
+      "kind": "scenario",
+      "prompt": "一个 HDFS 集群有 n 台 DataNode，每台可用磁盘约 m TiB，默认副本因子为 r、Block 大小为 b。你会如何估算可用数据容量和 Block 数？为什么不能仅用 n*m/b/r 回答“最多能存多少个文件”，小文件又会带来什么限制？",
+      "file": "hadoop/q.hadoop.f2918bc640ae.json"
+    },
+    {
+      "id": "q.hive.30b9e6f12a74",
+      "status": "active",
+      "visibility": "public",
+      "topic": "hive",
+      "kind": "explanation",
+      "prompt": "请解释 Hive 的核心架构和一条 SQL 的执行路径，并比较 Managed Table 与 External Table 的生命周期。分区目录已经存在但 Metastore 中没有记录，或记录与文件系统不一致时，你会如何安全地同步和修复分区元数据？",
+      "file": "hive/q.hive.30b9e6f12a74.json"
+    },
+    {
+      "id": "q.iceberg.table-format-foundations",
+      "status": "active",
+      "visibility": "public",
+      "topic": "iceberg",
+      "kind": "explanation",
+      "prompt": "什么是 Apache Iceberg，它如何把对象存储或分布式文件系统中的不可变数据文件组织成一张支持事务和演进的分析表？请从 catalog、metadata JSON、snapshot、manifest list、manifest、data/delete files 的层级解释一次读取和一次写入，并说明 schema evolution、hidden partitioning、time travel、并发提交和 row-level update/delete 分别如何实现。",
+      "file": "iceberg/q.iceberg.table-format-foundations.json"
+    },
+    {
+      "id": "q.java.1f0c8a5cd168",
+      "status": "active",
+      "visibility": "public",
+      "topic": "java",
+      "kind": "scenario",
+      "prompt": "一个 Java 服务每次刷新内存中的 Map 后，操作系统看到的进程内存都会上升，但 GC 后 heap used 反而下降，Survivor/Eden/Old Gen 的 capacity 还会动态变化。你会如何判断这是内存泄漏、JVM 保留内存，还是 AdaptiveSizePolicy 的正常调整？",
+      "file": "os/q.java.1f0c8a5cd168.json"
+    },
+    {
+      "id": "q.java.3f8d61e204ba",
+      "status": "active",
+      "visibility": "public",
+      "topic": "java",
+      "kind": "explanation",
+      "prompt": "JVM 如何判断对象已经成为垃圾并完成回收？请比较引用计数与可达性分析，说明 GC Roots、分代假设和常见收集器，并重点比较 CMS 与 G1 的阶段、停顿、浮动垃圾、并发失败和适用场景。",
+      "file": "java/q.java.3f8d61e204ba.json"
+    },
+    {
+      "id": "q.java.5a2ef43c8b17",
+      "status": "active",
+      "visibility": "public",
+      "topic": "java",
+      "kind": "scenario",
+      "prompt": "多个线程需要高并发读写同一个 Map。请比较 Hashtable、Collections.synchronizedMap 和 ConcurrentHashMap，并解释 Java 8+ ConcurrentHashMap 如何通过 volatile、CAS、桶级同步和协助扩容保证线程安全。哪些复合操作仍需要 compute、merge 或额外协调？",
+      "file": "java/q.java.5a2ef43c8b17.json"
+    },
+    {
+      "id": "q.java.6de9418a2c7f",
+      "status": "active",
+      "visibility": "public",
+      "topic": "java",
+      "kind": "explanation",
+      "prompt": "请从源码思路解释 Java 8+ HashMap 的数据结构以及 put/get 流程：hash 如何计算、数组下标如何定位、碰撞如何处理、何时扩容、链表何时树化或退化。equals/hashCode 的实现质量会怎样影响正确性和性能？",
+      "file": "java/q.java.6de9418a2c7f.json"
+    },
+    {
+      "id": "q.java.ba242c599d32",
+      "status": "active",
+      "visibility": "public",
+      "topic": "java",
+      "kind": "scenario",
+      "prompt": "Java Web 服务的进程仍然存活、CPU 不高，但请求全部无响应。你会如何从线程转储开始定位问题？如果多次 jstack 都显示所有 selector 线程长期停在同一 RUNNABLE 栈帧，你会怎样验证它是应用死锁、I/O 事件循环卡死，还是框架版本缺陷？",
+      "file": "os/q.java.ba242c599d32.json"
+    },
+    {
+      "id": "q.java.c9e52d74a018",
+      "status": "active",
+      "visibility": "public",
+      "topic": "java",
+      "kind": "scenario",
+      "prompt": "你要为一个突发流量明显、任务耗时不稳定的 Java 服务配置 ThreadPoolExecutor。请解释 corePoolSize、maximumPoolSize、keepAliveTime、workQueue、ThreadFactory 和 RejectedExecutionHandler 如何共同决定行为，并给出容量估算、背压、监控与优雅关闭方案。",
+      "file": "java/q.java.c9e52d74a018.json"
+    },
+    {
+      "id": "q.java.d2470ea9b531",
+      "status": "active",
+      "visibility": "public",
+      "topic": "java",
+      "kind": "scenario",
+      "prompt": "怎样判断一段 Java 代码是否线程安全，并选择合适的实现方式？请从共享可变状态、原子性、可见性和有序性出发，比较不可变对象、线程封闭、锁、volatile、原子类和并发容器的适用边界。",
+      "file": "java/q.java.d2470ea9b531.json"
+    },
+    {
+      "id": "q.kafka.delivery-reprocessing",
+      "status": "active",
+      "visibility": "public",
+      "topic": "kafka",
+      "kind": "system-design",
+      "prompt": "请设计一个消费 Kafka 事件并写入数据湖或数据库的管道。你会如何处理 offset、重试、重复、乱序、毒消息、consumer rebalance 和历史重放？请准确说明 at-most-once、at-least-once 与 end-to-end exactly-once 分别需要什么条件。",
+      "file": "kafka/q.kafka.delivery-reprocessing.json"
+    },
+    {
+      "id": "q.kafka.partitioning-ordering",
+      "status": "active",
+      "visibility": "public",
+      "topic": "kafka",
+      "kind": "scenario",
+      "prompt": "一个 Kafka topic 承载用户行为事件，要求同一用户有序、可以水平扩展，并避免热点用户拖慢全局。你会如何设计 message key、partition 数、副本和生产者确认策略？扩分区或 key 分布变化会带来哪些正确性与运维影响？",
+      "file": "kafka/q.kafka.partitioning-ordering.json"
+    },
+    {
+      "id": "q.linux.8bc7e2a4d190",
+      "status": "active",
+      "visibility": "public",
+      "topic": "linux",
+      "kind": "scenario",
+      "prompt": "一台运行 Java 数据服务的 Linux 机器负载突然升高。你会按什么顺序判断问题来自 CPU、运行队列、内存/Swap、磁盘 I/O、网络还是 JVM？请给出会使用的 Linux/JDK 命令、关键指标、进程与线程关联方法，并补充脚本中判断文件存在和安全替换文本的写法。",
+      "file": "linux/q.linux.8bc7e2a4d190.json"
+    },
+    {
+      "id": "q.python.ee452f006c7b",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "explanation",
+      "prompt": "在以 CPython 为主的数据处理服务中，GIL 是什么，它保护了什么，又没有保护什么？请比较 CPU 密集与 I/O 密集任务下线程、多进程、异步 I/O 和原生扩展的选择，并说明你会如何验证瓶颈确实来自 GIL。",
+      "file": "python/q.python.ee452f006c7b.json"
+    },
+    {
+      "id": "q.redis.0e1f6a9c3b72",
+      "status": "active",
+      "visibility": "public",
+      "topic": "redis",
+      "kind": "scenario",
+      "prompt": "为计数器、排行榜、消息消费和对象缓存选择 Redis 数据结构时，你会怎样在 String、Hash、List、Set、Sorted Set 和 Stream 之间取舍？如果要求主节点故障后自动切换，请解释 Sentinel 的监控、主观/客观下线、选主和客户端重定向，并说明它不解决哪些问题。",
+      "file": "redis/q.redis.0e1f6a9c3b72.json"
+    },
+    {
+      "id": "q.soft-skill.7d02ecd6ccdd",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "当你没有正式职权，却需要推动一个与你意见不同的团队接受方案时，你会如何使用倾听、同理心、好奇心、故事和谈判来形成共同决定？请给出一个具体经历，并说明你怎样做到清晰坚定但不攻击对方。",
+      "file": "soft-skill/q.soft-skill.7d02ecd6ccdd.json"
+    },
+    {
+      "id": "q.soft-skill.f6ae997e45a3",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "你接到一个范围复杂、信息不完整、要求 10 天上线的数据项目。你会如何拆解这 10 天？请说明如何澄清目标、识别风险、切出可交付的最小范围、安排设计与实现、持续同步，并在发现无法按原范围交付时如何处理。",
+      "file": "soft-skill/q.soft-skill.f6ae997e45a3.json"
+    },
+    {
+      "id": "q.spark.0be84c49d2ca",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "请详细阐述 Spark Tungsten 引擎的 Whole-Stage Code Generation（全阶段代码生成）技术。这个技术是如何工作的？它解决了哪些传统 JVM 模型的性能瓶颈？请尽量结合 JVM 字节码和 CPU 缓存等底层机制进行解释。",
+      "file": "spark/q.spark.0be84c49d2ca.json"
+    },
+    {
+      "id": "q.spark.1fb86bac7d3e",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "在 Spark SQL 中，一个 SQL 语句或 DataFrame API 调用会经历一个复杂的执行计划优化过程。请详细阐述 Catalyst 优化器是如何将一个逻辑计划（Logical Plan）逐步转换和优化为物理计划（Physical Plan）的？你能描述一下这个过程中几个关键的优化阶段（如规则匹配、成本模型）吗？请尽可能结合源码中的关键类和概念进行说明。",
+      "file": "spark/q.spark.1fb86bac7d3e.json"
+    },
+    {
+      "id": "q.spark.22862e4ea305",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "scenario",
+      "prompt": "一个 Spark 作业从 5 分钟退化到 45 分钟。请给出一套可重复的诊断流程：如何复现、收集 Spark UI/日志/指标、缩小问题范围、比较逻辑与物理计划、验证修复，并避免只靠反复改配置碰运气？",
+      "file": "spark/q.spark.22862e4ea305.json"
+    },
+    {
+      "id": "q.spark.37ac819e6f02",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "Spark RDD 的 Transformation 与 Action 有什么区别？请解释惰性求值、lineage、DAG 和 Job 触发关系，并说明为什么 cache/persist 本身不是 Action，以及重复 Action、宽依赖和副作用代码会带来什么影响。",
+      "file": "spark/q.spark.37ac819e6f02.json"
+    },
+    {
+      "id": "q.spark.3c26070ac1c9",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "concept",
+      "prompt": "请详细阐述 Spark 中的数据倾斜（Data Skew） 是什么？为什么会发生？你作为一名资深工程师，有哪些行之有效的方法来检测和解决数据倾斜问题？请尽量从实际案例和工程实践的角度来回答。",
+      "file": "spark/q.spark.3c26070ac1c9.json"
+    },
+    {
+      "id": "q.spark.535119bf3b67",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "system-design",
+      "prompt": "在实际生产环境中，Spark Streaming 和 Structured Streaming 是两种处理流数据的技术。请详细阐述这两种技术的核心设计思想、编程模型、容错机制和执行效率上的区别。你认为在什么场景下应该选择哪种技术？",
+      "file": "spark/q.spark.535119bf3b67.json"
+    },
+    {
+      "id": "q.spark.72f0be3a914d",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "scenario",
+      "prompt": "同一条批处理数据链路既可以用 Hadoop MapReduce，也可以用 Spark。你会如何从执行模型、DAG 表达能力、中间结果物化、迭代计算、容错、资源与运维成本来选择？请给出一个 Spark 更合适和一个 MapReduce 仍可能合理的场景。",
+      "file": "spark/q.spark.72f0be3a914d.json"
+    },
+    {
+      "id": "q.spark.85bf856034cf",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "从源码角度，详细阐述一下 Spark 的 宽窄依赖 (Wide vs. Narrow Dependencies) 机制。宽窄依赖是如何影响 Spark 的任务调度和容错性的？请尽量结合源码中的关键类和方法进行说明。",
+      "file": "spark/q.spark.85bf856034cf.json"
+    },
+    {
+      "id": "q.spark.8c76713ff503",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "请详细阐述 Spark 中的内存管理。具体来说，请解释 Unified Memory Management（统一内存管理） 的设计思想。它将 执行内存（Execution Memory）和存储内存（Storage Memory）是如何进行动态平衡的？这种设计解决了哪些问题？",
+      "file": "spark/q.spark.8c76713ff503.json"
+    },
+    {
+      "id": "q.spark.9c65eca344e2",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "scenario",
+      "prompt": "一个按 event time 做窗口聚合的流式作业会收到乱序和迟到事件。请区分 event time、arrival/ingestion time 与 processing time，解释 watermark 如何表达事件时间进度以及它与状态清理、output mode 或 trigger 的关系。然后设计一套处理方案，分别说明 watermark 之前、可接受迟到范围内、超过最终迟到阈值以及消息处理失败时应该怎样处理，并重点解释 side output、DLQ、幂等修正、replay/backfill 各自解决什么问题。",
+      "file": "spark/q.spark.9c65eca344e2.json"
+    },
+    {
+      "id": "q.spark.9e28a43e64f7",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "Spark 3 的 AQE 如何利用运行时统计重新优化物理计划？请解释分区合并、倾斜 Join 优化和 Join 策略切换的触发条件与收益，并说明 DPP 如何把维表过滤条件传导到事实表以减少扫描。",
+      "file": "spark/q.spark.9e28a43e64f7.json"
+    },
+    {
+      "id": "q.spark.a2e6e3577f1c",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "能详细谈谈 Spark 调度（Scheduling） 的全过程吗？请从一个 Job 提交开始，直到 Tasks 在 Executor 上执行，深入剖析这其中涉及的各个组件（如 DAGScheduler、TaskScheduler、SchedulerBackend 等）是如何协同工作的，并且阐述它们各自的核心职责。",
+      "file": "spark/q.spark.a2e6e3577f1c.json"
+    },
+    {
+      "id": "q.spark.e2d23ccd90d1",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "PySpark 作业中，Driver 侧的 Python API、Py4J、JVM SparkContext、Executor 上的 Python worker 和 Catalyst 是如何协作的？普通 Python UDF、Pandas UDF 与原生 Spark SQL 表达式的数据传输和执行成本有什么区别，Apache Arrow 为什么能降低跨语言开销？",
+      "file": "spark/q.spark.e2d23ccd90d1.json"
+    },
+    {
+      "id": "q.spark.e4f842352f82",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "scenario",
+      "prompt": "给定每个节点的 CPU、内存和实例单价，你会怎样设计一组成本有效的 Spark executor 配置，并证明成本下降没有以吞吐量或稳定性为代价？请讨论 executor 数、cores、memory、memoryOverhead、driver、shuffle partitions 与 dynamic allocation。",
+      "file": "spark/q.spark.e4f842352f82.json"
+    },
+    {
+      "id": "q.spark.ffd6ef1303d3",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "scenario",
+      "prompt": "你要用 Spark 读取大量来自同一张 3000 列宽表的 Parquet 文件，作业在真正扫描数据前就很慢。你会如何验证是否由 schema merging 引起，并决定 spark.sql.parquet.mergeSchema 应该开启还是关闭？",
+      "file": "spark/q.spark.ffd6ef1303d3.json"
+    },
+    {
+      "id": "q.sql.7ab69acb4a1e",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 employee(employee_id, department_id, salary)，请写 SQL 返回每个部门薪资排名前三的员工。先明确同薪并列时的产品语义，再分别说明需要恰好三行和需要保留并列第三名时应使用什么窗口函数。",
+      "file": "sql/q.sql.7ab69acb4a1e.json"
+    },
+    {
+      "id": "q.sql.7fcdc6255018",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "explanation",
+      "prompt": "请解释 SQL 窗口函数的语义和执行方式。PARTITION BY、ORDER BY 与 window frame 分别控制什么？它与 GROUP BY 有什么本质区别？请用排名、累计值或滑动窗口举例，并说明常见的正确性与性能陷阱。",
+      "file": "sql/q.sql.7fcdc6255018.json"
+    },
+    {
+      "id": "q.sql.average-adjacent-transaction-interval",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 transactions(trans_id, user_id, trans_date, amount)，样例数据为 (1,1,'2024-01-01',100)、(2,1,'2024-01-05',200)、(3,1,'2024-02-01',150)、(4,2,'2024-01-10',300)、(5,2,'2024-02-05',100)、(6,2,'2024-02-10',250)、(7,3,'2024-01-20',400)、(8,3,'2024-02-20',100)。请写 SQL 计算每个用户相邻两次交易之间的平均间隔天数，只返回至少有两次交易的用户，输出 user_id、avg_interval_days 并四舍五入到两位小数。按通常的日期差定义，期望结果为 (1,15.50)、(2,15.50)、(3,31.00)。",
+      "file": "sql/q.sql.average-adjacent-transaction-interval.json"
+    },
+    {
+      "id": "q.sql.conditional-aggregation-pivot",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 monthly_sales(product_id, month, revenue)，其中 month 只取 1、2、3。样例数据为 (100,1,100.00)、(100,2,150.00)、(100,3,200.00)、(200,1,80.00)、(200,2,120.00)、(200,3,90.00)。请写 SQL 把月份行转换为 m1、m2、m3 三列，每个 product_id 输出一行；期望结果为产品 100 对应 100、150、200，产品 200 对应 80、120、90。",
+      "file": "sql/q.sql.conditional-aggregation-pivot.json"
+    },
+    {
+      "id": "q.sql.consecutive-login-intervals",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 logins(user_id, login_date)，样例数据为用户 1 在 2024-01-01、01-02、01-04、01-05、01-06 登录，用户 2 在 01-01、01-02、01-03、01-05 登录，用户 3 在 01-03、01-04 登录。请写 SQL 返回每个用户的所有连续登录区间，连续指相邻自然日相差 1 天。输出 user_id、start_date、end_date、length，按 user_id、start_date 升序；期望区间为用户 1 的 01-01 至 01-02 和 01-04 至 01-06，用户 2 的 01-01 至 01-03 和单日 01-05，用户 3 的 01-03 至 01-04。同一用户同一天可能有重复记录，应先按自然日去重。",
+      "file": "sql/q.sql.consecutive-login-intervals.json"
+    },
+    {
+      "id": "q.sql.cumulative-revenue",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 sales(sale_id, product_id, sale_date, quantity, price)，样例数据为 (1,100,'2024-01-01',2,10.00)、(2,100,'2024-01-05',1,10.00)、(3,100,'2024-02-01',3,10.00)、(4,200,'2024-01-03',5,20.00)、(5,200,'2024-02-02',2,20.00)、(6,200,'2024-02-10',4,20.00)、(7,300,'2024-01-10',1,30.00)、(8,300,'2024-03-01',2,30.00)。请写 SQL 按 sale_date 升序计算每个产品的累计销售额，销售额为 quantity * price，输出 product_id、sale_date、cumulative_revenue。还需说明同一产品同一天有多条记录时的结果语义。",
+      "file": "sql/q.sql.cumulative-revenue.json"
+    },
+    {
+      "id": "q.sql.customer-product-count-and-spend",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 customers(customer_id, customer_name)、orders(order_id, customer_id, order_date) 和 order_items(order_id, product_id, quantity, unit_price)。样例中 Alice 的两笔订单包含 p1:2*100、p2:1*150、p3:1*200；Bob 购买 p1:1*100、p2:2*100；Carol 购买 p1:3*100、p2:1*200。请写 SQL 找出购买至少 3 种不同产品且总消费金额大于 500 的客户，输出 customer_id、customer_name、total_spent、distinct_products_count，并按 total_spent 降序。期望结果只有 Alice，total_spent 为 550，distinct_products_count 为 3。",
+      "file": "sql/q.sql.customer-product-count-and-spend.json"
+    },
+    {
+      "id": "q.sql.department-top-salary-ties",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 employees(emp_id, emp_name, dept_id, salary)，样例数据为 (1,'Alice',10,9000)、(2,'Bob',10,8000)、(3,'Carol',10,9500)、(4,'Dave',20,7000)、(5,'Eve',20,7200)、(6,'Frank',20,7200)、(7,'Grace',30,6000)、(8,'Heidi',30,6100)。请写 SQL 返回每个部门薪资最高的全部员工，最高薪资并列时全部保留。输出 dept_id、emp_name、salary；期望结果包括 Carol，Eve 与 Frank，以及 Heidi。",
+      "file": "sql/q.sql.department-top-salary-ties.json"
+    },
+    {
+      "id": "q.sql.employee-manager-self-join",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 employees(emp_id, emp_name, manager_id, salary)，其中 manager_id 引用同表的 emp_id。样例数据为 (1,'Alice',NULL,10000)、(2,'Bob',1,8000)、(3,'Carol',1,12000)、(4,'Dave',2,9000)、(5,'Eve',2,11000)、(6,'Frank',3,7000)。请写 SQL 找出薪资高于直属经理的员工，输出 emp_name、salary、manager_salary；期望结果为 Carol、Dave、Eve。",
+      "file": "sql/q.sql.employee-manager-self-join.json"
+    },
+    {
+      "id": "q.sql.first-last-order-interval",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 orders(order_id, customer_id, order_date, amount)，样例中客户 1 的订单日期为 2024-01-01、2024-01-10、2024-02-01，客户 2 为 2024-01-05、2024-01-15、2024-02-05，客户 3 为 2024-01-20、2024-02-01、2024-03-01。请写 SQL 返回每个客户第一次订单日期、最后一次订单日期及二者相隔天数，输出 customer_id、first_order_date、last_order_date、days_between，按 customer_id 升序。客户只有一次订单时 days_between 为 0；样例期望间隔为 31、31、41。",
+      "file": "sql/q.sql.first-last-order-interval.json"
+    },
+    {
+      "id": "q.sql.incremental-deduplication",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "一张增量事件表 events(event_id, entity_id, event_time, ingest_time, operation, payload) 可能重复、乱序并包含更新与删除。请用 SQL 产出每个 entity 的最新有效状态，并说明你的去重顺序、迟到数据、相同时间戳、增量重跑和幂等策略。",
+      "file": "sql/q.sql.incremental-deduplication.json"
+    },
+    {
+      "id": "q.sql.max-consecutive-login-days",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 logins(user_id, login_date)，样例数据为用户 1 在 2024-01-01、01-02、01-04、01-05、01-06 登录，用户 2 在 01-01、01-02、01-03、01-05 登录，用户 3 在 01-03、01-04 登录。请写 SQL 计算每个用户连续登录的最大天数，输出 user_id、max_consecutive_days；期望结果分别为 3、3、2。同一用户同一天可能存在重复登录记录，应按自然日去重。",
+      "file": "sql/q.sql.max-consecutive-login-days.json"
+    },
+    {
+      "id": "q.sql.monthly-threshold-conditional-aggregation",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 orders(order_id, customer_id, order_date, total_amount)，样例数据为 (1,101,'2024-01-05',120.50)、(2,102,'2024-01-06',80.00)、(3,101,'2024-01-10',200.00)、(4,103,'2024-01-12',45.00)、(5,102,'2024-01-15',150.00)、(6,101,'2024-02-01',300.00)、(7,103,'2024-02-05',95.00)、(8,102,'2024-02-10',210.00)。请写 SQL 找出 2024 年 1 月和 2 月的订单总金额分别都大于 150 的客户，输出 customer_id；期望结果为 101、102。order_date 可能是包含时间的 timestamp。",
+      "file": "sql/q.sql.monthly-threshold-conditional-aggregation.json"
+    },
+    {
+      "id": "q.sql.never-purchased-product",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 customers(customer_id, customer_name)，样例为 (1,'Alice')、(2,'Bob')、(3,'Carol')、(4,'Dave')；orders(order_id, customer_id)，样例为 (101,1)、(102,1)、(103,2)、(104,3)；order_items(order_id, product_id)，其中 Alice 买过 p1、p2、p3，Bob 只买过 p2，Carol 买过 p1、p3，Dave 没有订单。请写 SQL 找出从未购买过产品 p1 的客户，输出 customer_id、customer_name；期望结果为 Bob 和 Dave。",
+      "file": "sql/q.sql.never-purchased-product.json"
+    },
+    {
+      "id": "q.sql.query-plan-optimization",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "scenario",
+      "prompt": "一条原本 10 分钟完成的分析 SQL 变成 90 分钟。请给出从结果正确性、数据变化、统计信息和执行计划入手的诊断流程，并说明如何判断瓶颈来自扫描、过滤、Join、聚合、排序、数据倾斜还是资源竞争。",
+      "file": "sql/q.sql.query-plan-optimization.json"
+    },
+    {
+      "id": "q.sql.top-product-by-customer-with-ties",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "给定 orders(order_id, customer_id)，样例为 (101,1)、(102,1)、(103,2)、(104,2)、(105,2)、(106,3)；order_items(order_id, product_id, quantity)，样例为 (101,'p1',5)、(101,'p2',3)、(102,'p1',2)、(102,'p3',4)、(103,'p1',5)、(103,'p2',5)、(104,'p1',6)、(104,'p2',6)、(105,'p3',1)、(106,'p1',1)。请写 SQL 返回每位客户购买总数量最多的产品，并保留并列第一。输出 customer_id、product_id、total_quantity，按 customer_id、product_id 升序。期望结果为 (1,p1,7)、(2,p1,11)、(2,p2,11)、(3,p1,1)。",
+      "file": "sql/q.sql.top-product-by-customer-with-ties.json"
+    },
+    {
+      "id": "q.system-design.831963b717f1",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "system-design",
+      "prompt": "请设计一个面向多业务数据源的生产级 ETL/ELT 平台。先澄清规模、时效、数据质量和 SLA，再给出摄取、编排、计算、存储、元数据、可观测性与发布架构。最后按优先级说明：如果你指导团队从 MVP 演进到稳定平台，会先保证什么，后建设什么，为什么？",
+      "file": "system-design/q.system-design.831963b717f1.json"
+    }
+  ]
+}

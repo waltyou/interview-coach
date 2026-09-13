@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.hadoop.f2918bc640ae",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "hadoop",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "big-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一个 HDFS 集群有 n 台 DataNode，每台可用磁盘约 m TiB，默认副本因子为 r、Block 大小为 b。你会如何估算可用数据容量和 Block 数？为什么不能仅用 n*m/b/r 回答“最多能存多少个文件”，小文件又会带来什么限制？",
+  "rubric": [
+    "原始磁盘容量约为 n*m，考虑操作系统预留、水位和非 HDFS 占用后得到可用物理容量",
+    "逻辑数据容量近似为可用物理容量除以有效副本因子，但纠删码和不同副本策略会改变估算",
+    "Block 数需考虑文件尾块通常未填满，因此不能直接等同于容量除以 Block 大小",
+    "文件数量取决于平均文件大小，而不是只由 Block 大小决定",
+    "NameNode 内存中的 inode、Block 和副本元数据常成为海量小文件场景的主要约束",
+    "说明机架、副本放置、坏盘、再平衡空间和容量异质性会使简单公式产生偏差"
+  ],
+  "hints": [
+    "先区分物理容量、逻辑数据容量、Block 数和文件数。",
+    "一个 1 KiB 文件也会占用一个文件 inode 和至少一个 Block 元数据记录。"
+  ],
+  "follow_ups": [
+    "纠删码会如何改变容量利用率和恢复成本？",
+    "有哪些办法缓解 HDFS 小文件问题？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.8c76713ff503",
+  "revision": 2,
+  "status": "active",
+  "topic": "spark",
+  "kind": "explanation",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer",
+    "spark-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "请详细阐述 Spark 中的内存管理。具体来说，请解释 Unified Memory Management（统一内存管理） 的设计思想。它将 执行内存（Execution Memory）和存储内存（Storage Memory）是如何进行动态平衡的？这种设计解决了哪些问题？",
+  "rubric": [
+    "区分 JVM heap、off-heap、memory overhead 和进程总内存，避免只讨论 executor heap",
+    "说明 Unified Memory Manager 在可用堆内划分 execution 与 storage 共享区域，并允许双方按规则借用空间",
+    "解释 execution 内存用于 shuffle、join、sort、aggregation，storage 内存用于 cache 与广播等数据",
+    "说明 execution 可以驱逐借用区域中的缓存块，而 storage 不能驱逐正在使用的 execution 内存这一不对称关系",
+    "把 spill、频繁 GC、缓存淘汰、容器被杀和 OOM 等现象映射到不同内存区域与诊断信号",
+    "能基于 workload 选择序列化、分区、缓存级别、算法、executor sizing 或 memoryOverhead 等改进，而不是只增大内存"
+  ],
+  "hints": [
+    "先画出 executor 进程内外的内存边界。",
+    "再回答 execution 和 storage 谁能借谁、谁能驱逐谁。"
+  ],
+  "follow_ups": [
+    "executor heap 看起来充足但容器仍被 YARN 或 Kubernetes 杀掉，可能是什么原因？",
+    "大量缓存是否一定能提升性能？你会如何验证缓存的收益？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00",
+  "visibility": "public"
+}

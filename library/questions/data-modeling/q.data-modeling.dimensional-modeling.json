@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.data-modeling.dimensional-modeling",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "data-modeling",
+  "kind": "system-design",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请为一个电商分析场景设计维度模型，支持订单金额、转化率、复购和按商品、用户、地区、渠道的历史分析。你会如何确定业务过程与事实表粒度，区分事实和维度，处理多币种、退货、迟到事实以及 Slowly Changing Dimension？",
+  "rubric": [
+    "从业务过程、指标定义和查询需求出发，先明确订单、订单行、支付或退货等事实表的粒度",
+    "区分可加、半可加和不可加指标，避免在不同粒度事实之间直接连接造成重复计算",
+    "设计日期、商品、用户、地区、渠道等一致性维度，以及业务键、代理键和未知成员",
+    "说明 SCD Type 1、Type 2 等策略的语义，并根据历史追溯需求选择而不是一律保留全部版本",
+    "处理多币种口径、取消与退货、迟到维度/事实、去重和重算，保证指标随时间仍可解释",
+    "讨论宽表、星型模型和 Data Vault 等方案在易用性、变更成本、性能与治理上的取舍"
+  ],
+  "hints": [
+    "先写一句事实表一行代表什么。",
+    "任何可聚合指标都要检查它是否与当前粒度一致。"
+  ],
+  "follow_ups": [
+    "用户所属地区发生变化时，历史订单应该归到旧地区还是新地区？",
+    "订单行和支付是一对多关系时，如何避免金额被重复统计？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-23T15:08:30+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00"
+}

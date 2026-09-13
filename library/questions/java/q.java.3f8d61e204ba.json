@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.java.3f8d61e204ba",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "java",
+  "kind": "explanation",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer",
+    "java-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "JVM 如何判断对象已经成为垃圾并完成回收？请比较引用计数与可达性分析，说明 GC Roots、分代假设和常见收集器，并重点比较 CMS 与 G1 的阶段、停顿、浮动垃圾、并发失败和适用场景。",
+  "rubric": [
+    "说明垃圾来自对象生命周期结束后仍占用内存，并解释自动回收的目标与成本",
+    "比较引用计数的循环引用问题与从 GC Roots 出发的可达性分析",
+    "列举线程栈、静态字段、JNI 引用等典型 GC Roots",
+    "理解 Serial、Parallel、CMS、G1 等收集器的定位和分代/区域化思路",
+    "描述 CMS 的初始标记、并发标记、重新标记和并发清除，以及浮动垃圾和 concurrent mode failure",
+    "描述 G1 的 Region、Remembered Set、并发标记、Mixed GC 和暂停目标，并比较它与 CMS 的权衡"
+  ],
+  "hints": [
+    "先回答“谁还可能访问这个对象”。",
+    "区分并发阶段和必须 Stop-The-World 的阶段。"
+  ],
+  "follow_ups": [
+    "CMS 失败后为什么可能退化为 Serial Old？",
+    "G1 的暂停时间目标是否是硬保证？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

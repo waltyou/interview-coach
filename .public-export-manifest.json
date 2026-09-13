@@ -1,0 +1,737 @@
+{
+  "schema_version": 1,
+  "generator": "scripts/export_public.py",
+  "content_sha256": "72ad1ba1d7c50fa95eecee665c6e9b069ff62fd88d9d0b540c2e42191861d63b",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "61fa691ffb01c2c960309161fae0077dcd28c4008883dd98cb1078bbb7bd24bd",
+      "size_bytes": 148
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "0373c70630060f6c2661d211d9cc1b3009acf2c6477415370d09c56eb575bfae",
+      "size_bytes": 5547
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "06e9917ebc78c50af7d0126076b38f553189cfb942e70af9fe7f1c808a7472be",
+      "size_bytes": 1086
+    },
+    {
+      "path": "README.md",
+      "sha256": "1bcb4184a42cd67d1e3a2ef9ee293f87fd78593ecc547c65643abf57adeb7eb1",
+      "size_bytes": 5696
+    },
+    {
+      "path": "dashboard/README.md",
+      "sha256": "4d24baf6e4a011ff668af614b8a1c42adb168079ee24c622c8eecf19632dbfad",
+      "size_bytes": 758
+    },
+    {
+      "path": "dashboard/review-template.html",
+      "sha256": "5fccc66ca0f5ace784c0e3eabfa4c6c6090d16e463850f930b217525cab5f164",
+      "size_bytes": 15523
+    },
+    {
+      "path": "dashboard/template.html",
+      "sha256": "ae1a24336adf483d52ea2951fc1ee787310f93d1b0c6ea014479b7ae20fc92e0",
+      "size_bytes": 49571
+    },
+    {
+      "path": "docs/HANDBOOK.md",
+      "sha256": "cc3fc75e9ef53b5563c81883ba35d9a3e1a34a0f1ed8d9ca85d98fd12ee3e866",
+      "size_bytes": 8193
+    },
+    {
+      "path": "library/questions/algorithm/q.algorithm.22be7a8d061f.json",
+      "sha256": "2a0b43f991459cbb39f02d74dd15b65d9cec85eaccc17933500c106568875e8a",
+      "size_bytes": 1521
+    },
+    {
+      "path": "library/questions/algorithm/q.algorithm.58cf31a9e620.json",
+      "sha256": "fba4eb8aa1c32ed2e749a492730430dcf23bab229980c19eab43375dfc66fe0f",
+      "size_bytes": 1458
+    },
+    {
+      "path": "library/questions/algorithm/q.algorithm.73c981e40a2d.json",
+      "sha256": "1902e0ab12a5027804ed934938d4f05371648b69afbd33cd336c92194275ac6b",
+      "size_bytes": 1299
+    },
+    {
+      "path": "library/questions/big-data-architecture/q.big-data-architecture.8f3e589a35db.json",
+      "sha256": "153dd3fb1fc8437ed3bf3cbdfe5f8b623adea792b42cfa56b1722905d41284dd",
+      "size_bytes": 1939
+    },
+    {
+      "path": "library/questions/big-data-architecture/q.big-data-architecture.warehouse-lake-lakehouse.json",
+      "sha256": "1cd4cc6adec909e1090743151031b00ee11ddcc8be73b24e49739e0d916f43da",
+      "size_bytes": 2190
+    },
+    {
+      "path": "library/questions/data-modeling/q.data-modeling.dimensional-modeling.json",
+      "sha256": "51408539238e0685cbafe754188ffdf501f802918e19caf9cc72578aee44b15b",
+      "size_bytes": 1894
+    },
+    {
+      "path": "library/questions/data-quality/q.data-quality.contracts-observability.json",
+      "sha256": "15f5c5744aef60e8e0ce23617c9ef10930cac8ae0b3d420f024365ba0320fd9d",
+      "size_bytes": 1944
+    },
+    {
+      "path": "library/questions/elasticsearch/q.elasticsearch.84d2c09a713f.json",
+      "sha256": "8d965511ed4dab906589abbc7aa11f5295d91eaa46864b7ee2adb79beb9fb0ab",
+      "size_bytes": 1766
+    },
+    {
+      "path": "library/questions/hadoop/q.hadoop.71a30d9e4c26.json",
+      "sha256": "8565a74d9042b28467bb42bde2e72af3f6cfdd8c6e6ef1d5fefc141188f9007e",
+      "size_bytes": 1806
+    },
+    {
+      "path": "library/questions/hadoop/q.hadoop.d48f20a17c53.json",
+      "sha256": "5444c0a50f1db1d97376fd6971740fcbc4efcbc6e11c8da22a2edf5abd4bae6b",
+      "size_bytes": 1842
+    },
+    {
+      "path": "library/questions/hadoop/q.hadoop.f2918bc640ae.json",
+      "sha256": "550314c1179a0907c44a03cf9fa389652cd4c3259bdd6f872d5d9437b51698a6",
+      "size_bytes": 1782
+    },
+    {
+      "path": "library/questions/hive/q.hive.30b9e6f12a74.json",
+      "sha256": "ee86b7ea889defa37a6988bc95d068604668ab80a3e49dcbd0eef462993e99ee",
+      "size_bytes": 1750
+    },
+    {
+      "path": "library/questions/iceberg/q.iceberg.table-format-foundations.json",
+      "sha256": "377052b8891e722b26f8a95eccaf5e3b04b1685154a0126f5a98d8da568ab54e",
+      "size_bytes": 2608
+    },
+    {
+      "path": "library/questions/index.json",
+      "sha256": "69a6e48ceee2d9596beb3eca21e6c13f64378409b9a6213abbf8438102aa5e41",
+      "size_bytes": 34492
+    },
+    {
+      "path": "library/questions/java/q.java.3f8d61e204ba.json",
+      "sha256": "137231d6576b86676b2f60ca2e3205e6829b735253ca003dc72a41b8d18049b5",
+      "size_bytes": 1639
+    },
+    {
+      "path": "library/questions/java/q.java.5a2ef43c8b17.json",
+      "sha256": "9fbd168da674f0459c6f161046ebcb3151b8346a6d293057e910912aa2b96cdd",
+      "size_bytes": 1594
+    },
+    {
+      "path": "library/questions/java/q.java.6de9418a2c7f.json",
+      "sha256": "9230cf08856370159246a37b2eea7fc9e9e03dfedc03308c6189780efd4ab23c",
+      "size_bytes": 1514
+    },
+    {
+      "path": "library/questions/java/q.java.c9e52d74a018.json",
+      "sha256": "1e5f83df2beed18ed23c5a87f744bf7b17f24923b3cebd0b8b527e55b2d7fc1e",
+      "size_bytes": 1711
+    },
+    {
+      "path": "library/questions/java/q.java.d2470ea9b531.json",
+      "sha256": "b1745b37e8c500ef5ad89ddddbfebc267b29359e0e00ee5e70c2a800dc4ed7fc",
+      "size_bytes": 1529
+    },
+    {
+      "path": "library/questions/kafka/q.kafka.delivery-reprocessing.json",
+      "sha256": "73b7ea0f04fd37f0b5349d55cbe20d0cdabf8786c08ac7b0022271afd83a04f4",
+      "size_bytes": 1894
+    },
+    {
+      "path": "library/questions/kafka/q.kafka.partitioning-ordering.json",
+      "sha256": "1bb71455afa25bf073fb9770752ab7d814e33f977fe975c437f7edf84b56858f",
+      "size_bytes": 1915
+    },
+    {
+      "path": "library/questions/linux/q.linux.8bc7e2a4d190.json",
+      "sha256": "051dc5d0ca8910af7158382227b10c0cd834ae9bdc3abbe3ad0adcc7f7591f4f",
+      "size_bytes": 1741
+    },
+    {
+      "path": "library/questions/os/q.java.1f0c8a5cd168.json",
+      "sha256": "49b99b4ba2b157f40ec2010407c3b6a5a80d4d7364509b4fb7b4920cb25aa7f0",
+      "size_bytes": 1597
+    },
+    {
+      "path": "library/questions/os/q.java.ba242c599d32.json",
+      "sha256": "11e958db155720f5c877df8b544cc759e4330c8637707092cd47501c5a8202c1",
+      "size_bytes": 1562
+    },
+    {
+      "path": "library/questions/python/q.python.ee452f006c7b.json",
+      "sha256": "ad6f05fc0e72d18319cb04de4c22938091ce6185ccd15dc97fa427a3debc217f",
+      "size_bytes": 1931
+    },
+    {
+      "path": "library/questions/redis/q.redis.0e1f6a9c3b72.json",
+      "sha256": "fc2fbc3638122b5fd0f0dad5680dd2a9416c504051cde86243234441c9eaeba8",
+      "size_bytes": 1732
+    },
+    {
+      "path": "library/questions/soft-skill/q.soft-skill.7d02ecd6ccdd.json",
+      "sha256": "5c205a0eb35bcaf9710112a65eda1a829ed2e5c3b998f92dda788baec02be0c2",
+      "size_bytes": 1588
+    },
+    {
+      "path": "library/questions/soft-skill/q.soft-skill.f6ae997e45a3.json",
+      "sha256": "a4d8dbe52b269190c0f653d507ffd5f04d39d06a82e6b2711611ca3ce6305dac",
+      "size_bytes": 1995
+    },
+    {
+      "path": "library/questions/spark/q.spark.0be84c49d2ca.json",
+      "sha256": "07f1f60e040cd0e4dd9d72ebf0d9cd54c12a97edbe5729c8321419ea7fde0667",
+      "size_bytes": 1726
+    },
+    {
+      "path": "library/questions/spark/q.spark.1fb86bac7d3e.json",
+      "sha256": "a409e672e67adc849d3206257350419f1b9a6bd786fbce7a90cfb47453dc3d2a",
+      "size_bytes": 2040
+    },
+    {
+      "path": "library/questions/spark/q.spark.22862e4ea305.json",
+      "sha256": "41132bbac22f2249e63c378e3860ceddc3cef5acce2bdaad7d8eaaeedf987f77",
+      "size_bytes": 1733
+    },
+    {
+      "path": "library/questions/spark/q.spark.37ac819e6f02.json",
+      "sha256": "51981830b0a65c0ea8f56bcd33ce0a8a903ecf602cc1b9d8e20d967967d9df5e",
+      "size_bytes": 1599
+    },
+    {
+      "path": "library/questions/spark/q.spark.3c26070ac1c9.json",
+      "sha256": "015ee96d8de39d5e5eceb48c81b4a474a144d599df44c6954b04499f19c6d7c8",
+      "size_bytes": 1940
+    },
+    {
+      "path": "library/questions/spark/q.spark.535119bf3b67.json",
+      "sha256": "42b727792c9b21ca5a2846decc6b3558cb22e618524bf072591a37a227f40952",
+      "size_bytes": 1636
+    },
+    {
+      "path": "library/questions/spark/q.spark.72f0be3a914d.json",
+      "sha256": "639113dbc731db7b4fe4c25f70a019ec496fed8c3ce7522d818c52efdaa82bf2",
+      "size_bytes": 1672
+    },
+    {
+      "path": "library/questions/spark/q.spark.85bf856034cf.json",
+      "sha256": "53d74fe9b6440c9101040e2c9da1544b4859e60b8db0a1b0920bc5462c768165",
+      "size_bytes": 1526
+    },
+    {
+      "path": "library/questions/spark/q.spark.8c76713ff503.json",
+      "sha256": "dac9dbbed92ce92e70f38477ccdb777b351ddcc7b1c7d82b5a10ab0418413b28",
+      "size_bytes": 1943
+    },
+    {
+      "path": "library/questions/spark/q.spark.9c65eca344e2.json",
+      "sha256": "387d313d4e9b4476e1bc279c184f5d10d211dc8dbeea3c48ec4f59e6b3577db0",
+      "size_bytes": 3104
+    },
+    {
+      "path": "library/questions/spark/q.spark.9e28a43e64f7.json",
+      "sha256": "0080ef898ae597be2fe3c38bfb13ae7282ecd9421db821dcb08ecfb48d6acdd4",
+      "size_bytes": 1625
+    },
+    {
+      "path": "library/questions/spark/q.spark.a2e6e3577f1c.json",
+      "sha256": "22a8240a130111a16cfa808ff850d78fc594a554a4ec68819f3f876586c390bc",
+      "size_bytes": 1750
+    },
+    {
+      "path": "library/questions/spark/q.spark.e2d23ccd90d1.json",
+      "sha256": "d9af22f0331f7ac7cb60203f1082c0643e5c0e939e8232f25e30cbe2aa176975",
+      "size_bytes": 1689
+    },
+    {
+      "path": "library/questions/spark/q.spark.e4f842352f82.json",
+      "sha256": "e25b27f0bd60238afd16ae0edfe0657d4c3cbde9fcb6239c9b3f136fd6b700ce",
+      "size_bytes": 1856
+    },
+    {
+      "path": "library/questions/spark/q.spark.ffd6ef1303d3.json",
+      "sha256": "4e94f3b5f05458d8ccc21469c84e19807090d6f2d3dc5e1ca29420cc64324f3d",
+      "size_bytes": 1579
+    },
+    {
+      "path": "library/questions/sql/q.sql.7ab69acb4a1e.json",
+      "sha256": "a4ffe1be35ddcf74a2c933959d3e4b752306fe09d56a04095b23b9e343793bad",
+      "size_bytes": 1761
+    },
+    {
+      "path": "library/questions/sql/q.sql.7fcdc6255018.json",
+      "sha256": "49b4446f42435bbad99e9745bfc1369b98974df967855aee0bbe1a64e28cefba",
+      "size_bytes": 1835
+    },
+    {
+      "path": "library/questions/sql/q.sql.average-adjacent-transaction-interval.json",
+      "sha256": "475213a92a20dfbf19c9dabdfeeaeb15a7fcdb25f6fb2a166c388e08446380d5",
+      "size_bytes": 2011
+    },
+    {
+      "path": "library/questions/sql/q.sql.conditional-aggregation-pivot.json",
+      "sha256": "36ef79128f01dd527b00708e9efe733062fa0060075fb731dcc5e7c634ee8a65",
+      "size_bytes": 1739
+    },
+    {
+      "path": "library/questions/sql/q.sql.consecutive-login-intervals.json",
+      "sha256": "9554ccf6721e08d5281b6be1759fab955384c6ca7618c5627ca15c73286ccb33",
+      "size_bytes": 2010
+    },
+    {
+      "path": "library/questions/sql/q.sql.cumulative-revenue.json",
+      "sha256": "f6ba5fa0ae974b6f6b5e0b38a873cb0a8f572412985ed416d5c57ac1205ade37",
+      "size_bytes": 2004
+    },
+    {
+      "path": "library/questions/sql/q.sql.customer-product-count-and-spend.json",
+      "sha256": "5ae7c8d542f771a2299086c5b57c0d59c2a09abe652842cdd33ab22e330932c8",
+      "size_bytes": 1973
+    },
+    {
+      "path": "library/questions/sql/q.sql.department-top-salary-ties.json",
+      "sha256": "9ce2cf0abdfc8d28da9633768ddbc98153fd60ee9030320fb995ae2ade9de86e",
+      "size_bytes": 1832
+    },
+    {
+      "path": "library/questions/sql/q.sql.employee-manager-self-join.json",
+      "sha256": "ed517c7e20bdfbd68074db2b2b4589a2727255032138e3b2d6f5334bc511eca4",
+      "size_bytes": 1803
+    },
+    {
+      "path": "library/questions/sql/q.sql.first-last-order-interval.json",
+      "sha256": "392d67b19ae558971ed072dd9f3a1a11b6b4cdebdd344cc14589659178a5ab29",
+      "size_bytes": 1871
+    },
+    {
+      "path": "library/questions/sql/q.sql.incremental-deduplication.json",
+      "sha256": "927e9c7ddb10ae2977a11c05fb83d8ffb6df5eba96fe15d3fe560a432115a79e",
+      "size_bytes": 1855
+    },
+    {
+      "path": "library/questions/sql/q.sql.max-consecutive-login-days.json",
+      "sha256": "20cf789e4f542775b2034c4458d734e578eac55cdcc8c148d412e86a67853153",
+      "size_bytes": 1881
+    },
+    {
+      "path": "library/questions/sql/q.sql.monthly-threshold-conditional-aggregation.json",
+      "sha256": "a1d028e48b046dc21e6efa5558d40396c3d37bff9def82ea389a53fbcc630bd8",
+      "size_bytes": 2021
+    },
+    {
+      "path": "library/questions/sql/q.sql.never-purchased-product.json",
+      "sha256": "50047f989744488a4f6d8d1196e11fe861b6a268eb06e62afb32d56cd96b247f",
+      "size_bytes": 1892
+    },
+    {
+      "path": "library/questions/sql/q.sql.query-plan-optimization.json",
+      "sha256": "d292b41a7da34a4a85f7d87e92c7007f0b616360ae6c8a6147fa763f662eb7ac",
+      "size_bytes": 1895
+    },
+    {
+      "path": "library/questions/sql/q.sql.top-product-by-customer-with-ties.json",
+      "sha256": "d67b283aee0c89b5e997fcc5000e9f5b7aa5228517f7672fa99512855d53cc7f",
+      "size_bytes": 1969
+    },
+    {
+      "path": "library/questions/system-design/q.distributed-systems.0d67c05a8185.json",
+      "sha256": "c3a84a530743e2fce284297a636d2fc966cb05e92f439acc2455533184d7fc12",
+      "size_bytes": 1579
+    },
+    {
+      "path": "library/questions/system-design/q.distributed-systems.d83ad8e9cbfb.json",
+      "sha256": "c53f8b31708f8c7e04222c38d5b61f76f79e2d4f2c5f67281514e3dcd5093c52",
+      "size_bytes": 1716
+    },
+    {
+      "path": "library/questions/system-design/q.system-design.831963b717f1.json",
+      "sha256": "629da67e0d30cea86f1928b6a653b070e2186e7f3b63e5a6c885c8cc084b9a89",
+      "size_bytes": 2274
+    },
+    {
+      "path": "library/sources/catalog.json",
+      "sha256": "1a23c143dc64615ac682e4d2f3065abe55533f6b3bb441d886fcd7c16db50e9c",
+      "size_bytes": 180
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "a101f9acf3b1e15c5ada033ce9878d4ce45ceeb80c80aa01a82fccd223ecfc4f",
+      "size_bytes": 1974
+    },
+    {
+      "path": "protocol/COACHING.md",
+      "sha256": "e43971f1eba958b2edb665ef183b79ed3184bcdb8a45a1a4a8b689b205b89d4f",
+      "size_bytes": 15377
+    },
+    {
+      "path": "protocol/DISCOVERY.md",
+      "sha256": "9c124562f713d3f39deb83cd424fa102b9321b25a9939f4b82e13fa0dbb46cd6",
+      "size_bytes": 3713
+    },
+    {
+      "path": "protocol/ONBOARDING.md",
+      "sha256": "e86a99387dedc85bcd71c4c1c573820ba0e01965d476ca9959167e17bd08a478",
+      "size_bytes": 5000
+    },
+    {
+      "path": "protocol/TERMS.md",
+      "sha256": "a44cd1cf360046a33191743ae49fcc01919852e2f52d6c4f63feddd33074aba7",
+      "size_bytes": 5438
+    },
+    {
+      "path": "protocol/examples/attempt-event.example.json",
+      "sha256": "364dbf32298b5f64dae25e2882e655282b76797d8999339393abd1cf81e71dd5",
+      "size_bytes": 929
+    },
+    {
+      "path": "protocol/schemas/attempt-event.schema.json",
+      "sha256": "8b7ad51f8193a28872c1aa80f03940cafa82c30ea8e9914b7344f073ec2f0b94",
+      "size_bytes": 2675
+    },
+    {
+      "path": "protocol/schemas/candidate-profile.schema.json",
+      "sha256": "0e9273ed4b6f1ca47a8289df65455c54aa8f0e91ae22baf36982279656a0488f",
+      "size_bytes": 4036
+    },
+    {
+      "path": "protocol/schemas/coach-model.schema.json",
+      "sha256": "f05a17191fab7a7c460f32f6e3ec02a10e62c6aa5c583198bd08df88b70a8a94",
+      "size_bytes": 2950
+    },
+    {
+      "path": "protocol/schemas/coach-observation.schema.json",
+      "sha256": "b8f9b3b825088d8d55fcf4f66f65c78ccd881ac396e83c8f7110395d562a6cbf",
+      "size_bytes": 1916
+    },
+    {
+      "path": "protocol/schemas/cycle-progress.schema.json",
+      "sha256": "905e953e67acb6f27fe0474fc26364218f97e486146e72328a94a3cf3bb9fb4f",
+      "size_bytes": 4080
+    },
+    {
+      "path": "protocol/schemas/cycle-report.schema.json",
+      "sha256": "3a75fc10abb493a15e5a96a5eacf83b672d16791dbc3fedb89a2c4c5cb3e2d68",
+      "size_bytes": 4559
+    },
+    {
+      "path": "protocol/schemas/job.schema.json",
+      "sha256": "8d83f0473ac08af4fed366ea83e349b819b29f932f98dae3037d13ef2c88648b",
+      "size_bytes": 1960
+    },
+    {
+      "path": "protocol/schemas/manifest.schema.json",
+      "sha256": "7ca8472c109ed7691c988d59a0cd468347a0f77a3942dbf30b75ff4f5b77199b",
+      "size_bytes": 2140
+    },
+    {
+      "path": "protocol/schemas/mastery-state.schema.json",
+      "sha256": "64c3c4cf4093c9ae32823e0b4989114b9ff04fef9980a1cf4806b975cf90cc2c",
+      "size_bytes": 1883
+    },
+    {
+      "path": "protocol/schemas/onboarding.schema.json",
+      "sha256": "58a92a73cd6afca044de5b7ae332755475d4258a9eb4c07086a83b01f218890d",
+      "size_bytes": 2402
+    },
+    {
+      "path": "protocol/schemas/preparation-cycle.schema.json",
+      "sha256": "3ccce941c41cb320c4489a87ebefd31f864d02cd5e57fdf190f86fba3ff9adf4",
+      "size_bytes": 1982
+    },
+    {
+      "path": "protocol/schemas/question.schema.json",
+      "sha256": "68750d51373e9ce0123c886507458b28722a8d661faaadc25606f4af729dc455",
+      "size_bytes": 2505
+    },
+    {
+      "path": "protocol/schemas/source-catalog.schema.json",
+      "sha256": "dfbb943b6c46cc5143006c70f547271a55142b544cccd564ac1b1c24489ab00b",
+      "size_bytes": 1892
+    },
+    {
+      "path": "resume/.gitignore",
+      "sha256": "1a925bbd0aed23fb86404761ff3582e98b75f379109c91a34cc082ff665becd7",
+      "size_bytes": 36
+    },
+    {
+      "path": "resume/AGENTS.md",
+      "sha256": "eb2b4c8794b7a875aef013190b3142f675f1554a46b28f4614e65271856f0c84",
+      "size_bytes": 2302
+    },
+    {
+      "path": "resume/PDF_EXPORT.md",
+      "sha256": "0018d1f5f2b5f42232bbf91aaeb88d5322cc8d9b9fa02a60103d7b97014eee4c",
+      "size_bytes": 1506
+    },
+    {
+      "path": "resume/README.md",
+      "sha256": "855bf2849679ff5b983bb0da6cb47864de0eb7a96c64d17eb64f06b9f91e5263",
+      "size_bytes": 600
+    },
+    {
+      "path": "resume/RESUME_RULES.md",
+      "sha256": "9942314973e5e76a5a65e8600bf53e284b11df079e6b594f0310210ae1f3228d",
+      "size_bytes": 3376
+    },
+    {
+      "path": "resume/assets/envelope-solid.svg",
+      "sha256": "6cff006056ad7c2d215f89126904dc2e8f2c000fd29399659b85b72056ac8ebd",
+      "size_bytes": 682
+    },
+    {
+      "path": "resume/assets/github-brands.svg",
+      "sha256": "3364aec10a4ddb2484d33b795185c02abeceef772e11044c11ab55ea140f6cad",
+      "size_bytes": 1518
+    },
+    {
+      "path": "resume/assets/phone-solid.svg",
+      "sha256": "ad03c4e0d9d3f98926cb97bbdbc8925eb88cc3a877521469ff94bfd519761221",
+      "size_bytes": 493
+    },
+    {
+      "path": "resume/assets/rss-solid.svg",
+      "sha256": "1425b4f7a93dc27bed8b763c06c5eff1cf8b511f54f28f73b7ea3ed5c3e30bb6",
+      "size_bytes": 851
+    },
+    {
+      "path": "resume/package-lock.json",
+      "sha256": "07f001111a5fd9d22aebf86c6c42044f5f546c9f86486b0f03e287e07f444203",
+      "size_bytes": 89415
+    },
+    {
+      "path": "resume/package.json",
+      "sha256": "b17609efde26ea597e935bc33a2e12a2bf5c4a53063018b9b3f095ccac1568b2",
+      "size_bytes": 295
+    },
+    {
+      "path": "resume/scripts/export-pdf.cjs",
+      "sha256": "1a46461d91ce574b5bb2616a6d73d098bb7022b4536af509c1920376934bd935",
+      "size_bytes": 9975
+    },
+    {
+      "path": "resume/styles/resume.css",
+      "sha256": "13e0203a0d5a8a9954a1a1b257af6fd48b033c85a3ef65ab0b42ceeb8d6ff1f8",
+      "size_bytes": 2622
+    },
+    {
+      "path": "scripts/build_dashboard.py",
+      "sha256": "bd50d730190ea91de239f4dd4446f36f80e6bc70c18d5053cfae036a3d7a68f5",
+      "size_bytes": 14422
+    },
+    {
+      "path": "scripts/build_review_notes.py",
+      "sha256": "400306b8ee5649d37a594f327f74ebb3ae51cf0364fca64c720e303f936324a4",
+      "size_bytes": 6788
+    },
+    {
+      "path": "scripts/coach_model.py",
+      "sha256": "0d482ac006cd8c1808a4248980e09ede115317d97a92745c6d4bd891989cc2b2",
+      "size_bytes": 14032
+    },
+    {
+      "path": "scripts/common.py",
+      "sha256": "28ec2e943289fd19ceda05cbaf5e94343bce802623f54e32a880a14a2669fa68",
+      "size_bytes": 12839
+    },
+    {
+      "path": "scripts/complete_cycle.py",
+      "sha256": "106e47d73520d135658e1c42e3821f13863e935d25c0877d5dc511164f797561",
+      "size_bytes": 9766
+    },
+    {
+      "path": "scripts/discover.py",
+      "sha256": "4f4785b24f3a3c4888e043b159943f29dcaf3ccf5625e87fa72f7fe070c9ef98",
+      "size_bytes": 17789
+    },
+    {
+      "path": "scripts/extract_source.py",
+      "sha256": "c8caeffc71efb11956e397fab1749e6a0897693db1fcc253880c1ada11cf62d8",
+      "size_bytes": 1698
+    },
+    {
+      "path": "scripts/history.py",
+      "sha256": "c1169bcc97127c87318a0241fb4e665ee7bded866c32ddcf7cefd580aca324d9",
+      "size_bytes": 4583
+    },
+    {
+      "path": "scripts/initialize.py",
+      "sha256": "17e285706b20694fdd754bb8caba93ba64afdea9c0fb1d6d45de3091cea46d8c",
+      "size_bytes": 15266
+    },
+    {
+      "path": "scripts/onboard.py",
+      "sha256": "beb7f2929ed2370f12af491f788be395bc4c3a8a0e8b7854f5f48a5f817b7f61",
+      "size_bytes": 18785
+    },
+    {
+      "path": "scripts/rebuild_state.py",
+      "sha256": "da62cf8544572cd8bd711c37be27e63a44c2b418a90a4595e86bf177c3ff3bf7",
+      "size_bytes": 7193
+    },
+    {
+      "path": "scripts/select_next.py",
+      "sha256": "72334d1bc8bda2f44d59ebe97e616b9c8ecb3ef176d8adde55b87d6a35d62d17",
+      "size_bytes": 4673
+    },
+    {
+      "path": "scripts/source_readers.py",
+      "sha256": "6f97584aa57567d816cf52a66f8105390c1a2abea3a8336ee1a62ba7eed8de5b",
+      "size_bytes": 17452
+    },
+    {
+      "path": "scripts/start_cycle.py",
+      "sha256": "c60122c0b8ae3c58df8df407de6a8e59177063997bbe494b20aa556c1e93cd2e",
+      "size_bytes": 5008
+    },
+    {
+      "path": "scripts/tests/test_answer_review.py",
+      "sha256": "5929ad8bd16cdb5784544e2447a6d290a2ee5785e517927b5ab3381092a3e941",
+      "size_bytes": 3460
+    },
+    {
+      "path": "scripts/tests/test_coach_model.py",
+      "sha256": "1856de6f5a8c875d99eab77bfcea73e032d15c93fe0fcd26ac50477e99382293",
+      "size_bytes": 3486
+    },
+    {
+      "path": "scripts/tests/test_discover.py",
+      "sha256": "7205d48bb5221bfa91b631e25681453161dac1d7ef187588618a9921abda95f2",
+      "size_bytes": 3081
+    },
+    {
+      "path": "scripts/tests/test_interview_experience.py",
+      "sha256": "549793936daf9054ee0cab855cadef954ea6486fbe865cbc66ae7024f49580b0",
+      "size_bytes": 1883
+    },
+    {
+      "path": "scripts/tests/test_job_targeting.py",
+      "sha256": "27dd69a6ff4ebf43a6f6c90051a4b3ac7809d1756c9fec54d9ffeb687cec248e",
+      "size_bytes": 2115
+    },
+    {
+      "path": "scripts/tests/test_onboard.py",
+      "sha256": "84a9704ccbd791f32cc609b49fa7f81259fe73f7cf6d32c4a505dffc5adcbf09",
+      "size_bytes": 6530
+    },
+    {
+      "path": "scripts/tests/test_review_flow.py",
+      "sha256": "2a0f044d16a97b355085e2c5085c6e802f4f2db236d57d9fe4a8740826ec0a9c",
+      "size_bytes": 6409
+    },
+    {
+      "path": "scripts/tests/test_source_list.py",
+      "sha256": "19a9bc0268de2be468e81587802e8ba9fe7d65f5c1dd10404504eb5c5303bdf0",
+      "size_bytes": 5438
+    },
+    {
+      "path": "scripts/validate.py",
+      "sha256": "ed913bbea940849d637597aa391d7729e16500927d0e36d0a4fd67911096d3cb",
+      "size_bytes": 39480
+    },
+    {
+      "path": "source-list.txt",
+      "sha256": "265de663cc7efb60c2813a8cf5066de137cb49e42c9d06e9034bec2fe0785e8c",
+      "size_bytes": 181
+    },
+    {
+      "path": "workspace/README.md",
+      "sha256": "0c2902791ab13dd9ce9e59b3418c25c0738950bb862b98f032db38418f726361",
+      "size_bytes": 1662
+    },
+    {
+      "path": "workspace/cycles/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/events/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/events/README.md",
+      "sha256": "2967648ce7cd459e50425bab6a2b28c4da61cc5ac4b121d5448fddfbe16db561",
+      "size_bytes": 415
+    },
+    {
+      "path": "workspace/jobs/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/profile/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/profile/observations/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/questions/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/reports/README.md",
+      "sha256": "99b8c098520e5ec87eeaf83140822e878f885014ed1aacdb203c070228cdfe17",
+      "size_bytes": 439
+    },
+    {
+      "path": "workspace/reports/cycles/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/reports/cycles/README.md",
+      "sha256": "a9af4eb5fc7d416429a06712e0a3490a697ec08dbe25d30c49efd883f69e242d",
+      "size_bytes": 135
+    },
+    {
+      "path": "workspace/resume/Markdown/master/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/resume/Markdown/shared/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/resume/Markdown/tailored/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/resume/PDF/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/resume/README.md",
+      "sha256": "aa148c28c9a066017ea9878d303e123ad6a6f59252475bc3903320e5f6a9997f",
+      "size_bytes": 506
+    },
+    {
+      "path": "workspace/sources/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/state/cycles/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "workspace/state/mastery/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.first-last-order-interval",
+  "revision": 2,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 2,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 orders(order_id, customer_id, order_date, amount)，样例中客户 1 的订单日期为 2024-01-01、2024-01-10、2024-02-01，客户 2 为 2024-01-05、2024-01-15、2024-02-05，客户 3 为 2024-01-20、2024-02-01、2024-03-01。请写 SQL 返回每个客户第一次订单日期、最后一次订单日期及二者相隔天数，输出 customer_id、first_order_date、last_order_date、days_between，按 customer_id 升序。客户只有一次订单时 days_between 为 0；样例期望间隔为 31、31、41。",
+  "rubric": [
+    "按 customer_id 分组，并分别使用 MIN(order_date) 与 MAX(order_date) 得到首次和末次日期",
+    "以最后日期减首次日期计算天数，只有一次订单时自然返回 0",
+    "结果列别名与顺序正确，并显式按 customer_id 排序",
+    "准确说明 MySQL、SQL Server 与 PostgreSQL 的日期差语法差异",
+    "能够讨论 order_date 为 timestamp、存在 NULL 或需要按业务时区截断为自然日时的语义"
+  ],
+  "hints": [
+    "每个客户只需要一行结果，先考虑哪些聚合函数能找到边界日期。",
+    "同一个日期减去自身的间隔正好是 0。"
+  ],
+  "follow_ups": [
+    "如果要返回首次和末次订单的 amount，应怎样可靠地取出对应行？",
+    "如果首次和末次日期各有多笔订单，如何定义并实现唯一结果？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-04T08:15:11+08:00"
+}

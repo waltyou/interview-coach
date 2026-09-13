@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.distributed-systems.d83ad8e9cbfb",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "distributed-systems",
+  "kind": "system-design",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "以 GFS 风格的大文件存储系统为例，说明 Master 与 Chunk Server 如何分工，客户端读写为什么尽量绕过 Master，以及 Primary-Backup 复制如何保证多个副本以相同顺序执行写入。请同时讨论 lease、版本号、确认时机和故障切换。",
+  "rubric": [
+    "说明 Master 保存命名空间、chunk 映射、副本位置、版本和 lease 等元数据，数据面由客户端直连 Chunk Server",
+    "描述读取路径中的元数据查询与客户端缓存，以及它们如何降低 Master 压力",
+    "描述写入时 Primary 确定顺序、Secondary 按序执行、客户端确认与失败处理",
+    "解释版本号或 generation 如何识别陈旧副本，并讨论 Master 日志、checkpoint 和故障切换",
+    "指出非确定性事件、重复请求和部分确认可能造成的不一致，并给出幂等或去重策略"
+  ],
+  "hints": [
+    "先分离控制面与数据面。",
+    "再沿一次写请求的时序说明各节点职责。"
+  ],
+  "follow_ups": [
+    "为什么让客户端把同一次写请求直接发给所有副本可能导致副本顺序不一致？",
+    "2f+1 个副本最多能容忍多少个故障？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-08-10T21:35:29+08:00"
+}

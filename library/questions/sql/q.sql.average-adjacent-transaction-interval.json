@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.average-adjacent-transaction-interval",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 transactions(trans_id, user_id, trans_date, amount)，样例数据为 (1,1,'2024-01-01',100)、(2,1,'2024-01-05',200)、(3,1,'2024-02-01',150)、(4,2,'2024-01-10',300)、(5,2,'2024-02-05',100)、(6,2,'2024-02-10',250)、(7,3,'2024-01-20',400)、(8,3,'2024-02-20',100)。请写 SQL 计算每个用户相邻两次交易之间的平均间隔天数，只返回至少有两次交易的用户，输出 user_id、avg_interval_days 并四舍五入到两位小数。按通常的日期差定义，期望结果为 (1,15.50)、(2,15.50)、(3,31.00)。",
+  "rubric": [
+    "按 user_id 分区并按 trans_date、trans_id 等稳定键排序，使用 LEAD 或 LAG 获取相邻交易日期",
+    "计算相邻日期的天数差，过滤每个分区首行或末行产生的 NULL 间隔",
+    "按用户聚合 AVG 并四舍五入到两位小数，过滤后自然只保留至少两次交易的用户",
+    "能够验证样例：用户 1 的间隔为 4、27，用户 2 为 26、5，两者平均均为 15.50",
+    "准确说明 PostgreSQL 日期相减、MySQL DATEDIFF 和 SQL Server DATEDIFF(day, ...) 的方言差异"
+  ],
+  "hints": [
+    "LEAD 取下一次交易，LAG 取上一次交易，两种方向都可以。",
+    "每个用户总会有一行找不到相邻记录，该行的间隔是 NULL。"
+  ],
+  "follow_ups": [
+    "同一用户同一天有多笔交易时，应按交易次数还是按活跃日期计算间隔？",
+    "如果 trans_date 是带时区的 timestamp，如何定义自然日和部分天数？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

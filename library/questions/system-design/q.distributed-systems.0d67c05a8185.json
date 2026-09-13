@@ -1,0 +1,34 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.distributed-systems.0d67c05a8185",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "distributed-systems",
+  "kind": "explanation",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "为什么需要分布式系统？请从并行扩展、容错、地理分布和隔离性出发说明收益，再解释并发、部分失败、一致性与通信成本如何限制这些收益。设计系统时，你会如何在强一致性、可用性、吞吐量和恢复能力之间做取舍？",
+  "rubric": [
+    "说明单机扩展边界，以及并行计算、跨地域部署、故障隔离和资源共享带来的价值",
+    "区分完整失败与部分失败，并解释超时、重试、重复执行和网络分区带来的不确定性",
+    "说明复制会提高可用性和恢复能力，但会引入副本一致性、写入顺序和通信开销",
+    "用明确业务目标和 SLO 驱动一致性、延迟、吞吐量、成本与复杂度之间的选择"
+  ],
+  "hints": [
+    "先回答为什么不能只依赖更大的单机。",
+    "把性能目标和故障模型分开讨论。"
+  ],
+  "follow_ups": [
+    "什么是部分失败，为什么它比分布式系统中的完整失败更难处理？",
+    "什么时候你会接受最终一致性？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-08-10T21:35:29+08:00"
+}

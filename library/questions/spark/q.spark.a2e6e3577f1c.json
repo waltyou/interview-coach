@@ -1,0 +1,40 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.a2e6e3577f1c",
+  "revision": 3,
+  "status": "active",
+  "topic": "spark",
+  "kind": "explanation",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer",
+    "spark-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "能详细谈谈 Spark 调度（Scheduling） 的全过程吗？请从一个 Job 提交开始，直到 Tasks 在 Executor 上执行，深入剖析这其中涉及的各个组件（如 DAGScheduler、TaskScheduler、SchedulerBackend 等）是如何协同工作的，并且阐述它们各自的核心职责。",
+  "rubric": [
+    "Action 如何通过 SparkContext 触发 Job",
+    "DAGScheduler 如何基于 RDD lineage 和宽依赖划分 Stage",
+    "DAGScheduler 如何生成 TaskSet 并处理 Stage 依赖",
+    "TaskScheduler 与 TaskSetManager 的职责边界",
+    "SchedulerBackend 如何提供 Executor 资源并分发 Task",
+    "Executor 如何执行 Task、返回结果并报告失败",
+    "失败重试、Shuffle 输出丢失和 Stage 重算的基本过程"
+  ],
+  "hints": [
+    "先回忆 DAGScheduler、TaskScheduler 和 SchedulerBackend 三个组件。",
+    "按照 Job、Stage、Task 三个层级组织答案。",
+    "重点区分作业依赖分析、任务调度和资源通信。"
+  ],
+  "follow_ups": [
+    "为什么宽依赖通常会形成新的 Stage 边界？",
+    "TaskScheduler 是否需要理解 RDD 的血缘关系？",
+    "Executor 丢失导致 Shuffle 输出不可用时，哪些组件参与恢复？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00",
+  "visibility": "public"
+}

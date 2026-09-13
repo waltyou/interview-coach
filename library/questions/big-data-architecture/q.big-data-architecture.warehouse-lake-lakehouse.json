@@ -1,0 +1,39 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.big-data-architecture.warehouse-lake-lakehouse",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "big-data-architecture",
+  "kind": "concept",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "senior-data-engineer",
+    "data-platform-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请比较数据仓库、数据湖与 Lakehouse 的目标、数据组织方式、事务与治理能力、查询性能和典型工作负载。Iceberg、Delta Lake、Hudi 这类 table format 在其中位于哪一层？为什么说 Iceberg 既不是数据湖本身，也不是一个完整的 Lakehouse？",
+  "rubric": [
+    "说明数据仓库强调建模治理、稳定 SQL、BI 性能和平台化事务能力",
+    "说明数据湖强调在对象存储或分布式文件系统中低成本保存大规模原始及多类型数据",
+    "解释早期 file-and-directory 数据湖在 schema、分区、并发写、更新删除和一致读取方面的问题",
+    "把 Lakehouse 解释为在开放湖存储上提供仓库式事务、治理与性能的架构目标，而不是某一个组件",
+    "把 Iceberg、Delta Lake、Hudi 定位为数据文件之上的 table format 或 storage layer，并区分 catalog、compute engine、object store 和 governance",
+    "能根据组织已有平台、引擎生态、开放性、运维成本和工作负载讨论选型，而不是简单宣称一种架构替代另一种"
+  ],
+  "hints": [
+    "分别回答数据放在哪里、谁定义表、谁执行查询、谁提供治理。",
+    "把 storage、file format、table format、catalog 和 compute engine 画成五层。"
+  ],
+  "follow_ups": [
+    "仅仅把 Parquet 文件放进 S3，为什么还不能得到可靠的数据湖表？",
+    "如果公司已经使用云数仓，哪些场景仍可能需要 Iceberg？",
+    "Open table format 带来了哪些避免厂商锁定的能力，又增加了哪些运维责任？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-19T21:59:41+08:00",
+  "updated_at": "2026-08-19T21:59:41+08:00"
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mastery-state.schema.json",
+  "title": "MasteryState",
+  "type": "object",
+  "required": ["schema_version", "learner_id", "generated_at", "questions", "derived_from_events"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 2 },
+    "learner_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "question_id",
+          "total_attempts",
+          "cycles_seen",
+          "scores",
+          "knowledge_score",
+          "review_interval_days",
+          "last_attempt_at",
+          "next_due_at"
+        ],
+        "properties": {
+          "question_id": { "type": "string", "pattern": "^q\\." },
+          "total_attempts": { "type": "integer", "minimum": 1 },
+          "cycles_seen": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^cycle\\." },
+            "uniqueItems": true
+          },
+          "scores": {
+            "type": "object",
+            "additionalProperties": { "type": "integer", "minimum": 0, "maximum": 4 }
+          },
+          "knowledge_score": { "type": "integer", "minimum": 0, "maximum": 4 },
+          "review_interval_days": { "type": "integer", "minimum": 1 },
+          "last_attempt_at": { "type": "string", "format": "date-time" },
+          "next_due_at": { "type": "string", "format": "date" },
+          "last_event_id": { "type": "string", "pattern": "^attempt\\." }
+        },
+        "additionalProperties": false
+      }
+    },
+    "derived_from_events": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^attempt\\." },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

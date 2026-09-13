@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.3c26070ac1c9",
+  "revision": 2,
+  "status": "active",
+  "topic": "spark",
+  "kind": "concept",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer",
+    "spark-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "请详细阐述 Spark 中的数据倾斜（Data Skew） 是什么？为什么会发生？你作为一名资深工程师，有哪些行之有效的方法来检测和解决数据倾斜问题？请尽量从实际案例和工程实践的角度来回答。",
+  "rubric": [
+    "说明数据倾斜是少量分区或 task 承担了远高于其他分区的数据量或计算量，导致长尾、spill、OOM 或重试",
+    "分析热点 key、分区键选择、join 两侧分布、聚合、数据膨胀和上游业务分布变化等常见根因",
+    "使用 Spark UI、SQL 指标、task 时长与输入/shuffle 大小分位数、日志和数据分布统计建立证据",
+    "根据根因选择 AQE skew join、广播 join、预聚合、过滤异常 key、调整分区键或分区数等方案",
+    "解释 salting、拆分热点 key、两阶段聚合等方案如何保证语义正确，以及它们带来的复杂度和额外 shuffle",
+    "通过固定输入的前后对照验证正确性、长尾改善、资源成本和稳定性，并补充监控防止回归"
+  ],
+  "hints": [
+    "不要把 task 数量少或执行慢直接等同于数据倾斜，先看分布。",
+    "优化方法必须对应具体算子和具体热点来源。"
+  ],
+  "follow_ups": [
+    "一个热点 key 占 40% 数据且不能丢弃时，你会如何改写聚合？",
+    "AQE 已开启但倾斜仍未缓解，你会继续检查哪些条件和阈值？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00",
+  "visibility": "public"
+}

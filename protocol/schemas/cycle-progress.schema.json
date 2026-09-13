@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cycle-progress.schema.json",
+  "title": "CycleProgress",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "cycle_id",
+    "learner_id",
+    "cycle_status",
+    "generated_at",
+    "review_policy",
+    "totals",
+    "statistics",
+    "questions",
+    "derived_from_events"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 2 },
+    "cycle_id": { "type": "string", "pattern": "^cycle\\." },
+    "learner_id": { "type": "string", "minLength": 1 },
+    "cycle_status": { "enum": ["planned", "active", "completed", "archived"] },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "review_policy": { "enum": ["coverage_once", "spaced", "coverage_then_spaced"] },
+    "totals": {
+      "type": "object",
+      "required": ["questions", "unseen", "covered", "due"],
+      "properties": {
+        "questions": { "type": "integer", "minimum": 0 },
+        "unseen": { "type": "integer", "minimum": 0 },
+        "covered": { "type": "integer", "minimum": 0 },
+        "due": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "statistics": {
+      "type": "object",
+      "required": [
+        "coverage_rate",
+        "total_attempts",
+        "attempts_today",
+        "score_averages",
+        "knowledge_score_distribution",
+        "next_due_at"
+      ],
+      "properties": {
+        "coverage_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "total_attempts": { "type": "integer", "minimum": 0 },
+        "attempts_today": { "type": "integer", "minimum": 0 },
+        "score_averages": {
+          "type": ["object", "null"],
+          "properties": {
+            "recall": { "type": "number", "minimum": 0, "maximum": 4 },
+            "correctness": { "type": "number", "minimum": 0, "maximum": 4 },
+            "depth": { "type": "number", "minimum": 0, "maximum": 4 },
+            "communication": { "type": "number", "minimum": 0, "maximum": 4 }
+          },
+          "required": ["recall", "correctness", "depth", "communication"],
+          "additionalProperties": false
+        },
+        "knowledge_score_distribution": {
+          "type": "object",
+          "properties": {
+            "0": { "type": "integer", "minimum": 0 },
+            "1": { "type": "integer", "minimum": 0 },
+            "2": { "type": "integer", "minimum": 0 },
+            "3": { "type": "integer", "minimum": 0 },
+            "4": { "type": "integer", "minimum": 0 }
+          },
+          "required": ["0", "1", "2", "3", "4"],
+          "additionalProperties": false
+        },
+        "next_due_at": { "type": ["string", "null"], "format": "date" }
+      },
+      "additionalProperties": false
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "question_id",
+          "status",
+          "attempt_count",
+          "scores",
+          "knowledge_score",
+          "review_interval_days"
+        ],
+        "properties": {
+          "question_id": { "type": "string", "pattern": "^q\\." },
+          "status": { "enum": ["unseen", "covered", "due"] },
+          "attempt_count": { "type": "integer", "minimum": 0 },
+          "scores": {
+            "type": ["object", "null"],
+            "additionalProperties": { "type": "integer", "minimum": 0, "maximum": 4 }
+          },
+          "knowledge_score": { "type": ["integer", "null"], "minimum": 0, "maximum": 4 },
+          "review_interval_days": { "type": ["integer", "null"], "minimum": 1 },
+          "last_attempt_at": { "type": ["string", "null"], "format": "date-time" },
+          "next_due_at": { "type": ["string", "null"], "format": "date" },
+          "last_event_id": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "derived_from_events": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^attempt\\." },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

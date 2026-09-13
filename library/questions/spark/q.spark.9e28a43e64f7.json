@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.9e28a43e64f7",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "explanation",
+  "difficulty": 4,
+  "target_roles": [
+    "spark-engineer",
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "Spark 3 的 AQE 如何利用运行时统计重新优化物理计划？请解释分区合并、倾斜 Join 优化和 Join 策略切换的触发条件与收益，并说明 DPP 如何把维表过滤条件传导到事实表以减少扫描。",
+  "rubric": [
+    "说明 AQE 以 Query Stage 的物化统计为依据，在执行期间重新优化后续物理计划",
+    "解释 coalesce shuffle partitions 如何合并过小分区并减少调度开销",
+    "解释 skew join 如何拆分倾斜分区、复制另一侧数据并改善尾部任务",
+    "说明运行时过滤后的小表可触发 SMJ 到 Broadcast Hash Join 的策略切换",
+    "说明 DPP 的等值 Join、事实表分区键和维表过滤/广播条件，以及它如何减少事实表 I/O",
+    "指出 AQE/DPP 的适用边界、关键配置和用 explain/Spark UI 验证的方法"
+  ],
+  "hints": [
+    "区分编译期统计与 Query Stage 运行时统计。",
+    "DPP 的目标是减少事实表分区扫描。"
+  ],
+  "follow_ups": [
+    "AQE 为什么必须等待某些 Query Stage 物化？",
+    "DPP 不生效时你会检查哪些条件？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-08-10T21:35:29+08:00"
+}

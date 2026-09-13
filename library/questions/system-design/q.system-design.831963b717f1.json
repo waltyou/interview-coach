@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.system-design.831963b717f1",
+  "revision": 2,
+  "status": "active",
+  "topic": "system-design",
+  "kind": "system-design",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "real-interview",
+  "prompt": "请设计一个面向多业务数据源的生产级 ETL/ELT 平台。先澄清规模、时效、数据质量和 SLA，再给出摄取、编排、计算、存储、元数据、可观测性与发布架构。最后按优先级说明：如果你指导团队从 MVP 演进到稳定平台，会先保证什么，后建设什么，为什么？",
+  "rubric": [
+    "先澄清数据源与消费者、批流需求、数据量增长、延迟、SLA、合规、成本和团队能力等约束",
+    "定义数据集、schema、分区、血缘、owner、质量规则、运行实例和 backfill 等核心模型及生命周期",
+    "给出解耦的摄取、编排、计算、存储/表格式、元数据目录、质量检查和服务层架构与主数据流",
+    "把幂等、checkpoint、重试、去重、迟到数据、schema evolution、补数和灾难恢复纳入正确性设计",
+    "设计端到端可观测性，包括新鲜度、完整性、质量、运行状态、资源成本、告警和可追溯的发布变更",
+    "优先保证数据契约、正确性、安全和最小可运维闭环，再按真实瓶颈演进自助化、弹性、实时化和成本治理",
+    "能够明确 build versus buy、批流一体与分离、多租户隔离等关键取舍，并说明验证指标"
+  ],
+  "hints": [
+    "先定义数据产品的契约和成功指标，再选择组件。",
+    "从一条数据失败、重跑、补数和追责的完整路径检验设计。"
+  ],
+  "follow_ups": [
+    "上游在没有通知的情况下修改 schema，你的系统如何避免静默产出错误数据？",
+    "历史三个月数据需要 backfill，但不能影响每日 SLA，你会如何隔离与调度？",
+    "平台何时应该支持流式处理，何时微批已经足够？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00",
+  "visibility": "public"
+}

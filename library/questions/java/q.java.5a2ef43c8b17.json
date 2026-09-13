@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.java.5a2ef43c8b17",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "java",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "data-engineer",
+    "java-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "多个线程需要高并发读写同一个 Map。请比较 Hashtable、Collections.synchronizedMap 和 ConcurrentHashMap，并解释 Java 8+ ConcurrentHashMap 如何通过 volatile、CAS、桶级同步和协助扩容保证线程安全。哪些复合操作仍需要 compute、merge 或额外协调？",
+  "rubric": [
+    "说明 HashMap 本身不保证并发安全，Hashtable 和 synchronizedMap 主要使用较粗粒度互斥",
+    "解释 ConcurrentHashMap 的数组节点、volatile 可见性、CAS 和冲突桶 synchronized 更新",
+    "说明读取通常不获取全局锁，以及扩容时多个线程可协助迁移",
+    "指出 size、遍历等操作通常提供弱一致视图而非全局快照",
+    "识别先检查后执行、读改写等复合操作的竞态，并使用 computeIfAbsent、compute 或 merge"
+  ],
+  "hints": [
+    "线程安全不等于一串独立安全调用组合后仍然原子。",
+    "比较锁的作用范围和读路径。"
+  ],
+  "follow_ups": [
+    "ConcurrentHashMap 为什么不允许 null key/value？",
+    "什么时候仍应在 Map 外部加锁？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

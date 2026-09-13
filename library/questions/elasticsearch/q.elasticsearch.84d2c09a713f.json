@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.elasticsearch.84d2c09a713f",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "elasticsearch",
+  "kind": "scenario",
+  "difficulty": 4,
+  "target_roles": [
+    "data-engineer",
+    "backend-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一个 Elasticsearch 集群执行高基数聚合时频繁 GC，查询延迟明显升高。你会如何检查 JVM heap、off-heap、page cache、fielddata/doc values、bucket 数和 circuit breaker，并在索引设计、聚合参数与节点资源之间调优？",
+  "rubric": [
+    "区分 JVM heap、堆外内存和操作系统 page cache，避免把机器内存全部分配给 heap",
+    "说明 doc values 通常用于排序/聚合并依赖文件系统缓存，text fielddata 可能大量占用 heap",
+    "识别高基数 terms、过大的 size/shard_size、嵌套聚合和过多 bucket 的成本",
+    "结合 GC 日志、节点统计、慢日志、任务和 breaker 指标定位压力来源",
+    "考虑 keyword 映射、预聚合、composite aggregation、过滤范围和分页等方案",
+    "通过基准与容量模型验证修改，同时保留足够 page cache 并避免超过压缩对象指针等边界"
+  ],
+  "hints": [
+    "先回答内存究竟消耗在 heap 还是 page cache。",
+    "聚合结果桶数量可能比命中文档数更危险。"
+  ],
+  "follow_ups": [
+    "为什么不建议把 Elasticsearch heap 设置为机器全部内存？",
+    "composite aggregation 与 terms aggregation 的分页能力有何不同？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T22:36:58+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

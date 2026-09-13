@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.java.1f0c8a5cd168",
+  "revision": 2,
+  "status": "active",
+  "visibility": "public",
+  "topic": "java",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一个 Java 服务每次刷新内存中的 Map 后，操作系统看到的进程内存都会上升，但 GC 后 heap used 反而下降，Survivor/Eden/Old Gen 的 capacity 还会动态变化。你会如何判断这是内存泄漏、JVM 保留内存，还是 AdaptiveSizePolicy 的正常调整？",
+  "rubric": [
+    "区分 RSS、已提交堆容量、实际堆使用量、堆外内存、Metaspace 和 Direct Memory",
+    "用 jstat、jmap、Arthas 等工具连续采样各代容量与使用量，而不是只看 ps 的单点值",
+    "解释对象存活、晋升、Full GC 后基线和 heap dump 对比如何用于判断泄漏",
+    "说明 Parallel GC 的 AdaptiveSizePolicy 会围绕暂停时间、吞吐量和最小内存占用动态调整各区大小",
+    "给出可重复的刷新实验、GC 日志和对象直方图验证方案"
+  ],
+  "hints": [
+    "capacity 变化不等于 live objects 增加。",
+    "同时观察 used、committed 和 RSS。"
+  ],
+  "follow_ups": [
+    "为什么 SurvivorRatio=8 时实际 S0、S1、Eden 仍可能不是 1:1:8？",
+    "怎样确认 Direct Memory 是否在增长？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-08-10T22:36:58+08:00"
+}

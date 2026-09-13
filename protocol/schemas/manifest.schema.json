@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "manifest.schema.json",
+  "title": "Interview Coach Context Pack Manifest",
+  "type": "object",
+  "required": [
+    "protocol",
+    "protocol_version",
+    "instructions",
+    "onboarding",
+    "candidate",
+    "roots",
+    "source_roots",
+    "capabilities",
+    "default_review_policy"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "protocol": { "const": "interview-coach-context-pack" },
+    "protocol_version": { "type": "string", "pattern": "^0\\.[0-9]+\\.[0-9]+$" },
+    "instructions": { "type": "string", "minLength": 1 },
+    "terminology": { "type": "string", "minLength": 1 },
+    "onboarding": {
+      "type": "object",
+      "required": ["instructions", "guide", "state"],
+      "properties": {
+        "instructions": { "type": "string", "minLength": 1 },
+        "guide": { "type": "string", "minLength": 1 },
+        "state": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "required": ["discovery", "profile", "observations", "model"],
+      "properties": {
+        "discovery": { "type": "string", "minLength": 1 },
+        "profile": { "type": "string", "minLength": 1 },
+        "observations": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "roots": {
+      "type": "object",
+      "required": ["source_catalog", "source_list", "questions", "private_questions", "jobs", "cycles", "events", "state", "reports", "dashboard"],
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "source_roots": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "default_review_policy": {
+      "enum": ["coverage_once", "spaced", "coverage_then_spaced"]
+    }
+  },
+  "additionalProperties": false
+}

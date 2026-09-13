@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "preparation-cycle.schema.json",
+  "title": "PreparationCycle",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "name",
+    "kind",
+    "learner_id",
+    "status",
+    "created_at",
+    "started_at",
+    "target_roles",
+    "topics",
+    "question_set_policy",
+    "review_policy",
+    "same_day_repeat",
+    "question_ids"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 2 },
+    "id": { "type": "string", "pattern": "^cycle\\.[a-z0-9][a-z0-9.-]+$" },
+    "name": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["baseline", "maintenance", "job_targeted", "stage_targeted"] },
+    "job_id": { "type": "string", "pattern": "^job\\.[a-z0-9][a-z0-9.-]+$" },
+    "learner_id": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["planned", "active", "completed", "archived"] },
+    "created_at": { "type": "string", "format": "date-time" },
+    "started_at": { "type": ["string", "null"], "format": "date-time" },
+    "completed_at": { "type": ["string", "null"], "format": "date-time" },
+    "target_roles": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "topics": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "question_set_policy": { "enum": ["snapshot", "dynamic"] },
+    "review_policy": { "enum": ["coverage_once", "spaced", "coverage_then_spaced"] },
+    "same_day_repeat": { "type": "boolean" },
+    "question_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^q\\." },
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "kind": { "const": "job_targeted" } },
+        "required": ["kind"]
+      },
+      "then": { "required": ["job_id"] }
+    }
+  ],
+  "additionalProperties": false
+}

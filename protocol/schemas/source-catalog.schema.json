@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "source-catalog.schema.json",
+  "title": "Source Catalog",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "root", "sources"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 2 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "root": { "type": "string", "minLength": 1 },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "path",
+          "title",
+          "topics",
+          "visibility",
+          "format",
+          "unit_label",
+          "content_sha256",
+          "size_bytes",
+          "status"
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^source\\." },
+          "path": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "topics": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          },
+        "visibility": { "enum": ["private", "public"] },
+          "format": { "enum": ["markdown", "pdf", "pptx", "xmind"] },
+          "unit_label": { "enum": ["document", "page", "slide", "sheet"] },
+          "unit_count": { "type": "integer", "minimum": 1 },
+          "content_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "questions_extracted_from_sha256": {
+            "type": ["string", "null"],
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "size_bytes": { "type": "integer", "minimum": 0 },
+          "modified_at": { "type": "string", "format": "date-time" },
+          "status": { "enum": ["ready", "empty", "unreadable"] }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

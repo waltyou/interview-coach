@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.7ab69acb4a1e",
+  "revision": 2,
+  "status": "active",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "real-interview",
+  "prompt": "给定 employee(employee_id, department_id, salary)，请写 SQL 返回每个部门薪资排名前三的员工。先明确同薪并列时的产品语义，再分别说明需要恰好三行和需要保留并列第三名时应使用什么窗口函数。",
+  "rubric": [
+    "使用 PARTITION BY department_id 并按 salary DESC 排序计算部门内名次",
+    "说明 ROW_NUMBER 会强制得到行级顺序，若排序不唯一需要增加稳定的 tie-breaker",
+    "说明 DENSE_RANK 会保留并列薪资且名次不跳号，过滤 <= 3 可能返回多于三人",
+    "能根据业务对并列的定义选择 ROW_NUMBER、RANK 或 DENSE_RANK，而不是机械套用",
+    "使用子查询或 CTE 后过滤窗口结果，避免在不支持 QUALIFY 的方言中直接写入 WHERE",
+    "考虑 NULL salary、重复员工记录和大表分区/排序成本等边界与工程问题"
+  ],
+  "hints": [
+    "关键不只是 Top 3，而是并列时到底要三行还是三个薪资档位。",
+    "窗口函数的结果通常需要在外层查询中过滤。"
+  ],
+  "follow_ups": [
+    "如果要返回每个部门薪资前三且最近入职的员工，排序规则应如何定义？",
+    "在百亿行数据上执行这条 SQL，你会如何检查和优化物理执行计划？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00",
+  "visibility": "public"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "interview-coach-resume",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Export private Interview Coach Markdown resumes to PDF.",
+  "scripts": {
+    "pdf": "node scripts/export-pdf.cjs"
+  },
+  "devDependencies": {
+    "md-to-pdf": "5.2.5",
+    "pdf-lib": "1.17.1"
+  }
+}

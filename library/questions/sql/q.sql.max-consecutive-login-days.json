@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.max-consecutive-login-days",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 logins(user_id, login_date)，样例数据为用户 1 在 2024-01-01、01-02、01-04、01-05、01-06 登录，用户 2 在 01-01、01-02、01-03、01-05 登录，用户 3 在 01-03、01-04 登录。请写 SQL 计算每个用户连续登录的最大天数，输出 user_id、max_consecutive_days；期望结果分别为 3、3、2。同一用户同一天可能存在重复登录记录，应按自然日去重。",
+  "rubric": [
+    "先按 user_id 和自然日去重，避免同一天的重复事件夸大连续天数或破坏分组",
+    "能够使用日期减 ROW_NUMBER 的 gaps-and-islands 方法，或使用 LAG 标记断点后累计分组号",
+    "连续区间的分组必须按 user_id 隔离，并以相邻自然日差为 1 天作为连续定义",
+    "先计算每个连续区间的天数，再按用户取最大值，正确保留只有一天的区间",
+    "说明日期与 timestamp、时区、NULL 日期及不同数据库日期函数的处理方式"
+  ],
+  "hints": [
+    "连续日期与连续行号同步增长，两者的差在同一连续区间中保持不变。",
+    "也可以用 LAG 判断是否断开，再对断点标记做累计和生成组号。"
+  ],
+  "follow_ups": [
+    "如果多个连续区间并列最长，需要同时返回它们的起止日期，SQL 应怎样扩展？",
+    "如果周末不要求登录，连续工作日应如何定义和计算？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

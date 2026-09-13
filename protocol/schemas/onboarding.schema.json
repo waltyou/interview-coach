@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "onboarding.schema.json",
+  "title": "Interview Coach Onboarding State",
+  "type": "object",
+  "required": [
+    "schema_version", "status", "started_at", "updated_at", "completed_at",
+    "skipped_at", "current_step", "entry_path", "privacy_choice",
+    "candidate_profile_path", "activation", "steps"
+  ],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schema_version": { "const": 2 },
+    "status": { "enum": ["in_progress", "completed", "skipped"] },
+    "started_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": ["string", "null"], "format": "date-time" },
+    "skipped_at": { "type": ["string", "null"], "format": "date-time" },
+    "current_step": { "enum": ["privacy", "goal", "profile", "materials", "first_value", "done"] },
+    "entry_path": { "enum": ["baseline", "job_targeted", "knowledge_import", "resume", "interview_retro", "explore", null] },
+    "privacy_choice": { "enum": ["private_remote", "local_only", "no_personal_data", null] },
+    "candidate_profile_path": { "type": ["string", "null"], "minLength": 1 },
+    "activation": {
+      "type": "object",
+      "required": ["kind", "reference"],
+      "properties": {
+        "kind": { "enum": ["cycle_started", "source_indexed", "resume_initialized", "interview_experience_captured", "guide_reviewed", "candidate_discovery_completed", null] },
+        "reference": { "type": ["string", "null"], "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "steps": {
+      "type": "object",
+      "required": ["privacy", "goal", "profile", "materials", "first_value"],
+      "properties": {
+        "privacy": { "$ref": "#/$defs/step" },
+        "goal": { "$ref": "#/$defs/step" },
+        "profile": { "$ref": "#/$defs/step" },
+        "materials": { "$ref": "#/$defs/step" },
+        "first_value": { "$ref": "#/$defs/step" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "step": {
+      "type": "object",
+      "required": ["status", "completed_at"],
+      "properties": {
+        "status": { "enum": ["pending", "completed", "skipped"] },
+        "completed_at": { "type": ["string", "null"], "format": "date-time" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

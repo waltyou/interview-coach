@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.consecutive-login-intervals",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "manual",
+  "prompt": "给定 logins(user_id, login_date)，样例数据为用户 1 在 2024-01-01、01-02、01-04、01-05、01-06 登录，用户 2 在 01-01、01-02、01-03、01-05 登录，用户 3 在 01-03、01-04 登录。请写 SQL 返回每个用户的所有连续登录区间，连续指相邻自然日相差 1 天。输出 user_id、start_date、end_date、length，按 user_id、start_date 升序；期望区间为用户 1 的 01-01 至 01-02 和 01-04 至 01-06，用户 2 的 01-01 至 01-03 和单日 01-05，用户 3 的 01-03 至 01-04。同一用户同一天可能有重复记录，应先按自然日去重。",
+  "rubric": [
+    "先对 user_id、自然日去重，并在每个用户内按日期建立确定顺序",
+    "使用日期减 ROW_NUMBER 的稳定键，或用 LAG 标记断点后累计组号，正确识别每个连续区间",
+    "按 user_id 与区间键分组，使用 MIN、MAX、COUNT 分别得到起始日、结束日和连续天数",
+    "单日区间必须保留且 length 为 1，最终顺序显式按 user_id、start_date",
+    "说明不同数据库构造日期分组键的语法，以及 timestamp 时区与自然日转换的处理"
+  ],
+  "hints": [
+    "连续日期与连续行号的差保持不变，可以把这个差作为区间键。",
+    "另一种方法是比较当前日期与 LAG 日期，断开时记 1，再累计得到组号。"
+  ],
+  "follow_ups": [
+    "如何只返回长度至少为 3 天的区间？",
+    "如何在同一查询中标出每个用户最长的全部并列区间？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-03T21:47:27+08:00",
+  "updated_at": "2026-09-03T21:47:27+08:00"
+}

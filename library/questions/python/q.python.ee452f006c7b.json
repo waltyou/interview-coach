@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.python.ee452f006c7b",
+  "revision": 2,
+  "status": "active",
+  "topic": "python",
+  "kind": "explanation",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "explicit-heading",
+  "prompt": "在以 CPython 为主的数据处理服务中，GIL 是什么，它保护了什么，又没有保护什么？请比较 CPU 密集与 I/O 密集任务下线程、多进程、异步 I/O 和原生扩展的选择，并说明你会如何验证瓶颈确实来自 GIL。",
+  "rubric": [
+    "说明 GIL 是 CPython 解释器层面的互斥机制，同一进程中通常只有一个线程执行 Python bytecode，而不是 Python 语言规范",
+    "解释它简化了 CPython 对象模型、引用计数和扩展生态的并发管理，但不等同于业务数据结构的线程安全",
+    "指出 CPU 密集纯 Python 线程通常不能获得多核线性加速，I/O 阻塞期间线程仍可能有效并发",
+    "能根据任务选择多进程、asyncio、释放 GIL 的 C/C++/NumPy 扩展、向量化或外部分布式计算，并说明代价",
+    "讨论序列化、进程间通信、内存复制、调度、故障隔离和可观测性等工程权衡",
+    "先用 profiling、CPU 利用率、线程状态和可重复基准验证瓶颈，避免把所有 Python 性能问题归因于 GIL"
+  ],
+  "hints": [
+    "区分 Python 语言、CPython 实现和业务代码线程安全。",
+    "先问任务是在等 I/O，还是在执行 Python bytecode。"
+  ],
+  "follow_ups": [
+    "为什么 NumPy 的某些计算可以在多线程下利用多个 CPU 核？",
+    "把线程池改为进程池后吞吐反而下降，你会检查什么？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-08-23T15:08:30+08:00",
+  "visibility": "public"
+}

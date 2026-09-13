@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+dashboard/index.html
+dashboard/review.html
+workspace/reports/answer-review.md
+workspace/state/
+
+# Generated personal projections
