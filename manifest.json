@@ -27,7 +27,8 @@
     "reports": "workspace/reports",
     "resume": "workspace/resume",
     "resume_tool": "resume",
-    "dashboard": "dashboard"
+    "dashboard": "dashboard",
+    "sessions": "workspace/sessions"
   },
   "source_roots": {
     "repository": ".",

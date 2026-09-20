@@ -15,6 +15,19 @@ import discover  # noqa: E402
 
 
 class OnboardingTests(unittest.TestCase):
+    def test_explore_can_complete_without_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "workspace" / "onboarding.json"
+            onboard.start_onboarding(path)
+            onboard.record_step("privacy", path=path, privacy_choice="no_personal_data")
+            onboard.record_step("goal", path=path, entry_path="explore")
+            onboard.record_step("profile", path=path, skipped=True)
+            onboard.record_step("materials", path=path, skipped=True)
+            onboard.record_step("first_value", path=path, activation_kind="guide_reviewed", reference="docs/HANDBOOK.md")
+            state = onboard.complete_onboarding(path)
+            self.assertIsNone(state["candidate_profile_path"])
+            self.assertEqual("completed", state["status"])
+
     def test_status_distinguishes_new_and_existing_workspaces(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

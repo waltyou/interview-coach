@@ -657,6 +657,25 @@ def validate_events(
             score = scores.get(field)
             if not isinstance(score, int) or not 0 <= score <= 4:
                 validation.error(path, f"invalid score {field}: {score}")
+    try:
+        effective_attempts(list(events.values()))
+    except (ValueError, KeyError, TypeError) as error:
+        validation.error(EVENT_ROOT, f"invalid evaluation history: {error}")
+    from practice import SESSION_ROOT, session_issues
+    unfinished = Counter()
+    for path in iter_json_files(SESSION_ROOT):
+        session = safe_load(path, validation)
+        if session is None:
+            continue
+        for issue in session_issues(session, cycles, questions):
+            validation.error(path, issue)
+        if path.stem != session.get("id"):
+            validation.error(path, "session filename does not match ID")
+        if session.get("stage") != "completed":
+            unfinished[session.get("cycle_id")] += 1
+    for cycle_id, count in unfinished.items():
+        if count > 1:
+            validation.warning(SESSION_ROOT, f"choose an unfinished session for {cycle_id}")
     return events
 
 

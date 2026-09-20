@@ -33,6 +33,7 @@ ACTIVATION_KINDS = {
     "candidate_discovery_completed",
 }
 EVIDENCE_GLOBS = (
+    "workspace/sessions/**/*.json",
     "workspace/jobs/**/*.json",
     "workspace/cycles/**/*.json",
     "workspace/events/**/*.json",
@@ -44,6 +45,10 @@ EVIDENCE_GLOBS = (
 
 class OnboardingError(RuntimeError):
     pass
+
+
+def required_steps(state: dict[str, Any]) -> set[str]:
+    return REQUIRED_STEPS - {"profile"} if state.get("entry_path") == "explore" else REQUIRED_STEPS
 
 
 def empty_step() -> dict[str, Any]:
@@ -170,7 +175,7 @@ def state_issues(state: dict[str, Any]) -> list[str]:
         if state["status"] == "completed":
             if state["current_step"] != "done" or not state["completed_at"]:
                 issues.append("completed onboarding must be at done with completed_at")
-            for step in REQUIRED_STEPS:
+            for step in required_steps(state):
                 if recorded_status(step) != "completed":
                     issues.append(f"completed onboarding requires completed step: {step}")
             pending = [
@@ -284,9 +289,9 @@ def record_step(
 ) -> dict[str, Any]:
     if step not in ONBOARDING_STEPS:
         raise OnboardingError(f"Unknown onboarding step: {step}")
-    if skipped and step in REQUIRED_STEPS:
-        raise OnboardingError(f"Required onboarding step cannot be skipped: {step}")
     state = load_state(path)
+    if skipped and step in required_steps(state):
+        raise OnboardingError(f"Required onboarding step cannot be skipped: {step}")
     if state["status"] != "in_progress":
         raise OnboardingError(f"Cannot update onboarding with status {state['status']}")
     if skipped and (
@@ -389,7 +394,7 @@ def complete_onboarding(
         raise OnboardingError(f"Onboarding still has pending steps: {', '.join(pending)}")
     incomplete = [
         step
-        for step in REQUIRED_STEPS
+        for step in required_steps(state)
         if state["steps"][step]["status"] != "completed"
     ]
     if incomplete:

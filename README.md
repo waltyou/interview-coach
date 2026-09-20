@@ -13,17 +13,17 @@ git clone <public-repository-url> interview-coach
 cd interview-coach
 ```
 
-### 2. 让 Agent 带你完成初始化
+### 2. 先试一道，或按你的情况准备
 
 在仓库根目录打开 Codex、Claude Code 或其他支持项目指令的 Agent，然后说：
 
 ```text
-帮我初始化 Interview Coach。
+先试一道。
 ```
 
-Agent 会先确认个人数据的保存方式和当前目标，再让你选择通过聊天、简历、其他资料或混合方式建立最小画像，并在这次对话中完成第一个实际结果。你可以选择全面摸底、准备具体职位、导入资料、处理简历、记录面试复盘或先了解项目。
+Agent 直接给出一道公共题，回答和评价不写入项目。当前聊天平台仍可能保留对话。想保存进度时，说按我的情况准备；Agent 再确认保存方式和最小背景。只用公共题库和不保存回答是两个独立选择。
 
-即使你没有说出这条提示词，Agent 在发现空白工作区时也会主动提供引导。你随时可以说跳过 onboarding，直接开始基线练习。
+也可以说先做 8 题短测，或今天练 15 分钟。已保存的练习中，说继续即可接回原题、提示和待答阶段。
 
 ### 3. 保存私人版本
 
@@ -59,6 +59,7 @@ workspace/questions/     根据私人上下文形成的题目
 workspace/jobs/          目标职位与 Job Brief
 workspace/cycles/        准备周期
 workspace/events/        原始回答与评价历史
+workspace/sessions/      未完成题目、提示和练习阶段
 workspace/state/         可重建的进度和掌握度
 workspace/reports/       复习报告
 workspace/resume/        私人简历与生成的 PDF

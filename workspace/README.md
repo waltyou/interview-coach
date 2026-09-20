@@ -8,6 +8,7 @@ onboarding.json 首次引导生命周期与 CandidateProfile 引用
 profile/        已确认的 CandidateProfile 与不可变 CoachObservation
 cycles/         PreparationCycle 定义
 events/         只追加的 AttemptEvent，包含 PracticeSession ID
+sessions/       当前题目、提示、待答阶段、目标与预算
 questions/      个人经历、具体公司和项目上下文相关的 private Question
 resume/         私人完整简历、岗位定制版本、共享页眉与生成的 PDF
 state/coach-model.json 从 CoachObservation 重建的 CoachModel 投影

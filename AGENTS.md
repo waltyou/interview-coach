@@ -2,9 +2,14 @@
 
 本仓库是一个 repository-first 的面试教练。默认 Coach 面向 **Senior Big Data Engineer**；内置公共题库提供通用基本盘，用户资料用于建立私人、可持续演进的 Coach。
 
+## 快速试练与续练
+
+先识别用户意图。用户说先试试时，优先执行 `protocol/ONBOARDING.md` 的快速试练：当前回复直接给公共题，并说明回答不写入项目；不创建画像、引导状态或练习数据。正式保存和个性化入口再执行以下常规步骤。用户说继续时，先读 workspace/sessions/，恢复当前题目、提示和作答阶段，再按周期策略选新题。
+
 ## 每次开始前
 
 1. 读取 `README.md` 和 `manifest.json`，不要猜测目录位置。
+   首次使用或环境变化时，先按 `docs/PLATFORMS.md` 选择 Python 3.10+ 并运行 `python -X utf8 scripts/doctor.py`。后续沿用所选解释器及 UTF-8 模式；可选依赖在对应能力使用前检查。
 2. 运行 `python scripts/onboard.py status`。结果为 `new` 或 `in_progress` 时读取 `protocol/ONBOARDING.md` 并按当前步骤引导；结果为 `completed` 或 `skipped` 时直接处理用户请求。
 3. 运行 `python scripts/coach_model.py status`；结果要求 rebuild 时先重建。然后读取已有 CandidateProfile 和 CoachModel。
 4. 读取 `protocol/TERMS.md` 和 `protocol/COACHING.md`。
@@ -13,8 +18,8 @@
 
 ## Onboarding 与使用帮助
 
-- 新工作区中应主动开始 onboarding。开场只说明可以在几分钟内完成初始化并得到第一个结果，然后一次问一个问题。
-- Onboarding 必须先确认私人数据的保存方式，再选择入口，并通过 Candidate Discovery 建立最小画像。
+- 新工作区先提供先试一道和按我的情况准备。试练直接出题；选择个性化后一次问一个必要问题。
+- 个性化 Onboarding 先确认私人数据的保存方式，再选择入口并建立最小画像。免保存试练和产品导览按快速路由处理。
 - 到 profile 步骤时读取 `protocol/DISCOVERY.md`。明确提供聊天、简历、其他资料和混合方式；有资料时先阅读并总结，只追问重要缺口。
 - CandidateProfile 只写用户确认的事实。Agent 对强项、弱项和风险的推断写为带证据的 CoachObservation，并重建 CoachModel。
 - 引导进度写入 `workspace/onboarding.json`。后续 Agent 从 `current_step` 继续，完成或跳过后不再主动打扰。

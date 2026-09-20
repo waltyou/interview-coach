@@ -15,10 +15,14 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Select the next Question for a PreparationCycle")
     parser.add_argument("--cycle-id", required=True)
     parser.add_argument("--seed", type=int)
+    parser.add_argument("--session-id")
     return parser.parse_args()
 
 
-def choose(items: list[dict[str, Any]], seed: int | None) -> dict[str, Any]:
+T = TypeVar("T")
+
+
+def choose(items: list[T], seed: int | None) -> T:
     generator = random.Random(seed) if seed is not None else random.SystemRandom()
     return generator.choice(items)
 
@@ -147,12 +151,33 @@ def main() -> None:
     if cycle["status"] != "active":
         raise SystemExit(f"PreparationCycle is not active: {cycle['status']}")
 
+    from practice import checkpoint, load_sessions, resumable, resume_result, save_session, start_session
+    questions = load_questions()
+    try:
+        if args.session_id:
+            session = next((s for s in load_sessions() if s["id"] == args.session_id), None)
+            if not session or session["cycle_id"] != cycle["id"] or session["stage"] == "completed":
+                raise ValueError("Session must be unfinished and belong to this cycle")
+        else:
+            session = resumable(cycle["id"])
+        if session:
+            pending = resume_result(session, cycle, questions)
+            if pending:
+                print(json.dumps(pending, ensure_ascii=False, indent=2))
+                return
+    except ValueError as error:
+        raise SystemExit(str(error))
+
     # AttemptEvent is the source of truth. Always rebuild before selection so a
     # stale projection can never cause the previous question to be selected again.
     rebuild()
     progress_path = STATE_ROOT / "cycles" / f"{cycle['id']}.json"
     progress = load_json(progress_path)
-    result = select_result(cycle, progress, load_questions(), args.seed)
+    result = select_result(cycle, progress, questions, args.seed)
+    if result["status"] == "selected":
+        session = session or start_session(cycle)
+        save_session(checkpoint(session, selection=result))
+        result["practice_session_id"] = session["id"]
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

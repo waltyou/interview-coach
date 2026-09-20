@@ -2,7 +2,21 @@
 
 Onboarding 的目标是在一次短对话内建立安全边界、理解候选人，并交付第一个实际结果。它是可恢复的生命周期，不是一次性欢迎文案。
 
+## 快速试练优先路由
+
+开场提供两个入口：先试一道、按我的情况准备。用户已经说先试试或先试一道时，当前回复直接出题，无需先追问画像、目标或保存偏好。
+
+运行 `python scripts/practice.py trial`，只展示返回的公共题目，并附一句：这次先试一道，回答和评价不写入项目；当前聊天平台仍可能保存对话。命令只读题库，不创建周期、画像、Onboarding、会话、Event 或报告。没有 Python 时直接从公共题库读取一个 active Question 并在对话内试练。
+
+回答后按 learning 模式给出反馈，用户愿意继续个性化时再补最小画像。用户明确选择保存后，确认 local_only 或 private_remote，建立周期与会话；若要保存先前试答，还需用户明确要求保留这次回答。否则从下一次正式作答开始记录。免保存模式下跨 Agent 续练依赖当前聊天上下文，不承诺从项目文件恢复。
+
+只用公共题库决定题目来源；不保存个人数据决定是否写入用户回答，两者分别处理。练公共题时回答也可能包含个人信息。用户选择 no_personal_data 时，只提供免保存试练或导览；不写 CandidateProfile、Observation、回答和练习状态。仅在用户选择记录引导进度时维护不含个人事实的 Onboarding 状态。
+
+用户询问产品能力时可直接导览。若已进入持久化 explore 引导，profile 可用 `onboard.py record profile --skip` 跳过，first_value 使用 guide_reviewed；个性化准备入口仍需最小画像。
+
 ## 何时启动
+
+首次调用脚本前先按 `docs/PLATFORMS.md` 检查基础环境，选择 Python 3.10+ 与 UTF-8 模式。检查独立于画像，不新增 Onboarding 步骤；PDF 等可选依赖推迟到对应能力使用时检查。
 
 处理新用户的第一个请求前运行：
 
@@ -10,7 +24,7 @@ Onboarding 的目标是在一次短对话内建立安全边界、理解候选人
 python scripts/onboard.py status
 ```
 
-- `new`：主动提供 onboarding，并运行 `python scripts/onboard.py start`。
+- `new`：先提供试练或个性化两个入口；选择个性化后运行 `python scripts/onboard.py start`。
 - `in_progress`：从 `current_step` 继续，不重复已经完成的问题。
 - `existing`：已有个人数据但没有 onboarding 状态。正常处理请求，仅提供一次可选补充初始化提示。
 - `completed` 或 `skipped`：直接处理当前请求。
@@ -34,7 +48,7 @@ python scripts/onboard.py status
 
 - `private_remote`：用户确认个人版本连接到 private repository。
 - `local_only`：只在本地保存。
-- `no_personal_data`：暂时只使用公共题库。
+- `no_personal_data`：回答、画像及其他个人数据不写入项目；只提供免保存试练或导览。
 
 在 privacy 完成前，不导入简历、联系方式、回答、复盘或公司内部资料。
 
@@ -76,7 +90,7 @@ python scripts/discover.py complete --confirmed-by-user
 python scripts/onboard.py record profile --candidate-profile workspace/profile/candidate.json
 ```
 
-profile 是必要步骤，但不要求用户提供完整履历。一个已确认的背景摘要或资料，加上当前目标、动机或待解决问题，就足以完成初次发现。
+个性化入口的 profile 是必要步骤，但不要求用户提供完整履历。explore 可跳过；免保存试练直接走快速路由。一个已确认的背景摘要或资料，加上当前目标、动机或待解决问题，就足以完成初次发现。
 
 ### 4. materials
 
@@ -108,7 +122,7 @@ python scripts/onboard.py complete
 ## 首次开场方式
 
 ```text
-我看到这是一个新的 Interview Coach 工作区。我可以用几分钟帮你完成初始化，并在这次对话里给出第一个有用结果。开始前先确认：你准备把个人资料保存在 private repository、只在本地使用，还是暂时只用公共题库？
+可以先试一道题，也可以按你的情况准备。先试一道会直接开始，回答不写入项目；按你的情况准备会先确认保存方式，再了解你的目标。
 ```
 
 privacy 和 goal 完成后：

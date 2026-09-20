@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "practice-session.schema.json",
+  "title": "PracticeSession",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "id",
+    "cycle_id",
+    "created_at",
+    "updated_at",
+    "mode",
+    "goal",
+    "time_budget_minutes",
+    "stage",
+    "current_question",
+    "hints_used",
+    "pending_prompt"
+  ],
+  "properties": {
+    "assistance": { "enum": ["independent", "hints", "reference_seen", "unknown"] },
+    "reference_seen_questions": { "type": "array", "items": { "type": "string", "pattern": "^q\\." }, "uniqueItems": true },
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^practice-session\\.[A-Za-z0-9.-]+$"
+    },
+    "cycle_id": {
+      "type": "string",
+      "pattern": "^cycle\\."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "mode": {
+      "enum": [
+        "learning",
+        "mock"
+      ]
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "time_budget_minutes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "stage": {
+      "enum": [
+        "ready",
+        "awaiting_answer",
+        "awaiting_followup",
+        "awaiting_retry",
+        "completed"
+      ]
+    },
+    "pending_prompt": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "current_question": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "question_id",
+        "question_revision",
+        "prompt"
+      ],
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "pattern": "^q\\."
+        },
+        "question_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "prompt": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "hints_used": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "level",
+          "text"
+        ],
+        "properties": {
+          "level": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
