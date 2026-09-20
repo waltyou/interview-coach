@@ -2,8 +2,7 @@ const fs = require('node:fs');
 const fsPromises = require('node:fs/promises');
 const path = require('node:path');
 
-const { mdToPdf } = require('md-to-pdf');
-const { PDFDocument } = require('pdf-lib');
+const { findBrowserExecutable, loadPdfDependencies, checkBrowser } = require('./browser.cjs');
 
 const toolRoot = path.resolve(__dirname, '..');
 const packRoot = path.resolve(toolRoot, '..');
@@ -21,6 +20,7 @@ const sharedHeaders = {
 function printHelp() {
   console.log(`Usage:
   npm run pdf
+  npm run pdf -- --check
   npm run pdf -- Markdown/tailored/resume.md
   npm run pdf -- Markdown/tailored/first.md Markdown/tailored/second.md
 
@@ -161,44 +161,15 @@ async function expandSharedHeader(markdownPath, markdown) {
   return `${header.trimEnd()}\n\n${body}`;
 }
 
-function findBrowserExecutable() {
-  const configuredPaths = [
-    process.env.PUPPETEER_EXECUTABLE_PATH,
-    process.env.CHROME_PATH,
-  ].filter(Boolean);
-
-  const platformPaths = {
-    win32: [
-      'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-      'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-      'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-    ],
-    darwin: [
-      '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-      '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
-    ],
-    linux: [
-      '/usr/bin/google-chrome',
-      '/usr/bin/google-chrome-stable',
-      '/usr/bin/chromium',
-      '/usr/bin/chromium-browser',
-      '/usr/bin/microsoft-edge',
-    ],
-  };
-
-  return [...configuredPaths, ...(platformPaths[process.platform] || [])].find((candidate) =>
-    fs.existsSync(candidate),
-  );
-}
-
 async function countPdfPages(pdfPath) {
+  const { PDFDocument } = loadPdfDependencies();
   const pdfBytes = await fsPromises.readFile(pdfPath);
   const pdf = await PDFDocument.load(pdfBytes);
   return pdf.getPageCount();
 }
 
 async function exportResume(markdownPath, browserExecutable) {
+  const { mdToPdf } = loadPdfDependencies();
   const markdown = await fsPromises.readFile(markdownPath, 'utf8');
   const expandedMarkdown = await expandSharedHeader(markdownPath, markdown);
   await validateLocalImages(markdownPath, expandedMarkdown);
@@ -237,6 +208,11 @@ async function main() {
     printHelp();
     return;
   }
+  if (argumentsFromCli.includes('--check')) {
+    await checkBrowser();
+    return;
+  }
+  loadPdfDependencies();
 
   const markdownFiles = await resolveInputs(argumentsFromCli);
   if (markdownFiles.length === 0) {

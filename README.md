@@ -150,7 +150,7 @@ git push origin main
 
 ## 运行环境
 
-核心脚本使用 Python 3 标准库。读取 PDF Source 时建议安装 `pypdf`；导出简历 PDF 需要 Node.js 和仓库中声明的 npm 依赖。
+面向 Windows、macOS、Linux。核心脚本需要 Python 3.10+；简历 PDF 导出按需使用 Node.js 22+ 与浏览器。Agent 会先检查当前任务需要的环境。命令中的 `python` 可替换为 `python3` 或 Windows 的 `py -3`，Windows 请加 `-X utf8`。平台验证状态、安装与字体说明见 [运行环境](docs/PLATFORMS.md)。
 
 ## License
 
