@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.system-design.shared-platform-boundaries",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "system-design",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "多个团队要求相似但不完全一致的数据管道。你如何决定继续逐个交付，还是建设共享组件或平台？说明适用边界、最小公共接口、例外处理、迁移成本和效果验证。",
+  "rubric": [
+    "区分已经重复验证的需求和推测需求",
+    "量化重复成本与变化频率",
+    "明确公共不变量和团队特有语义",
+    "比较共享能力的维护/迁移成本",
+    "渐进推广并保留合理逃生口",
+    "持续拥有业务结果和生产责任。"
+  ],
+  "hints": [
+    "列出三项真正相同的约束",
+    "计算平台本身需要谁长期维护。"
+  ],
+  "follow_ups": [
+    "只有一个团队会使用时是否仍值得建设？",
+    "统一接口不断新增例外时何时应拆开？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

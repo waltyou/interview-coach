@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.calendar-window-quality",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "质量表 quality_day(dataset_id, day, good_rows, total_rows) 中，每个数据集每天至多一行，但日期可能缺失。请写 SQL 计算每条记录当日及之前六个自然日的总 good_rows、total_rows 和加权通过率。规定缺失日期不增加计数，分母为零时通过率为 NULL；说明所用 SQL 方言。",
+  "rubric": [
+    "按 dataset_id 隔离并使用真实日期区间，不把前六行当六天",
+    "可用时间 RANGE、日期骨架或区间连接表达语义",
+    "先累计分子分母再相除，避免平均每日比率",
+    "用小数除法并处理零分母",
+    "保持输入输出粒度，说明重复日期需先规范化",
+    "测试缺失日期、窗口边界、零分母和不同数据集",
+    "讨论排序、分区裁剪与迟到更正重算范围"
+  ],
+  "hints": [
+    "先画出某一天的闭区间日历范围。",
+    "每日比率不能在不同分母下直接平均。"
+  ],
+  "follow_ups": [
+    "若同一天有多个修订版本，应该先去重还是先开窗？",
+    "为何只读取输出日期范围可能漏掉窗口所需历史？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

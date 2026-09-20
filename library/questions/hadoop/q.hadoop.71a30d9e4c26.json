@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.hadoop.71a30d9e4c26",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "hadoop",
@@ -28,10 +28,11 @@
   ],
   "follow_ups": [
     "Combiner 为什么不能保证执行次数？",
-    "Map 输出压缩会怎样影响 CPU、网络和磁盘？"
+    "Map 输出压缩会怎样影响 CPU、网络和磁盘？",
+    "在相同输入下比较先 Join 再聚合与先局部聚合再 Join，哪些业务粒度和代数条件允许等价重写？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T22:36:58+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-09-20T21:46:34+08:00"
 }

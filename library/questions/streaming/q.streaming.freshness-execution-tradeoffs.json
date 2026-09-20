@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.streaming.freshness-execution-tradeoffs",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "streaming",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "假设分析任务目前每日运行，业务希望大多数结果在十五分钟内可见，偶发迟到数据允许次日修正。你会如何比较定时批处理、微批和持续流式执行？说明延迟口径、正确性、恢复、状态成本，以及未来要求数秒延迟时的演进边界。",
+  "rubric": [
+    "区分调度间隔、处理耗时和端到端延迟",
+    "结合分位数与峰值吞吐验证目标",
+    "显式处理重复、迟到和结果修正",
+    "比较状态和运行成本",
+    "对所选引擎说明能力限制",
+    "制定演进触发指标，避免把持续执行等同于业务必需。"
+  ],
+  "hints": [
+    "先定义事件产生到结果可见的时间线",
+    "把快速可见与最终完整分别验收。"
+  ],
+  "follow_ups": [
+    "一次运行超过调度间隔怎么办？",
+    "下游仅允许追加时如何发布修正？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.algorithm.58cf31a9e620",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "algorithm",
@@ -13,24 +13,25 @@
     "java-engineer"
   ],
   "origin": "explicit-heading",
-  "prompt": "实现一个固定容量的 LRU Cache，要求 get 和 put 平均 O(1)。请说明哈希表与双向链表如何协作、更新访问顺序、淘汰最久未使用项，并讨论容量为 0、并发访问和 LinkedHashMap 实现。",
+  "prompt": "数据平台需要一个进程内的表元数据缓存。请实现固定容量的 LRU Cache，使 get 和 put 平均 O(1)，说明访问顺序、更新和淘汰如何协作，并分析容量为零、并发调用与元数据失效的边界。",
   "rubric": [
-    "哈希表提供 key 到节点的 O(1) 定位，双向链表维护从新到旧的访问顺序",
-    "get 命中和 put 更新都将节点移动到链表头部",
-    "容量超限时删除尾部节点，并同步从哈希表移除",
-    "正确处理覆盖已有 key、容量为 0 和不存在 key",
-    "说明普通实现不具备线程安全性，以及加锁、分段或使用成熟缓存库的取舍",
-    "能说明 LinkedHashMap accessOrder=true 的简化实现"
+    "哈希表定位节点，双向链表维护最近访问顺序",
+    "get 命中与 put 更新都移动到最近使用端",
+    "超出容量时从链表和哈希表一致删除最旧节点",
+    "覆盖已有键、空缓存和容量为零有明确语义",
+    "复合更新需要同步，单个并发 Map 不能独自保证链表与 Map 的一致性",
+    "区分容量淘汰与业务元数据失效，解释何时优先使用成熟缓存库"
   ],
   "hints": [
-    "链表节点需要同时保存 key 和 value，淘汰时才能更新 Map。"
+    "分别定义查找结构与顺序结构的不变量。",
+    "一次更新会修改几个共享状态？"
   ],
   "follow_ups": [
-    "LRU 与 LFU 的适用场景有何不同？",
-    "如何加入过期时间或按权重淘汰？"
+    "缓存里的表结构过期时，LRU 能解决吗？",
+    "如何验证热点键和并发淘汰下的正确性？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T22:36:58+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-09-20T21:46:34+08:00"
 }

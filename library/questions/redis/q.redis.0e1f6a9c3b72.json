@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.redis.0e1f6a9c3b72",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "redis",
@@ -13,25 +13,25 @@
     "backend-engineer"
   ],
   "origin": "generated",
-  "prompt": "为计数器、排行榜、消息消费和对象缓存选择 Redis 数据结构时，你会怎样在 String、Hash、List、Set、Sorted Set 和 Stream 之间取舍？如果要求主节点故障后自动切换，请解释 Sentinel 的监控、主观/客观下线、选主和客户端重定向，并说明它不解决哪些问题。",
+  "prompt": "数据平台要提供实时计数、排行榜和结果缓存。请按访问方式选择 Redis 数据结构，并讨论热点、过期与内存成本。若采用主从复制和 Sentinel，故障切换期间客户端怎样恢复，哪些最近写入仍可能丢失，何时应另行考虑分片？",
   "rubric": [
-    "能把计数、对象字段、队列、去重集合、排行榜和消费组映射到合适的数据结构",
-    "讨论编码方式、单 key 大小、热点 key、过期和原子命令对性能的影响",
-    "说明 Sentinel 持续监控实例并通过 quorum 判断客观下线",
-    "描述选举 leader Sentinel、选择副本、提升主节点和重新配置其他副本的过程",
-    "说明客户端需要发现新主节点并处理切换期间的错误与重试",
-    "指出 Sentinel 提供高可用而非数据分片，异步复制仍可能在故障切换时丢失最近写入"
+    "计数、字段更新、集合去重和有序排名对应不同访问与数据结构需求",
+    "评估大 key、热点 key、过期和内存开销",
+    "解释 Sentinel 的监控、故障判定和故障转移职责",
+    "客户端发现新主并处理失败、超时和重试副作用",
+    "异步复制使自动切换不等于零数据丢失",
+    "区分高可用与分片扩展，并用业务容忍度选择方案"
   ],
   "hints": [
-    "先按访问模式选数据结构，而不是按字段长相。",
-    "Sentinel 和 Redis Cluster 解决的问题不同。"
+    "先写出每类请求实际执行的读写操作。",
+    "在写入确认到副本同步之间放入一个故障。"
   ],
   "follow_ups": [
-    "如何避免缓存击穿、穿透和雪崩？",
-    "Redis Cluster 的 slot 与 Sentinel 架构有何区别？"
+    "计数重试造成重复累加时怎样处理？",
+    "为什么 Sentinel 高可用不能直接解决单个热点 key 的吞吐问题？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T22:36:58+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-09-20T21:46:34+08:00"
 }

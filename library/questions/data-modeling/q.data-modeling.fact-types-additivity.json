@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.data-modeling.fact-types-additivity",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "data-modeling",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "仓储业务记录货物入库、出库、库存日终余额、补货申请的各个审批阶段，以及仓库可存放哪些物料。请选择事务事实、周期快照、累积快照与无事实度量表的适用对象并声明粒度，再说明吞吐量、库存、平均等待时间和缺货率如何跨仓库与日期聚合。",
+  "rubric": [
+    "原子出入库动作使用稳定交易粒度",
+    "日终库存使用按日期与库存维度的周期快照",
+    "有明确起止和里程碑的补货流程可使用累积快照",
+    "仓库物料资格关系可用 factless fact 表达存在性",
+    "库存不能跨日期直接求和，吞吐也需统一计量单位",
+    "平均值和率保留分子分母或原始事实重新加权",
+    "避免不同粒度直接 Join 放大度量"
+  ],
+  "hints": [
+    "一行代表一次动作、一天状态、一个流程还是一个关系？",
+    "沿日期维度直接 SUM 是否仍有业务含义？"
+  ],
+  "follow_ups": [
+    "仓库平均等待时间能直接平均吗？",
+    "一次补货拆成多次到货时累积快照粒度如何调整？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.2b4f91b1c3c8",
+  "revision": 2,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "explanation",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "以 Spark 3.5.x 为范围，一条金额计算 SQL 混合使用 Decimal(p,s)、整数和显式 cast，并把结果写入较窄的 Decimal 列。你会如何检查中间类型、精度缩减、舍入与溢出？请用边界样例比较 ANSI 模式和相关精度设置，设计可重复的验收。",
+  "rubric": [
+    "区分 p、s 与整数位 p-s，检查每一步表达式及目标列类型",
+    "Spark Decimal 精度上限为 38，运算类型增长可能触发缩减或溢出",
+    "加减需要考虑进位，乘除需要按目标版本规则验证结果类型",
+    "区分算术溢出、显式 cast 与写入赋值策略，避免认为一个开关决定所有路径",
+    "用最大边界、负数、舍入和空值验证启用/关闭 ANSI 时的行为",
+    "以金额正确性选择显式类型和失败策略，不能用 Double 隐藏问题"
+  ],
+  "hints": [
+    "先看 explain 或表达式 schema 中的类型。",
+    "中间结果和最终目标列需要分别验收。"
+  ],
+  "follow_ups": [
+    "怎样发现结果变成 NULL 后被 SUM 静默忽略？",
+    "为什么只测试常见小金额不能证明边界安全？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

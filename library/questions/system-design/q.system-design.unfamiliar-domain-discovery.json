@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.system-design.unfamiliar-domain-discovery",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "system-design",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "假设你不熟悉设备租赁业务，却需要为其建立分析模型。请演示开始两分钟如何澄清业务目标、指标消费者、时间与准确性要求，声明合理假设，并从业务过程、事实粒度、历史语义和访问模式组织后续设计。暂不展开完整 schema。",
+  "rubric": [
+    "诚实区分已知背景与假设，不虚构领域经验",
+    "优先问会改变设计的少量问题",
+    "用租赁、归还、收费等业务动作识别过程",
+    "逐表声明粒度的计划先于技术选型",
+    "标记取消、延期、状态和可变属性的时间语义",
+    "区分分析与当前状态访问要求",
+    "得到不足信息时声明假设继续，并保留后续验证点"
+  ],
+  "hints": [
+    "两分钟用于确定路线和风险。",
+    "每个澄清问题都应能改变一个设计决定。"
+  ],
+  "follow_ups": [
+    "需求方要求自行假设时怎样继续？",
+    "熟悉相似工具但缺少目标工具生产经验时，如何验证迁移能力和安全上手？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.ragged-text-aggregation",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "文本文件的每行是长度不定的逗号分隔整数序列，格式不支持 CSV 引号或字段内换行。请用 PySpark 计算所有正数的平均值，处理空行、非法 token 和无正数的输入，并说明局部聚合怎样减少传输。",
+  "rubric": [
+    "使用 text 读取并通过 flatMap 或 split/explode 展开变长序列",
+    "显式 trim、类型转换和大整数/溢出约定",
+    "正确筛选正数，声明坏值失败或隔离策略",
+    "使用可合并 sum/count 状态而不是对分区平均值直接平均",
+    "明确空结果语义与数值精度",
+    "避免 collect 全量输入，分析跨分区合并成本",
+    "用不等大小分区验证加权结果"
+  ],
+  "hints": [
+    "平均值需要保留哪些可组合的信息？",
+    "输入约定决定是否需要完整 CSV parser。"
+  ],
+  "follow_ups": [
+    "两个分区各自平均值相同，是否意味着直接平均总是正确？",
+    "怎样统计并隔离坏 token 而不让问题静默消失？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

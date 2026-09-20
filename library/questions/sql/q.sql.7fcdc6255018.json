@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.sql.7fcdc6255018",
-  "revision": 2,
+  "revision": 3,
   "status": "active",
   "topic": "sql",
   "kind": "explanation",
@@ -26,11 +26,12 @@
   ],
   "follow_ups": [
     "ROWS BETWEEN 6 PRECEDING AND CURRENT ROW 与按最近七个自然日统计有什么差别？",
-    "多个窗口函数的分区键和排序键不同时，执行计划可能发生什么？"
+    "多个窗口函数的分区键和排序键不同时，执行计划可能发生什么？",
+    "需求中的最近一个月可能指完整自然月或滚动时间窗口。请先明确范围、时区与输出粒度，再给出 SQL。"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-05T21:54:18+08:00",
-  "updated_at": "2026-08-23T15:08:30+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00",
   "visibility": "public"
 }

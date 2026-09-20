@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.spark.0be84c49d2ca",
-  "revision": 2,
+  "revision": 3,
   "status": "active",
   "topic": "spark",
   "kind": "explanation",
@@ -12,25 +12,26 @@
     "senior-data-engineer"
   ],
   "origin": "explicit-heading",
-  "prompt": "请详细阐述 Spark Tungsten 引擎的 Whole-Stage Code Generation（全阶段代码生成）技术。这个技术是如何工作的？它解决了哪些传统 JVM 模型的性能瓶颈？请尽量结合 JVM 字节码和 CPU 缓存等底层机制进行解释。",
+  "prompt": "以 Apache Spark 3.5.x 为范围，解释 Whole-Stage Code Generation 如何将连续支持代码生成的算子组成执行流水线。请说明它减少哪些逐行执行开销，哪些边界会中断融合，以及如何通过生成代码、计划和运行指标验证性能收益或回退。",
   "rubric": [
-    "解释 Volcano Iterator 模型中逐算子虚函数调用、分支判断、中间对象和 CPU cache 利用不佳等开销",
-    "说明 WholeStageCodegenExec 如何把连续支持 codegen 的物理算子融合成单个 Java 函数或 pipeline",
-    "说明 produce/consume 接口如何让父子算子生成一段紧凑循环，并由 InputAdapter 切开不支持 codegen 的边界",
-    "说明代码在 Driver 生成、由 Janino 编译，并在 Executor 的 mapPartitions 路径中执行",
-    "讨论方法字节码大小、编译时间、不支持 codegen 的算子、回退路径和排查方式"
+    "比较逐算子迭代的虚函数调用、中间对象和分支开销",
+    "说明支持代码生成的物理算子可以融合处理循环",
+    "区分 WholeStageCodegenExec 与不支持代码生成的边界",
+    "能查看生成代码和物理计划，并按目标版本追踪生成、编译与 Executor 执行路径",
+    "考虑方法大小、编译开销、回退和 UDF 等边界",
+    "用固定输入比较 CPU、分配率、吞吐与正确性"
   ],
   "hints": [
-    "先比较 Volcano 的 pull 模型和生成代码的紧凑循环。",
-    "关注 WholeStageCodegenExec 与 InputAdapter 的边界。"
+    "沿一行数据经过多个算子的路径比较两种执行方式。",
+    "先看 explain 中流水线边界，再看代码。"
   ],
   "follow_ups": [
-    "哪些物理算子会打断一个 Whole-Stage Codegen pipeline？",
-    "Driver 生成代码而 Executor 编译执行有什么影响？"
+    "为什么启用 codegen 后仍可能没有收益？",
+    "代码生成、编译和实际执行分别在哪些路径发生，怎样从目标版本源码验证？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-05T21:54:18+08:00",
-  "updated_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00",
   "visibility": "public"
 }

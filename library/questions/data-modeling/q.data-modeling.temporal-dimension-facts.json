@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.data-modeling.temporal-dimension-facts",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "data-modeling",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "客户所属服务等级会变化，历史账单需要按当时等级分析，同时保存真实收费金额。请设计 SCD Type 2 维度与账单事实，处理一天内多次变化、迟到更正、并发更新和重复执行，并解释账单金额为何仍需保存在事实中。",
+  "rubric": [
+    "区分客户业务键与各历史版本代理键",
+    "定义半开有效区间，保证版本不重叠和当前版本唯一",
+    "事实按业务发生时间关联有效维度版本",
+    "稳定事件身份和确定顺序保证重跑不重复生成版本",
+    "乱序更正可能需要重建区间及修正已经关联的事实",
+    "事务或等价机制保护关闭旧版本和新增版本",
+    "实际收费独立于等级目录价，事实保留金额、折扣与币种"
+  ],
+  "hints": [
+    "分别定义客户是谁和当时处于哪个版本。",
+    "先处理迟到变更会影响哪些既有区间。"
+  ],
+  "follow_ups": [
+    "账单到达时找不到有效维度怎样处理？",
+    "哪些属性更正适合 Type 1 而无需保留新历史？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

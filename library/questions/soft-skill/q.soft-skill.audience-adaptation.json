@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.soft-skill.audience-adaptation",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "soft-skill",
+  "kind": "behavioral",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请选择一个你熟悉的数据平台，分别用一分钟向技术评审者和准备接入的业务团队负责人介绍。两次使用相同事实，但说明各自需要理解的价值、技术边界、服务承诺、责任和下一步。",
+  "rubric": [
+    "技术版本交代关键约束和个人判断",
+    "接入版本说明输入输出、收益、接入成本与责任",
+    "两次事实一致",
+    "指标口径可解释且不夸大个人贡献",
+    "只展开会影响听众决策的技术细节",
+    "提出可执行下一步。"
+  ],
+  "hints": [
+    "先问听众准备作出什么决定",
+    "将架构信息与那个决定对应起来。"
+  ],
+  "follow_ups": [
+    "只有三十秒时保留什么？",
+    "接入方要求你没有验证过的 SLA 时怎样回答？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.scd2-event-timeline",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "套餐变更历史 plan_events(event_id, account_id, effective_at, received_at, plan_code) 使用 UTC；同一 event_id 的更新按 received_at 取最新，同一事件与接收时间内容冲突则隔离。对同账户同 effective_at 的事件约定按 (received_at,event_id) 最大者决胜。请用 SQL 从完整历史生成 plan_history(account_id, plan_code, valid_from, valid_to, is_current)，只为属性真实变化生成版本，并说明迟到更正后的原子重建方式。",
+  "rubric": [
+    "先按事件身份消除修订，再按账户/生效时刻决胜",
+    "按生效时间排序并用 null-safe 比较消除连续相同状态",
+    "去除无变化事件后再用 LEAD 定义下一个真实变化边界",
+    "采用半开区间且最后版本开放，每账户至多一个 current",
+    "迟到更正重建受影响账户，原子替换避免短暂空洞或双 current",
+    "同一输入反复执行得到相同时间线",
+    "讨论更正已被事实引用的历史版本，以及并发写的边界"
+  ],
+  "hints": [
+    "区间端点来自下一次真正变化。",
+    "收到事件的顺序不一定是业务生效顺序。"
+  ],
+  "follow_ups": [
+    "同一时间多次变化为什么需要明确业务决胜规则？",
+    "历史修订后如何定位需要重算的下游数据？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

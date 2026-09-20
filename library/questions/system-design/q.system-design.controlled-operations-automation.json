@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.system-design.controlled-operations-automation",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "system-design",
+  "kind": "system-design",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "一个数据团队经常跨多个系统排查数据延迟。你会如何从人工运行手册开始建立自动化，决定哪些步骤使用脚本或工作流、哪些需要人工判断，并在引入模型辅助时控制权限、错误传播和不可逆操作？",
+  "rubric": [
+    "从重复事实和耗时建立优先级",
+    "把确定性数据获取与判断分开",
+    "使用最小权限和可审计身份",
+    "明确重试、幂等、超时与中断恢复",
+    "高影响动作有对应授权边界",
+    "结果可验证且失败能回到人工流程",
+    "用误操作率、解决时间、覆盖与维护成本评估。"
+  ],
+  "hints": [
+    "先自动化最稳定且容易验证的步骤",
+    "列出自动化出错时最坏的副作用。"
+  ],
+  "follow_ups": [
+    "外部接口变化导致结果看似成功但实际错误时怎样发现？",
+    "什么证据允许从只读建议升级到执行动作？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

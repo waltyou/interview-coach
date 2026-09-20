@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.soft-skill.evidence-bounded-decisions",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "soft-skill",
+  "kind": "behavioral",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请讲述一次数据系统发生生产问题、你尚未完全理解根因却必须做决定的经历。说明当时已知和未知的信息、等待的代价、你比较过的选项、做决定所需的最小证据、影响范围和回滚条件，以及后续如何补齐调查。",
+  "rubric": [
+    "区分当时已知事实和事后知识",
+    "解释证据为什么足以支持当前动作",
+    "选择可逆动作并控制影响范围",
+    "给出验证和停止条件",
+    "区分恢复服务与永久修复",
+    "如实说明个人职责、实际结果和反思。"
+  ],
+  "hints": [
+    "先定位决定发生的那个时刻",
+    "回答什么新证据会让你改变决定。"
+  ],
+  "follow_ups": [
+    "如果等待进一步调查会违反数据新鲜度目标，但错误恢复又可能产生坏数据，你怎样选择？",
+    "结果恢复是否足以证明根因假设正确？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

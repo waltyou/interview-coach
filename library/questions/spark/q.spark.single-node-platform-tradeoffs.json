@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.spark.single-node-platform-tradeoffs",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "spark",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "假设一个批处理任务的活跃数据集可以放入单机内存，但现有 Spark 平台已经提供数据接入、权限、调度、重试和结果发布。你会如何比较保留平台运行与改成独立 Python 服务？给出性能、运维、迁移和未来增长的判断依据。",
+  "rubric": [
+    "测量框架开销与真实计算成本",
+    "不把当前数据量当作唯一选择依据",
+    "列出独立实现要接管的生产能力",
+    "估算总成本和故障恢复成本",
+    "通过固定输入验证正确性与性能",
+    "提出渐进替换与退出阈值。"
+  ],
+  "hints": [
+    "把计算算法和生产运行环境分开评估",
+    "说明哪项成本是一次性、哪项长期存在。"
+  ],
+  "follow_ups": [
+    "平台启动时间超过实际处理时间时怎样优化？",
+    "单机满足平均负载但无法满足峰值时如何选择？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

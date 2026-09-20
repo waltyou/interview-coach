@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-09-04T08:15:11+08:00",
+  "generated_at": "2026-09-20T21:46:34+08:00",
   "visibility": "public",
   "questions": [
     {
@@ -18,17 +18,8 @@
       "visibility": "public",
       "topic": "algorithm",
       "kind": "coding",
-      "prompt": "实现一个固定容量的 LRU Cache，要求 get 和 put 平均 O(1)。请说明哈希表与双向链表如何协作、更新访问顺序、淘汰最久未使用项，并讨论容量为 0、并发访问和 LinkedHashMap 实现。",
+      "prompt": "数据平台需要一个进程内的表元数据缓存。请实现固定容量的 LRU Cache，使 get 和 put 平均 O(1)，说明访问顺序、更新和淘汰如何协作，并分析容量为零、并发调用与元数据失效的边界。",
       "file": "algorithm/q.algorithm.58cf31a9e620.json"
-    },
-    {
-      "id": "q.algorithm.73c981e40a2d",
-      "status": "active",
-      "visibility": "public",
-      "topic": "algorithm",
-      "kind": "coding",
-      "prompt": "实现 Unix 绝对路径规范化：合并重复的 /，忽略 .，让 .. 返回上一级但不能越过根目录，并保留普通目录名。请给出测试用例并分析复杂度。",
-      "file": "algorithm/q.algorithm.73c981e40a2d.json"
     },
     {
       "id": "q.big-data-architecture.8f3e589a35db",
@@ -36,7 +27,7 @@
       "visibility": "public",
       "topic": "big-data-architecture",
       "kind": "concept",
-      "prompt": "什么是数据仓库，企业为什么不能只依赖业务数据库做分析？请从目标、数据组织、典型建模方式、数据进入流程和查询负载几个方面说明，并讨论数据仓库、数据湖与湖仓一体各自适合解决什么问题。",
+      "prompt": "企业当前直接在业务数据库上运行分析报表。你会根据哪些业务和技术信号决定是否建设独立数据仓库？请比较 OLTP 与 OLAP 的访问模式，设计数据进入、建模、质量校验与服务链路，并解释引入独立分析平台后的收益和代价。",
       "file": "big-data-architecture/q.big-data-architecture.8f3e589a35db.json"
     },
     {
@@ -58,6 +49,42 @@
       "file": "data-modeling/q.data-modeling.dimensional-modeling.json"
     },
     {
+      "id": "q.data-modeling.fact-types-additivity",
+      "status": "active",
+      "visibility": "public",
+      "topic": "data-modeling",
+      "kind": "scenario",
+      "prompt": "仓储业务记录货物入库、出库、库存日终余额、补货申请的各个审批阶段，以及仓库可存放哪些物料。请选择事务事实、周期快照、累积快照与无事实度量表的适用对象并声明粒度，再说明吞吐量、库存、平均等待时间和缺货率如何跨仓库与日期聚合。",
+      "file": "data-modeling/q.data-modeling.fact-types-additivity.json"
+    },
+    {
+      "id": "q.data-modeling.stable-fact-grain",
+      "status": "active",
+      "visibility": "public",
+      "topic": "data-modeling",
+      "kind": "scenario",
+      "prompt": "预约服务把搜索、预约、支付、取消都存到 activity(actor_id, object_id, type, amount) 中，报表频繁重复计算。请识别业务过程，为事实表逐一声明粒度并选择维度，说明原始事件表如何与分析模型共存。",
+      "file": "data-modeling/q.data-modeling.stable-fact-grain.json"
+    },
+    {
+      "id": "q.data-modeling.temporal-dimension-facts",
+      "status": "active",
+      "visibility": "public",
+      "topic": "data-modeling",
+      "kind": "scenario",
+      "prompt": "客户所属服务等级会变化，历史账单需要按当时等级分析，同时保存真实收费金额。请设计 SCD Type 2 维度与账单事实，处理一天内多次变化、迟到更正、并发更新和重复执行，并解释账单金额为何仍需保存在事实中。",
+      "file": "data-modeling/q.data-modeling.temporal-dimension-facts.json"
+    },
+    {
+      "id": "q.data-modeling.workload-aware-storage",
+      "status": "active",
+      "visibility": "public",
+      "topic": "data-modeling",
+      "kind": "system-design",
+      "prompt": "一个订阅业务既要分析季度使用量，又要查询某客户在历史时刻的套餐，还要实时读取当前套餐并搜索套餐描述。请分别选择数据布局与服务存储，解释时间分区、聚簇、历史版本、当前快照、缓存和搜索索引的职责及同步方式。",
+      "file": "data-modeling/q.data-modeling.workload-aware-storage.json"
+    },
+    {
       "id": "q.data-quality.contracts-observability",
       "status": "active",
       "visibility": "public",
@@ -65,6 +92,24 @@
       "kind": "system-design",
       "prompt": "你负责的平台频繁因上游 schema 变化、数据延迟和业务口径漂移产出错误报表。请设计一套数据契约、质量检查和可观测性机制：哪些问题在写入前阻断，哪些允许隔离或降级，怎样定位影响范围并推动长期改进？",
       "file": "data-quality/q.data-quality.contracts-observability.json"
+    },
+    {
+      "id": "q.data-quality.streaming-completeness",
+      "status": "active",
+      "visibility": "public",
+      "topic": "data-quality",
+      "kind": "scenario",
+      "prompt": "事件管线需要向分析用户承诺数据完整性。请设计能区分源端未产生、传输丢失、重复摄取、解析失败与合法迟到的证据链，并解释截至某个时间点、某个事件窗口的完整性应如何量化和修正。",
+      "file": "data-quality/q.data-quality.streaming-completeness.json"
+    },
+    {
+      "id": "q.data-quality.timeout-coverage-bias",
+      "status": "active",
+      "visibility": "public",
+      "topic": "data-quality",
+      "kind": "scenario",
+      "prompt": "假设一个数据富化任务为了按时完成，会跳过超时记录。最近任务成功率提高，但只处理了部分输入。你怎样判断报表和下游判断是否仍可信，并设计覆盖率监控、重试回补与对业务方的结果说明？",
+      "file": "data-quality/q.data-quality.timeout-coverage-bias.json"
     },
     {
       "id": "q.distributed-systems.0d67c05a8185",
@@ -144,8 +189,17 @@
       "visibility": "public",
       "topic": "java",
       "kind": "scenario",
-      "prompt": "一个 Java 服务每次刷新内存中的 Map 后，操作系统看到的进程内存都会上升，但 GC 后 heap used 反而下降，Survivor/Eden/Old Gen 的 capacity 还会动态变化。你会如何判断这是内存泄漏、JVM 保留内存，还是 AdaptiveSizePolicy 的正常调整？",
+      "prompt": "假设使用 HotSpot JDK 8 的 Parallel GC 并开启自适应大小策略。一个 Java 服务每次刷新内存中的 Map 后，操作系统看到的进程内存都会上升，但 GC 后 heap used 反而下降，Survivor/Eden/Old Gen 的 capacity 还会动态变化。你会如何判断这是内存泄漏、JVM 保留内存，还是 AdaptiveSizePolicy 的正常调整？",
       "file": "os/q.java.1f0c8a5cd168.json"
+    },
+    {
+      "id": "q.java.267979d9f4cf",
+      "status": "active",
+      "visibility": "public",
+      "topic": "java",
+      "kind": "system-design",
+      "prompt": "多个 JVM 数据服务频繁读取表结构和分区元数据。请比较普通并发 Map、带加载与淘汰能力的本地缓存及远程缓存，设计容量、过期、失效、并发加载和服务故障下的行为。若使用 Guava Cache，请说明选择它需要验证什么。",
+      "file": "java/q.java.267979d9f4cf.json"
     },
     {
       "id": "q.java.3f8d61e204ba",
@@ -153,7 +207,7 @@
       "visibility": "public",
       "topic": "java",
       "kind": "explanation",
-      "prompt": "JVM 如何判断对象已经成为垃圾并完成回收？请比较引用计数与可达性分析，说明 GC Roots、分代假设和常见收集器，并重点比较 CMS 与 G1 的阶段、停顿、浮动垃圾、并发失败和适用场景。",
+      "prompt": "一个 JVM 数据服务的停顿影响摄取延迟。请先说明可达性分析、GC Roots 和对象生命周期，再结合分配率、存活集与暂停目标选择调查方法。以历史 HotSpot JDK 8 系统为比较范围，解释 Parallel、CMS 与 G1 的取舍；其他 JDK 版本应先确认可用收集器和日志方式。",
       "file": "java/q.java.3f8d61e204ba.json"
     },
     {
@@ -162,17 +216,8 @@
       "visibility": "public",
       "topic": "java",
       "kind": "scenario",
-      "prompt": "多个线程需要高并发读写同一个 Map。请比较 Hashtable、Collections.synchronizedMap 和 ConcurrentHashMap，并解释 Java 8+ ConcurrentHashMap 如何通过 volatile、CAS、桶级同步和协助扩容保证线程安全。哪些复合操作仍需要 compute、merge 或额外协调？",
+      "prompt": "数据平台的多个接入线程共享一份表元数据 Map，并需要按需加载。多个线程需要高并发读写同一个 Map。请比较 Hashtable、Collections.synchronizedMap 和 ConcurrentHashMap，并解释 Java 8+ ConcurrentHashMap 如何通过 volatile、CAS、桶级同步和协助扩容保证线程安全。哪些复合操作仍需要 compute、merge 或额外协调？",
       "file": "java/q.java.5a2ef43c8b17.json"
-    },
-    {
-      "id": "q.java.6de9418a2c7f",
-      "status": "active",
-      "visibility": "public",
-      "topic": "java",
-      "kind": "explanation",
-      "prompt": "请从源码思路解释 Java 8+ HashMap 的数据结构以及 put/get 流程：hash 如何计算、数组下标如何定位、碰撞如何处理、何时扩容、链表何时树化或退化。equals/hashCode 的实现质量会怎样影响正确性和性能？",
-      "file": "java/q.java.6de9418a2c7f.json"
     },
     {
       "id": "q.java.ba242c599d32",
@@ -189,7 +234,7 @@
       "visibility": "public",
       "topic": "java",
       "kind": "scenario",
-      "prompt": "你要为一个突发流量明显、任务耗时不稳定的 Java 服务配置 ThreadPoolExecutor。请解释 corePoolSize、maximumPoolSize、keepAliveTime、workQueue、ThreadFactory 和 RejectedExecutionHandler 如何共同决定行为，并给出容量估算、背压、监控与优雅关闭方案。",
+      "prompt": "你负责从多个外部数据源并发读取数据，必须保护下游连接数与请求配额。你要为一个突发流量明显、任务耗时不稳定的 Java 服务配置 ThreadPoolExecutor。请解释 corePoolSize、maximumPoolSize、keepAliveTime、workQueue、ThreadFactory 和 RejectedExecutionHandler 如何共同决定行为，并给出容量估算、背压、监控与优雅关闭方案。",
       "file": "java/q.java.c9e52d74a018.json"
     },
     {
@@ -198,7 +243,7 @@
       "visibility": "public",
       "topic": "java",
       "kind": "scenario",
-      "prompt": "怎样判断一段 Java 代码是否线程安全，并选择合适的实现方式？请从共享可变状态、原子性、可见性和有序性出发，比较不可变对象、线程封闭、锁、volatile、原子类和并发容器的适用边界。",
+      "prompt": "并行数据摄取任务共享去重状态和成功计数。怎样判断一段 Java 代码是否线程安全，并选择合适的实现方式？请从共享可变状态、原子性、可见性和有序性出发，比较不可变对象、线程封闭、锁、volatile、原子类和并发容器的适用边界。",
       "file": "java/q.java.d2470ea9b531.json"
     },
     {
@@ -225,8 +270,26 @@
       "visibility": "public",
       "topic": "linux",
       "kind": "scenario",
-      "prompt": "一台运行 Java 数据服务的 Linux 机器负载突然升高。你会按什么顺序判断问题来自 CPU、运行队列、内存/Swap、磁盘 I/O、网络还是 JVM？请给出会使用的 Linux/JDK 命令、关键指标、进程与线程关联方法，并补充脚本中判断文件存在和安全替换文本的写法。",
+      "prompt": "一台运行 Java 数据服务的 Linux 机器负载升高、请求变慢。你会按什么顺序区分 CPU、运行队列、内存/Swap、磁盘、网络与 JVM 问题？给出命令、连续采样指标、线程关联方法，以及低风险验证假设的步骤。",
       "file": "linux/q.linux.8bc7e2a4d190.json"
+    },
+    {
+      "id": "q.os.ddf14465258c",
+      "status": "active",
+      "visibility": "public",
+      "topic": "os",
+      "kind": "concept",
+      "prompt": "单机数据处理管线由多个独立进程完成解析、转换和写出，大批记录需要在进程之间传递。请比较队列、管道、共享内存与 Socket，设计背压、同步、生命周期和某个进程重启后的恢复；再说明跨主机部署会改变哪些选择。",
+      "file": "os/q.os.ddf14465258c.json"
+    },
+    {
+      "id": "q.python.csv-daily-distinct",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "coding",
+      "prompt": "请实现 daily_distinct(csv_path, timezone)：CSV 含 event_time 和 visitor_key，时间字段为带偏移量的 ISO 8601 字符串。返回按指定业务时区划分的每日唯一访客数。声明编码、坏行与空键策略，并说明输入文件或去重状态超内存时的精确和近似方案。",
+      "file": "python/q.python.csv-daily-distinct.json"
     },
     {
       "id": "q.python.ee452f006c7b",
@@ -234,8 +297,26 @@
       "visibility": "public",
       "topic": "python",
       "kind": "explanation",
-      "prompt": "在以 CPython 为主的数据处理服务中，GIL 是什么，它保护了什么，又没有保护什么？请比较 CPU 密集与 I/O 密集任务下线程、多进程、异步 I/O 和原生扩展的选择，并说明你会如何验证瓶颈确实来自 GIL。",
+      "prompt": "在启用 GIL 的 CPython 数据处理服务中，GIL 是什么，它保护了什么，又没有保护什么？请比较 CPU 密集与 I/O 密集任务下线程、多进程、异步 I/O 和原生扩展的选择，并说明你会如何验证瓶颈确实来自 GIL。",
       "file": "python/q.python.ee452f006c7b.json"
+    },
+    {
+      "id": "q.python.single-pass-batching",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "coding",
+      "prompt": "实现 batch_apply(records, batch_size, transform)：records 是无 len()、不可切片且只能消费一次的迭代器；每次最多取 batch_size 条，把该批的 iterator 传给 transform，惰性返回结果。最后不足一批也处理，batch_size 必须为正整数。说明异常时已经消费到哪里。",
+      "file": "python/q.python.single-pass-batching.json"
+    },
+    {
+      "id": "q.python.stable-first-event",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "coding",
+      "prompt": "用 Python 处理一条只能遍历一次的事件迭代器，每条记录包含 event_key 和 payload。返回每个 event_key 第一次在输入中出现的完整记录，保持相对顺序。说明空输入、重复键、空间成本，以及相同键保证相邻时能怎样简化。",
+      "file": "python/q.python.stable-first-event.json"
     },
     {
       "id": "q.redis.0e1f6a9c3b72",
@@ -243,7 +324,7 @@
       "visibility": "public",
       "topic": "redis",
       "kind": "scenario",
-      "prompt": "为计数器、排行榜、消息消费和对象缓存选择 Redis 数据结构时，你会怎样在 String、Hash、List、Set、Sorted Set 和 Stream 之间取舍？如果要求主节点故障后自动切换，请解释 Sentinel 的监控、主观/客观下线、选主和客户端重定向，并说明它不解决哪些问题。",
+      "prompt": "数据平台要提供实时计数、排行榜和结果缓存。请按访问方式选择 Redis 数据结构，并讨论热点、过期与内存成本。若采用主从复制和 Sentinel，故障切换期间客户端怎样恢复，哪些最近写入仍可能丢失，何时应另行考虑分片？",
       "file": "redis/q.redis.0e1f6a9c3b72.json"
     },
     {
@@ -252,8 +333,35 @@
       "visibility": "public",
       "topic": "soft-skill",
       "kind": "behavioral",
-      "prompt": "当你没有正式职权，却需要推动一个与你意见不同的团队接受方案时，你会如何使用倾听、同理心、好奇心、故事和谈判来形成共同决定？请给出一个具体经历，并说明你怎样做到清晰坚定但不攻击对方。",
+      "prompt": "你负责数据交付，但依赖团队的优先级或服务承诺与你的需求冲突，且你没有对方的管理权限。请用一次自己的经历说明如何理解双方目标、提出可验证方案、根据反馈调整、形成决定，并处理未能达成一致时的交付风险。",
       "file": "soft-skill/q.soft-skill.7d02ecd6ccdd.json"
+    },
+    {
+      "id": "q.soft-skill.ambiguous-platform-goals",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "经理希望你提高数据平台交付效率，但没有给出具体项目。你会怎样了解现状、识别值得解决的问题、提出优先级，与经理校准决策边界，并用第一阶段交付验证方向？可以结合自己的实际经历。",
+      "file": "soft-skill/q.soft-skill.ambiguous-platform-goals.json"
+    },
+    {
+      "id": "q.soft-skill.audience-adaptation",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请选择一个你熟悉的数据平台，分别用一分钟向技术评审者和准备接入的业务团队负责人介绍。两次使用相同事实，但说明各自需要理解的价值、技术边界、服务承诺、责任和下一步。",
+      "file": "soft-skill/q.soft-skill.audience-adaptation.json"
+    },
+    {
+      "id": "q.soft-skill.evidence-bounded-decisions",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请讲述一次数据系统发生生产问题、你尚未完全理解根因却必须做决定的经历。说明当时已知和未知的信息、等待的代价、你比较过的选项、做决定所需的最小证据、影响范围和回滚条件，以及后续如何补齐调查。",
+      "file": "soft-skill/q.soft-skill.evidence-bounded-decisions.json"
     },
     {
       "id": "q.soft-skill.f6ae997e45a3",
@@ -270,7 +378,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "explanation",
-      "prompt": "请详细阐述 Spark Tungsten 引擎的 Whole-Stage Code Generation（全阶段代码生成）技术。这个技术是如何工作的？它解决了哪些传统 JVM 模型的性能瓶颈？请尽量结合 JVM 字节码和 CPU 缓存等底层机制进行解释。",
+      "prompt": "以 Apache Spark 3.5.x 为范围，解释 Whole-Stage Code Generation 如何将连续支持代码生成的算子组成执行流水线。请说明它减少哪些逐行执行开销，哪些边界会中断融合，以及如何通过生成代码、计划和运行指标验证性能收益或回退。",
       "file": "spark/q.spark.0be84c49d2ca.json"
     },
     {
@@ -279,7 +387,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "explanation",
-      "prompt": "在 Spark SQL 中，一个 SQL 语句或 DataFrame API 调用会经历一个复杂的执行计划优化过程。请详细阐述 Catalyst 优化器是如何将一个逻辑计划（Logical Plan）逐步转换和优化为物理计划（Physical Plan）的？你能描述一下这个过程中几个关键的优化阶段（如规则匹配、成本模型）吗？请尽可能结合源码中的关键类和概念进行说明。",
+      "prompt": "以 Apache Spark 3.5.x 为范围。在 Spark SQL 中，一个 SQL 语句或 DataFrame API 调用会经历一个复杂的执行计划优化过程。请详细阐述 Catalyst 优化器是如何将一个逻辑计划（Logical Plan）逐步转换和优化为物理计划（Physical Plan）的？你能描述一下这个过程中几个关键的优化阶段（如规则匹配、成本模型）吗？请尽可能结合源码中的关键类和概念进行说明。",
       "file": "spark/q.spark.1fb86bac7d3e.json"
     },
     {
@@ -290,6 +398,15 @@
       "kind": "scenario",
       "prompt": "一个 Spark 作业从 5 分钟退化到 45 分钟。请给出一套可重复的诊断流程：如何复现、收集 Spark UI/日志/指标、缩小问题范围、比较逻辑与物理计划、验证修复，并避免只靠反复改配置碰运气？",
       "file": "spark/q.spark.22862e4ea305.json"
+    },
+    {
+      "id": "q.spark.2b4f91b1c3c8",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "以 Spark 3.5.x 为范围，一条金额计算 SQL 混合使用 Decimal(p,s)、整数和显式 cast，并把结果写入较窄的 Decimal 列。你会如何检查中间类型、精度缩减、舍入与溢出？请用边界样例比较 ANSI 模式和相关精度设置，设计可重复的验收。",
+      "file": "spark/q.spark.2b4f91b1c3c8.json"
     },
     {
       "id": "q.spark.37ac819e6f02",
@@ -351,7 +468,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "scenario",
-      "prompt": "一个按 event time 做窗口聚合的流式作业会收到乱序和迟到事件。请区分 event time、arrival/ingestion time 与 processing time，解释 watermark 如何表达事件时间进度以及它与状态清理、output mode 或 trigger 的关系。然后设计一套处理方案，分别说明 watermark 之前、可接受迟到范围内、超过最终迟到阈值以及消息处理失败时应该怎样处理，并重点解释 side output、DLQ、幂等修正、replay/backfill 各自解决什么问题。",
+      "prompt": "以 Spark 3.5.x Structured Streaming 的事件时间窗口聚合为例，设计乱序和迟到数据处理。请区分 event time、ingest time 与 processing time，解释 watermark 和状态清理、输出模式的关系，并设计原始数据留存、处理失败隔离和超迟到数据回补。",
       "file": "spark/q.spark.9c65eca344e2.json"
     },
     {
@@ -373,6 +490,15 @@
       "file": "spark/q.spark.a2e6e3577f1c.json"
     },
     {
+      "id": "q.spark.c4e37cba836a",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "system-design",
+      "prompt": "一个 Spark 平台希望在计算节点缩容后仍能使用 Shuffle 数据。请设计计算与 Shuffle 存储分离的方案，并以 Celeborn 类远程服务为例，讨论数据推送、复制、背压、容量、故障恢复及运维成本。具体能力需注明所用服务版本。",
+      "file": "spark/q.spark.c4e37cba836a.json"
+    },
+    {
       "id": "q.spark.e2d23ccd90d1",
       "status": "active",
       "visibility": "public",
@@ -391,6 +517,15 @@
       "file": "spark/q.spark.e4f842352f82.json"
     },
     {
+      "id": "q.spark.e9ad98dba094",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "explanation",
+      "prompt": "以 Spark 3.5.x 的 RDD 按键排序为范围，解释如何通过采样估计范围边界、按范围重分区并在分区内排序得到全局有序结果。请分析大量重复键、采样误差、倾斜和分区数的影响，并说明怎样验证输出顺序。",
+      "file": "spark/q.spark.e9ad98dba094.json"
+    },
+    {
       "id": "q.spark.ffd6ef1303d3",
       "status": "active",
       "visibility": "public",
@@ -398,6 +533,24 @@
       "kind": "scenario",
       "prompt": "你要用 Spark 读取大量来自同一张 3000 列宽表的 Parquet 文件，作业在真正扫描数据前就很慢。你会如何验证是否由 schema merging 引起，并决定 spark.sql.parquet.mergeSchema 应该开启还是关闭？",
       "file": "spark/q.spark.ffd6ef1303d3.json"
+    },
+    {
+      "id": "q.spark.ragged-text-aggregation",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "coding",
+      "prompt": "文本文件的每行是长度不定的逗号分隔整数序列，格式不支持 CSV 引号或字段内换行。请用 PySpark 计算所有正数的平均值，处理空行、非法 token 和无正数的输入，并说明局部聚合怎样减少传输。",
+      "file": "spark/q.spark.ragged-text-aggregation.json"
+    },
+    {
+      "id": "q.spark.single-node-platform-tradeoffs",
+      "status": "active",
+      "visibility": "public",
+      "topic": "spark",
+      "kind": "scenario",
+      "prompt": "假设一个批处理任务的活跃数据集可以放入单机内存，但现有 Spark 平台已经提供数据接入、权限、调度、重试和结果发布。你会如何比较保留平台运行与改成独立 Python 服务？给出性能、运维、迁移和未来增长的判断依据。",
+      "file": "spark/q.spark.single-node-platform-tradeoffs.json"
     },
     {
       "id": "q.sql.7ab69acb4a1e",
@@ -425,6 +578,24 @@
       "kind": "coding",
       "prompt": "给定 transactions(trans_id, user_id, trans_date, amount)，样例数据为 (1,1,'2024-01-01',100)、(2,1,'2024-01-05',200)、(3,1,'2024-02-01',150)、(4,2,'2024-01-10',300)、(5,2,'2024-02-05',100)、(6,2,'2024-02-10',250)、(7,3,'2024-01-20',400)、(8,3,'2024-02-20',100)。请写 SQL 计算每个用户相邻两次交易之间的平均间隔天数，只返回至少有两次交易的用户，输出 user_id、avg_interval_days 并四舍五入到两位小数。按通常的日期差定义，期望结果为 (1,15.50)、(2,15.50)、(3,31.00)。",
       "file": "sql/q.sql.average-adjacent-transaction-interval.json"
+    },
+    {
+      "id": "q.sql.calendar-month-active-users",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "访问表 visits(event_id, event_time, user_id, resource_id) 的 event_id 唯一，event_time 为 UTC；user_id 可为 NULL。写 SQL 计算最近三个完整自然月的每月活跃用户数，再为各月返回访问次数最高的三个不同名次的资源，保留并列。月份按指定业务时区计算，NULL 用户不计入活跃用户。",
+      "file": "sql/q.sql.calendar-month-active-users.json"
+    },
+    {
+      "id": "q.sql.calendar-window-quality",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "质量表 quality_day(dataset_id, day, good_rows, total_rows) 中，每个数据集每天至多一行，但日期可能缺失。请写 SQL 计算每条记录当日及之前六个自然日的总 good_rows、total_rows 和加权通过率。规定缺失日期不增加计数，分母为零时通过率为 NULL；说明所用 SQL 方言。",
+      "file": "sql/q.sql.calendar-window-quality.json"
     },
     {
       "id": "q.sql.conditional-aggregation-pivot",
@@ -463,15 +634,6 @@
       "file": "sql/q.sql.customer-product-count-and-spend.json"
     },
     {
-      "id": "q.sql.department-top-salary-ties",
-      "status": "active",
-      "visibility": "public",
-      "topic": "sql",
-      "kind": "coding",
-      "prompt": "给定 employees(emp_id, emp_name, dept_id, salary)，样例数据为 (1,'Alice',10,9000)、(2,'Bob',10,8000)、(3,'Carol',10,9500)、(4,'Dave',20,7000)、(5,'Eve',20,7200)、(6,'Frank',20,7200)、(7,'Grace',30,6000)、(8,'Heidi',30,6100)。请写 SQL 返回每个部门薪资最高的全部员工，最高薪资并列时全部保留。输出 dept_id、emp_name、salary；期望结果包括 Carol，Eve 与 Frank，以及 Heidi。",
-      "file": "sql/q.sql.department-top-salary-ties.json"
-    },
-    {
       "id": "q.sql.employee-manager-self-join",
       "status": "active",
       "visibility": "public",
@@ -499,15 +661,6 @@
       "file": "sql/q.sql.incremental-deduplication.json"
     },
     {
-      "id": "q.sql.max-consecutive-login-days",
-      "status": "active",
-      "visibility": "public",
-      "topic": "sql",
-      "kind": "coding",
-      "prompt": "给定 logins(user_id, login_date)，样例数据为用户 1 在 2024-01-01、01-02、01-04、01-05、01-06 登录，用户 2 在 01-01、01-02、01-03、01-05 登录，用户 3 在 01-03、01-04 登录。请写 SQL 计算每个用户连续登录的最大天数，输出 user_id、max_consecutive_days；期望结果分别为 3、3、2。同一用户同一天可能存在重复登录记录，应按自然日去重。",
-      "file": "sql/q.sql.max-consecutive-login-days.json"
-    },
-    {
       "id": "q.sql.monthly-threshold-conditional-aggregation",
       "status": "active",
       "visibility": "public",
@@ -526,6 +679,15 @@
       "file": "sql/q.sql.never-purchased-product.json"
     },
     {
+      "id": "q.sql.pipeline-latency-ranking",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "任务运行表 runs(run_id, owner_id, started_at, finished_at, status, ingest_time) 可重复摄取；同 run_id 的 ingest_time 严格不同。请先取最新版本，再计算上一完整 UTC 自然月内各 owner 的成功运行次数和平均耗时，仅保留至少三次有效成功运行的 owner，并返回平均耗时最短的两个不同名次，保留并列。无效时间记录不进入次数和平均值，并单独统计异常数。",
+      "file": "sql/q.sql.pipeline-latency-ranking.json"
+    },
+    {
       "id": "q.sql.query-plan-optimization",
       "status": "active",
       "visibility": "public",
@@ -533,6 +695,24 @@
       "kind": "scenario",
       "prompt": "一条原本 10 分钟完成的分析 SQL 变成 90 分钟。请给出从结果正确性、数据变化、统计信息和执行计划入手的诊断流程，并说明如何判断瓶颈来自扫描、过滤、Join、聚合、排序、数据倾斜还是资源竞争。",
       "file": "sql/q.sql.query-plan-optimization.json"
+    },
+    {
+      "id": "q.sql.request-completion-funnel",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "事件表 actions(event_id, account_id, kind, event_time) 使用 UTC 时间，kind 为 REQUEST 或 COMPLETE。对每个账户选择 [start_time,end_time) 内最早的 REQUEST，时间并列以 event_id 升序决胜，再找其后且不超过六小时的最早 COMPLETE。输出请求及匹配完成时间，未完成仍保留。字段均非 NULL 且 event_id 唯一。",
+      "file": "sql/q.sql.request-completion-funnel.json"
+    },
+    {
+      "id": "q.sql.scd2-event-timeline",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "套餐变更历史 plan_events(event_id, account_id, effective_at, received_at, plan_code) 使用 UTC；同一 event_id 的更新按 received_at 取最新，同一事件与接收时间内容冲突则隔离。对同账户同 effective_at 的事件约定按 (received_at,event_id) 最大者决胜。请用 SQL 从完整历史生成 plan_history(account_id, plan_code, valid_from, valid_to, is_current)，只为属性真实变化生成版本，并说明迟到更正后的原子重建方式。",
+      "file": "sql/q.sql.scd2-event-timeline.json"
     },
     {
       "id": "q.sql.top-product-by-customer-with-ties",
@@ -544,6 +724,24 @@
       "file": "sql/q.sql.top-product-by-customer-with-ties.json"
     },
     {
+      "id": "q.sql.versioned-state-tombstones",
+      "status": "active",
+      "visibility": "public",
+      "topic": "sql",
+      "kind": "coding",
+      "prompt": "设备状态事件 events(event_id, device_id, version, operation, payload) 可以重复和乱序；同一设备 version 单调表示业务顺序，相同 device_id/version 必须有相同内容，否则隔离。目标 device_state(device_id, version, is_deleted, payload) 保留最新状态与删除墓碑。假设单写者、每批原子提交，请写 SQL 选取本批最终事件并合并，使重跑不改变结果，旧 UPSERT 不会复活已删除设备，更新版本的 UPSERT 可恢复设备。",
+      "file": "sql/q.sql.versioned-state-tombstones.json"
+    },
+    {
+      "id": "q.streaming.freshness-execution-tradeoffs",
+      "status": "active",
+      "visibility": "public",
+      "topic": "streaming",
+      "kind": "scenario",
+      "prompt": "假设分析任务目前每日运行，业务希望大多数结果在十五分钟内可见，偶发迟到数据允许次日修正。你会如何比较定时批处理、微批和持续流式执行？说明延迟口径、正确性、恢复、状态成本，以及未来要求数秒延迟时的演进边界。",
+      "file": "streaming/q.streaming.freshness-execution-tradeoffs.json"
+    },
+    {
       "id": "q.system-design.831963b717f1",
       "status": "active",
       "visibility": "public",
@@ -551,6 +749,51 @@
       "kind": "system-design",
       "prompt": "请设计一个面向多业务数据源的生产级 ETL/ELT 平台。先澄清规模、时效、数据质量和 SLA，再给出摄取、编排、计算、存储、元数据、可观测性与发布架构。最后按优先级说明：如果你指导团队从 MVP 演进到稳定平台，会先保证什么，后建设什么，为什么？",
       "file": "system-design/q.system-design.831963b717f1.json"
+    },
+    {
+      "id": "q.system-design.controlled-operations-automation",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "system-design",
+      "prompt": "一个数据团队经常跨多个系统排查数据延迟。你会如何从人工运行手册开始建立自动化，决定哪些步骤使用脚本或工作流、哪些需要人工判断，并在引入模型辅助时控制权限、错误传播和不可逆操作？",
+      "file": "system-design/q.system-design.controlled-operations-automation.json"
+    },
+    {
+      "id": "q.system-design.migration-validation-rollback",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "system-design",
+      "prompt": "假设你要将持续接收增量数据的分析平台迁移到新环境，要求业务查询持续可用，并允许在验收失败时回滚。请设计历史回填、增量追赶、双跑对账、分阶段切换与回滚方案，重点解释如何证明数据语义正确以及处理切换后的新写入。",
+      "file": "system-design/q.system-design.migration-validation-rollback.json"
+    },
+    {
+      "id": "q.system-design.self-service-sql-boundaries",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "system-design",
+      "prompt": "为分析人员设计一个自助提交 SQL 数据任务的入口，使其在提交前发现语法、元数据和权限问题，并安全获得执行结果。解释编辑、校验、元数据访问、执行身份、配额与失败反馈如何协作，以及元数据服务暂时不可用时如何降级。",
+      "file": "system-design/q.system-design.self-service-sql-boundaries.json"
+    },
+    {
+      "id": "q.system-design.shared-platform-boundaries",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "scenario",
+      "prompt": "多个团队要求相似但不完全一致的数据管道。你如何决定继续逐个交付，还是建设共享组件或平台？说明适用边界、最小公共接口、例外处理、迁移成本和效果验证。",
+      "file": "system-design/q.system-design.shared-platform-boundaries.json"
+    },
+    {
+      "id": "q.system-design.unfamiliar-domain-discovery",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "scenario",
+      "prompt": "假设你不熟悉设备租赁业务，却需要为其建立分析模型。请演示开始两分钟如何澄清业务目标、指标消费者、时间与准确性要求，声明合理假设，并从业务过程、事实粒度、历史语义和访问模式组织后续设计。暂不展开完整 schema。",
+      "file": "system-design/q.system-design.unfamiliar-domain-discovery.json"
     }
   ]
 }

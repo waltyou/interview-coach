@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.request-completion-funnel",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "事件表 actions(event_id, account_id, kind, event_time) 使用 UTC 时间，kind 为 REQUEST 或 COMPLETE。对每个账户选择 [start_time,end_time) 内最早的 REQUEST，时间并列以 event_id 升序决胜，再找其后且不超过六小时的最早 COMPLETE。输出请求及匹配完成时间，未完成仍保留。字段均非 NULL 且 event_id 唯一。",
+  "rubric": [
+    "先限定请求范围，按账户和确定顺序保留完整首请求",
+    "完成时间条件为大于 request_time 且小于等于 request_time 加六小时",
+    "完成事件可在 end_time 之后，不能错误沿用请求过滤上界",
+    "无匹配仍输出请求，避免 WHERE 把 LEFT JOIN 变成 INNER",
+    "多条完成事件取最早且不放大请求数",
+    "测试并列请求、截止边界、无完成和跨日",
+    "使用所选方言实现并分析扫描和连接成本"
+  ],
+  "hints": [
+    "请求范围与完成匹配范围是两个不同条件。",
+    "先把请求规范化为每账户一行。"
+  ],
+  "follow_ups": [
+    "同一账户多次请求都要独立匹配时，是否允许一次完成关联多个请求？",
+    "事件可更正时，去重应放在哪里？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

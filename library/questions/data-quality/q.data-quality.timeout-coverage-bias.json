@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.data-quality.timeout-coverage-bias",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "data-quality",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "假设一个数据富化任务为了按时完成，会跳过超时记录。最近任务成功率提高，但只处理了部分输入。你怎样判断报表和下游判断是否仍可信，并设计覆盖率监控、重试回补与对业务方的结果说明？",
+  "rubric": [
+    "区分任务运行成功和数据处理完整",
+    "按业务群体、输入特征和处理耗时检查缺失是否系统性集中",
+    "记录输入、成功、超时、失败和最终回补的分母",
+    "限定结论适用范围",
+    "设计幂等重试、隔离队列和对账",
+    "用质量、时效与成本共同验收。"
+  ],
+  "hints": [
+    "平均覆盖率可能掩盖某一类数据全部失败",
+    "比较被保留与被丢弃样本。"
+  ],
+  "follow_ups": [
+    "最复杂的记录最容易超时时，单纯提高并发能解决偏差吗？",
+    "无法及时回补时怎样发布可解释的不完整结果？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

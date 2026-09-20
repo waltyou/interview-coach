@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.python.stable-first-event",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "python",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "用 Python 处理一条只能遍历一次的事件迭代器，每条记录包含 event_key 和 payload。返回每个 event_key 第一次在输入中出现的完整记录，保持相对顺序。说明空输入、重复键、空间成本，以及相同键保证相邻时能怎样简化。",
+  "rubric": [
+    "明确首次指输入位置而不是 payload 中的某个时间字段",
+    "用已见键集合按输入顺序决定输出",
+    "保留完整首记录且不被后续重复覆盖",
+    "预期时间 O(n)，去重状态 O(k)，若物化输出需另计输出空间",
+    "相同键保证连续时只需前一个键，输出可流式产生",
+    "对非法键声明失败或隔离策略并测试边界"
+  ],
+  "hints": [
+    "每次只需回答这个键是否出现过。",
+    "将输出内存与去重状态分别计算。"
+  ],
+  "follow_ups": [
+    "若要求按最早业务时间保留记录，算法怎样变化？",
+    "数据超内存且键交错时怎样外部分区并恢复原输入顺序？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

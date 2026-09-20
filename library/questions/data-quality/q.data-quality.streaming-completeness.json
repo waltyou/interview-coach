@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.data-quality.streaming-completeness",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "data-quality",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "事件管线需要向分析用户承诺数据完整性。请设计能区分源端未产生、传输丢失、重复摄取、解析失败与合法迟到的证据链，并解释截至某个时间点、某个事件窗口的完整性应如何量化和修正。",
+  "rubric": [
+    "区分字段合法、准确、一致、唯一、新鲜与完整",
+    "使用源端序列/清单/计数等独立证据界定可证明范围",
+    "Kafka offset 连续只能支持日志范围内的证据，不能证明源业务没有漏发",
+    "用稳定事件标识对账并记录解析隔离、重试和迟到",
+    "无限流的承诺绑定窗口、观测时点和延迟策略",
+    "通过幂等回放与回补修正缺口并监控 source-sink 差异"
+  ],
+  "hints": [
+    "先问证据从管线的哪一端开始。",
+    "时间边界和数据边界要同时给出。"
+  ],
+  "follow_ups": [
+    "源端没有计数或序列时，哪些结论只能估计？",
+    "如何向业务说明暂时完整与最终修正的差别？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

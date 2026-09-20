@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.java.267979d9f4cf",
+  "revision": 2,
+  "status": "active",
+  "visibility": "public",
+  "topic": "java",
+  "kind": "system-design",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "多个 JVM 数据服务频繁读取表结构和分区元数据。请比较普通并发 Map、带加载与淘汰能力的本地缓存及远程缓存，设计容量、过期、失效、并发加载和服务故障下的行为。若使用 Guava Cache，请说明选择它需要验证什么。",
+  "rubric": [
+    "从延迟、规模、共享一致性和故障边界选择缓存位置",
+    "区分线程安全容器与容量/加载/过期管理",
+    "区分容量淘汰、基于时间过期和主动失效",
+    "为多实例陈旧数据定义可接受窗口和更新机制",
+    "控制热点并发加载、失败缓存和穿透",
+    "监控命中、加载延迟、内存和陈旧读取，按实际版本验证库行为"
+  ],
+  "hints": [
+    "缓存正确性取决于消费者能容忍多久的旧元数据。",
+    "淘汰和业务失效是不同操作。"
+  ],
+  "follow_ups": [
+    "元数据服务故障时允许使用多久的旧值？",
+    "如何避免同一个热点同时失效触发大量回源？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-10T21:35:29+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

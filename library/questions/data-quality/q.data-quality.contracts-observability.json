@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.data-quality.contracts-observability",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "data-quality",
@@ -27,10 +27,11 @@
   ],
   "follow_ups": [
     "上游新增可空列和修改既有列类型，分别应如何兼容？",
-    "质量检查全部通过，但业务指标仍然错误，体系中还缺什么？"
+    "质量检查全部通过，但业务指标仍然错误，体系中还缺什么？",
+    "需求方说数据必须完整时，怎样用一句话确认是字段合法、源端事件无缺口，还是在约定时间内达到指定覆盖率？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-23T15:08:30+08:00",
-  "updated_at": "2026-08-23T15:08:30+08:00"
+  "updated_at": "2026-09-20T21:46:34+08:00"
 }

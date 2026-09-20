@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.os.ddf14465258c",
+  "revision": 3,
+  "status": "active",
+  "topic": "os",
+  "kind": "concept",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "real-interview",
+  "prompt": "单机数据处理管线由多个独立进程完成解析、转换和写出，大批记录需要在进程之间传递。请比较队列、管道、共享内存与 Socket，设计背压、同步、生命周期和某个进程重启后的恢复；再说明跨主机部署会改变哪些选择。",
+  "rubric": [
+    "进程地址空间隔离需要显式交换数据和协调状态",
+    "比较序列化、数据复制、系统调用和同步成本",
+    "共享内存需要明确所有权、生命周期和并发协议",
+    "有界队列和速率控制防止下游慢导致内存无界增长",
+    "进程重启需处理半成品、重复和丢失并定义恢复点",
+    "跨主机边界需要网络协议及额外故障处理"
+  ],
+  "hints": [
+    "先分别估算一次传输的字节数与频率。",
+    "画出生产快于消费时数据停留在哪里。"
+  ],
+  "follow_ups": [
+    "共享内存中的消费者异常退出，谁负责清理？",
+    "怎样证明某个批次重试不会重复写出？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-08-05T21:54:18+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00",
+  "visibility": "public"
+}

@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.java.c9e52d74a018",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "java",
@@ -13,7 +13,7 @@
     "java-engineer"
   ],
   "origin": "generated",
-  "prompt": "你要为一个突发流量明显、任务耗时不稳定的 Java 服务配置 ThreadPoolExecutor。请解释 corePoolSize、maximumPoolSize、keepAliveTime、workQueue、ThreadFactory 和 RejectedExecutionHandler 如何共同决定行为，并给出容量估算、背压、监控与优雅关闭方案。",
+  "prompt": "你负责从多个外部数据源并发读取数据，必须保护下游连接数与请求配额。你要为一个突发流量明显、任务耗时不稳定的 Java 服务配置 ThreadPoolExecutor。请解释 corePoolSize、maximumPoolSize、keepAliveTime、workQueue、ThreadFactory 和 RejectedExecutionHandler 如何共同决定行为，并给出容量估算、背压、监控与优雅关闭方案。",
   "rubric": [
     "准确描述提交任务时核心线程、队列、最大线程和拒绝策略的决策顺序",
     "比较有界队列、无界队列和直接移交队列对吞吐、延迟与内存的影响",
@@ -33,5 +33,5 @@
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T22:36:58+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-09-20T21:46:34+08:00"
 }

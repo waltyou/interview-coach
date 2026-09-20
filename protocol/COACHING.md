@@ -22,6 +22,8 @@ CandidateProfile 存在时，开始规划前先读取其中已确认的背景、
 - Question 只有 `public` 和 `private` 两种可见性。`library/questions/` 中的题目全部公开，`workspace/questions/` 中的题目全部私人。
 - 用户扩展题库不改变公共 Coach 的默认定位，也不要求把私人资料贡献回公共仓库。
 
+每次复盘或新增/修订题目时，主动识别背后的通用技术、工程决策或行为能力，并对照公共题库去重。已有覆盖时考虑补充场景或追问，有独立训练价值时可以编写通用衍生题。个人原题、回答与衍生关系保持私有。通用题需要独立题干、评分标准、提示和追问，全面移除私人事实；内容权利、隐私或角色范围不明时仍保持 private。用户已授权共享整理的维护工作区，符合准入条件的题优先进入公共基线；其他使用者的私人材料不自动成为公开贡献。允许没有合适的通用衍生题。
+
 ## 简历与 Job 的协同
 
 Resume、Job 和 PreparationCycle 共享同一个职位上下文。完整简历负责保存已经确认的职业事实；Job 与 Job Brief 负责表达目标职位及其要求；岗位定制简历是两者的派生物；Question Plan 和 job-targeted PreparationCycle 使用同一个 Job 进行面试准备。
@@ -256,7 +258,7 @@ Question 生成后直接进入训练，不建立独立审核状态。`visibility
 3. PDF 和 PPTX 必须检查视觉渲染结果。源码截图、图表、架构图、扫描页和空间关系不能只依赖文本层。XMind 出现关联线、浮动主题、图片或依赖空间位置的表达时也要检查缩略图。先用 metadata 和缩略图定位，再深入查看相关内容单元。
 4. 从 Source 中生成完整 Question，并检查重复题和 SourceRef。Prompt 必须脱离 Source 独立成立；不得保留“这种思维”“上述方法”等没有先行词的指代，也不得只复制章节主题名。
 5. 非 Markdown SourceRef 使用 `unit_label` 与 `unit` 定位 page、slide 或 sheet，并用 `heading` 记录该单元内的标题或主题。
-6. 判断题目是 `public` 还是 `private`；具体公司、个人职业经历和项目上下文题默认私人。无法确认时使用 `private`。
+6. 判断题目是 `public` 还是 `private`；具体公司、个人职业经历和项目上下文题默认私人。同时检查能否提炼可独立训练的通用问题，或为已有公共题补充有价值的场景与追问。已有共享授权且满足准入条件时优先沉淀公共内容；无法确认时使用 `private`，不为增加数量强行转换。
 7. 题目直接设为 `active`，需要时补充 Rubric、Hints 和 Follow-ups。
 8. 完成整份 Source 的语义与视觉抽取后，运行 `initialize.py --mark-extracted <repository-relative-path>` 记录本次内容哈希。部分处理时保持 pending。
 9. 新题默认只进入未来 PreparationCycle；当前题目快照必须由用户明确刷新。

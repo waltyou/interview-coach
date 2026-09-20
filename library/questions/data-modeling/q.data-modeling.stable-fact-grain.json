@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.data-modeling.stable-fact-grain",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "data-modeling",
+  "kind": "scenario",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "预约服务把搜索、预约、支付、取消都存到 activity(actor_id, object_id, type, amount) 中，报表频繁重复计算。请识别业务过程，为事实表逐一声明粒度并选择维度，说明原始事件表如何与分析模型共存。",
+  "rubric": [
+    "从搜索行为、预约生命周期与支付退款等过程区分事实",
+    "用完整句子定义每张表一行代表什么",
+    "识别通用 activity 表中键与金额语义随 type 变化的问题",
+    "使用事件身份和发生/摄取时间保留原始证据",
+    "维度描述事实上下文，度量与粒度一致",
+    "原始日志支持审计重放，分析表提供稳定语义",
+    "用一个具体报表验证连接不会放大金额"
+  ],
+  "hints": [
+    "先写业务动词，再决定表名。",
+    "检查一笔支付是否可能关联多个预约。"
+  ],
+  "follow_ups": [
+    "一次付款包含多个服务项目时怎样拆事实？",
+    "退款与取消时间不同，会改变哪些指标？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.java.5a2ef43c8b17",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "java",
@@ -13,7 +13,7 @@
     "java-engineer"
   ],
   "origin": "generated",
-  "prompt": "多个线程需要高并发读写同一个 Map。请比较 Hashtable、Collections.synchronizedMap 和 ConcurrentHashMap，并解释 Java 8+ ConcurrentHashMap 如何通过 volatile、CAS、桶级同步和协助扩容保证线程安全。哪些复合操作仍需要 compute、merge 或额外协调？",
+  "prompt": "数据平台的多个接入线程共享一份表元数据 Map，并需要按需加载。多个线程需要高并发读写同一个 Map。请比较 Hashtable、Collections.synchronizedMap 和 ConcurrentHashMap，并解释 Java 8+ ConcurrentHashMap 如何通过 volatile、CAS、桶级同步和协助扩容保证线程安全。哪些复合操作仍需要 compute、merge 或额外协调？",
   "rubric": [
     "说明 HashMap 本身不保证并发安全，Hashtable 和 synchronizedMap 主要使用较粗粒度互斥",
     "解释 ConcurrentHashMap 的数组节点、volatile 可见性、CAS 和冲突桶 synchronized 更新",
@@ -32,5 +32,5 @@
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T22:36:58+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-09-20T21:46:34+08:00"
 }

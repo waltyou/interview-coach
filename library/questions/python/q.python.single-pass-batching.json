@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.python.single-pass-batching",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "python",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "实现 batch_apply(records, batch_size, transform)：records 是无 len()、不可切片且只能消费一次的迭代器；每次最多取 batch_size 条，把该批的 iterator 传给 transform，惰性返回结果。最后不足一批也处理，batch_size 必须为正整数。说明异常时已经消费到哪里。",
+  "rubric": [
+    "只获取一个迭代器并逐批前进，不重复遍历输入",
+    "使用 islice 或等价逻辑构造非空批，空输入立即结束",
+    "验证正整数参数，拒绝零和负数",
+    "最后不足一批仍调用 transform",
+    "逐批产生结果，缓冲 O(batch_size) 另加 transform 自身空间",
+    "批已从上游读出后 transform 失败不能凭空重放，需缓存或外部 checkpoint",
+    "测试一次性 iterator、尾批、非法参数和 transform 异常"
+  ],
+  "hints": [
+    "先确定一批的所有权和消费边界。",
+    "成功或失败时上游都可能已经前进。"
+  ],
+  "follow_ups": [
+    "如果 transform 只读取批的一部分，下一批从哪里开始？",
+    "要求失败批重试时，接口需要增加什么状态？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

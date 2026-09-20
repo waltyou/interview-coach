@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.python.csv-daily-distinct",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "python",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请实现 daily_distinct(csv_path, timezone)：CSV 含 event_time 和 visitor_key，时间字段为带偏移量的 ISO 8601 字符串。返回按指定业务时区划分的每日唯一访客数。声明编码、坏行与空键策略，并说明输入文件或去重状态超内存时的精确和近似方案。",
+  "rubric": [
+    "使用标准 CSV parser 正确处理引号、逗号、换行和 header",
+    "解析带偏移时间并转换业务时区后取日期",
+    "按日期维护唯一键集合或等价准确去重",
+    "坏行可观测且策略明确，输出顺序稳定",
+    "时间接近 O(n)，空间由不同日期/访客组合决定",
+    "流式读取只限制原始文件驻留，不限制 distinct 状态",
+    "精确方案可外部排序/分区，近似方案需声明误差和可合并性"
+  ],
+  "hints": [
+    "把文件解析与去重状态分开设计。",
+    "接近午夜的同一时刻可能对应不同自然日。"
+  ],
+  "follow_ups": [
+    "如何设计跨时区与重复记录测试？",
+    "每个分区独立 count distinct 后为什么通常不能直接求和？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}

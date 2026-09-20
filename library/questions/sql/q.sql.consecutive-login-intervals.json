@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.sql.consecutive-login-intervals",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "sql",
@@ -26,10 +26,11 @@
   ],
   "follow_ups": [
     "如何只返回长度至少为 3 天的区间？",
-    "如何在同一查询中标出每个用户最长的全部并列区间？"
+    "如何在同一查询中标出每个用户最长的全部并列区间？",
+    "怎样从全部连续区间得到每个用户最长连续登录天数，同时保留只有一天的用户？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-09-03T21:47:27+08:00",
-  "updated_at": "2026-09-03T21:47:27+08:00"
+  "updated_at": "2026-09-20T21:46:34+08:00"
 }

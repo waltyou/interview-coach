@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.java.1f0c8a5cd168",
-  "revision": 2,
+  "revision": 3,
   "status": "active",
   "visibility": "public",
   "topic": "java",
@@ -12,7 +12,7 @@
     "senior-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "一个 Java 服务每次刷新内存中的 Map 后，操作系统看到的进程内存都会上升，但 GC 后 heap used 反而下降，Survivor/Eden/Old Gen 的 capacity 还会动态变化。你会如何判断这是内存泄漏、JVM 保留内存，还是 AdaptiveSizePolicy 的正常调整？",
+  "prompt": "假设使用 HotSpot JDK 8 的 Parallel GC 并开启自适应大小策略。一个 Java 服务每次刷新内存中的 Map 后，操作系统看到的进程内存都会上升，但 GC 后 heap used 反而下降，Survivor/Eden/Old Gen 的 capacity 还会动态变化。你会如何判断这是内存泄漏、JVM 保留内存，还是 AdaptiveSizePolicy 的正常调整？",
   "rubric": [
     "区分 RSS、已提交堆容量、实际堆使用量、堆外内存、Metaspace 和 Direct Memory",
     "用 jstat、jmap、Arthas 等工具连续采样各代容量与使用量，而不是只看 ps 的单点值",
@@ -31,5 +31,5 @@
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T21:35:29+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-09-20T21:46:34+08:00"
 }

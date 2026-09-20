@@ -1,0 +1,38 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.sql.versioned-state-tombstones",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "sql",
+  "kind": "coding",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "设备状态事件 events(event_id, device_id, version, operation, payload) 可以重复和乱序；同一设备 version 单调表示业务顺序，相同 device_id/version 必须有相同内容，否则隔离。目标 device_state(device_id, version, is_deleted, payload) 保留最新状态与删除墓碑。假设单写者、每批原子提交，请写 SQL 选取本批最终事件并合并，使重跑不改变结果，旧 UPSERT 不会复活已删除设备，更新版本的 UPSERT 可恢复设备。",
+  "rubric": [
+    "先校验同键同版本冲突，再取每设备本批最大版本",
+    "只让比目标严格更新的版本修改目标",
+    "DELETE 在有无匹配时都保存墓碑和版本",
+    "UPSERT 只在新版本时更新状态并解除删除",
+    "重跑相同版本是 no-op，用户视图过滤墓碑",
+    "物理清理需要事件低水位或其他不会再到达旧版本的证明",
+    "用删除后迟到旧写入和删除后更新写入验证",
+    "说明并发 writer 需要附加事务/串行化保证"
+  ],
+  "hints": [
+    "不存在的可见状态也可能有必须记住的版本。",
+    "让 DELETE 与 UPSERT 共用比较规则。"
+  ],
+  "follow_ups": [
+    "墓碑清理后旧事件重放会怎样？",
+    "若业务还要求保留每次变化，需要增加哪种历史模型？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-20T21:46:34+08:00",
+  "updated_at": "2026-09-20T21:46:34+08:00"
+}
