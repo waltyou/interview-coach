@@ -133,13 +133,58 @@ def load_jobs() -> dict[str, dict[str, Any]]:
     return jobs
 
 
-def load_events() -> list[dict[str, Any]]:
+def load_events(*, raw: bool = False) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
     for path in iter_json_files(EVENT_ROOT):
         event = load_json(path)
         event["_path"] = path
         events.append(event)
-    return sorted(events, key=lambda event: (event.get("occurred_at", ""), event.get("id", "")))
+    events = sorted(events, key=lambda event: (event.get("occurred_at", ""), event.get("id", "")))
+    return events if raw else effective_attempts(events)
+
+
+def effective_attempts(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Apply evaluation changes without manufacturing a new answer or attempt date."""
+    from copy import deepcopy
+
+    by_id = {}
+    for event in events:
+        if event["id"] in by_id:
+            raise ValueError(f"Duplicate Event id: {event['id']}")
+        by_id[event["id"]] = event
+    originals = {e["id"]: deepcopy(e) for e in events if e.get("type", "attempt.recorded") == "attempt.recorded"}
+    owners = {event_id: event_id for event_id in originals}
+    heads = dict(owners)
+    pending = [e for e in events if e.get("type") == "attempt.reevaluated"]
+    for event in events:
+        if event.get("type", "attempt.recorded") not in {"attempt.recorded", "attempt.reevaluated"}:
+            raise ValueError(f"Unsupported Event type: {event.get('type')}")
+    while pending:
+        ready = [e for e in pending if e.get("supersedes") in owners]
+        if not ready:
+            raise ValueError("Evaluation correction has an unknown or cyclic supersedes reference")
+        for correction in ready:
+            target = correction["supersedes"]
+            owner = owners[target]
+            if heads[owner] != target:
+                raise ValueError("Evaluation correction must supersede the latest evaluation")
+            original = originals[owner]
+            for field in ("occurred_at", "learner_id", "cycle_id", "practice_session_id", "question_id",
+                          "question_revision", "answer", "hints_used", "assistance"):
+                if correction.get(field) != original.get(field):
+                    raise ValueError(f"Evaluation correction changed answer fact: {field}")
+            previous = by_id[target]
+            if parse_datetime(correction["corrected_at"]) < parse_datetime(previous.get("corrected_at", previous["occurred_at"])):
+                raise ValueError("Evaluation correction predates its target")
+            if not correction.get("correction_reason", "").strip():
+                raise ValueError("Evaluation correction requires a reason")
+            original.setdefault("evaluation_history", []).append({"event_id": target, "evaluation": deepcopy(original["evaluation"])})
+            original["evaluation"] = deepcopy(correction["evaluation"])
+            original["evaluation_event_id"] = correction["id"]
+            heads[owner] = correction["id"]
+            owners[correction["id"]] = owner
+            pending.remove(correction)
+    return sorted(originals.values(), key=lambda e: (e["occurred_at"], e["id"]))
 
 
 def parse_datetime(value: str) -> datetime:
@@ -149,6 +194,12 @@ def parse_datetime(value: str) -> datetime:
 def knowledge_score(scores: dict[str, int]) -> int:
     """Return the conservative score used by the review scheduler."""
     return min(scores["recall"], scores["correctness"], scores["depth"])
+
+
+def practice_budget(*, session: dict | None = None, profile: dict | None = None, default: int = 15) -> int:
+    candidates = [(session or {}).get("time_budget_minutes"),
+                  (profile or {}).get("preferences", {}).get("session_minutes"), default]
+    return next(value for value in candidates if type(value) is int and value > 0)
 
 
 def slugify(value: str, fallback: str = "general") -> str:

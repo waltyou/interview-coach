@@ -27,6 +27,7 @@ from common import (
     iter_json_files,
     knowledge_score,
     load_json,
+    effective_attempts,
     question_completeness_issues,
     repository_relative,
     resolve_source_list,
@@ -47,9 +48,9 @@ QUESTION_STATUSES = {"active", "archived"}
 QUESTION_VISIBILITIES = {"public", "private"}
 CYCLE_STATUSES = {"planned", "active", "completed", "archived"}
 CYCLE_KINDS = {"baseline", "maintenance", "job_targeted", "stage_targeted"}
-REVIEW_POLICIES = {"coverage_once", "spaced", "coverage_then_spaced"}
+REVIEW_POLICIES = {"coverage_once", "spaced", "coverage_then_spaced", "mixed"}
 JOB_STATUSES = {"considering", "interviewing", "offer", "closed", "withdrawn"}
-EXPECTED_PROTOCOL_VERSION = "0.10.0"
+EXPECTED_PROTOCOL_VERSION = "0.12.0"
 
 
 class Validation:
@@ -592,6 +593,9 @@ def load_and_validate_cycles(
         for question_id in cycle["question_ids"]:
             if question_id not in questions:
                 validation.error(path, f"unknown Question in snapshot: {question_id}")
+        from diagnostic import snapshot_issues
+        for issue in snapshot_issues(cycle):
+            validation.error(path, issue)
     return cycles
 
 
@@ -632,8 +636,12 @@ def validate_events(
         if event_id in events:
             validation.error(path, f"duplicate AttemptEvent id: {event_id}")
         events[event_id] = event
-        if event["type"] != "attempt.recorded":
+        if event["type"] not in {"attempt.recorded", "attempt.reevaluated"}:
             validation.error(path, f"unsupported Event type: {event['type']}")
+        if "assistance" in event and event["assistance"] not in {"independent", "hints", "reference_seen"}:
+            validation.error(path, "invalid assistance level")
+        if event.get("assistance") == "independent" and event.get("hints_used"):
+            validation.error(path, "independent answer cannot have hints_used")
         question_id = event["question_id"]
         cycle_id = event["cycle_id"]
         if question_id not in questions:
@@ -665,7 +673,7 @@ def validate_state(
         if state is None:
             continue
         validation.counts["state_files"] += 1
-        if state.get("schema_version") != 2:
+        if state.get("schema_version") not in {2, 3}:
             validation.error(path, f"unsupported state schema_version: {state.get('schema_version')}")
         for event_id in state.get("derived_from_events", []):
             if event_id not in events:
@@ -698,7 +706,8 @@ def validate_state(
                 validation.error(path, f"state references unknown Question: {item.get('question_id')}")
             scores = item.get("scores")
             if scores is None:
-                if item.get("knowledge_score") is not None or item.get("review_interval_days") is not None:
+                expected_interval = 1 if item.get("evidence_status") == "awaiting_independent" else None
+                if item.get("knowledge_score") is not None or item.get("review_interval_days") != expected_interval:
                     validation.error(path, f"unscored Question has scheduling data: {item.get('question_id')}")
                 continue
             expected_score = knowledge_score(scores)
@@ -733,7 +742,7 @@ def validate_reports(
         if not require_fields(report, required, path, validation):
             continue
         cycle_id = report["cycle_id"]
-        if report["schema_version"] != 2:
+        if report["schema_version"] not in {2, 3}:
             validation.error(path, f"unsupported CycleReport schema_version: {report['schema_version']}")
         if path.stem != cycle_id:
             validation.error(path, f"filename does not match PreparationCycle id: {cycle_id}")
@@ -806,7 +815,8 @@ def validate_dashboard(
         validation.error(output_path, "Dashboard PreparationCycle count is stale")
     if len(data.get("jobs", [])) != validation.counts["jobs"]:
         validation.error(output_path, "Dashboard Job count is stale")
-    if data.get("attempts", {}).get("total") != len(events):
+    attempt_ids = {event_id for event_id, event in events.items() if event.get("type") == "attempt.recorded"}
+    if data.get("attempts", {}).get("total") != len(attempt_ids):
         validation.error(output_path, "Dashboard AttemptEvent count is stale")
 
     review_template_path = DASHBOARD_ROOT / "review-template.html"
@@ -845,12 +855,12 @@ def validate_dashboard(
                         for group in review_data.get("review_groups", [])
                         for attempt in group.get("attempts", [])
                     }
-                    if review_event_ids != set(events):
+                    if review_event_ids != attempt_ids:
                         validation.error(
                             review_output_path,
                             "answer review page does not contain every AttemptEvent",
                         )
-                    if review_data.get("attempt_count") != len(events):
+                    if review_data.get("attempt_count") != len(attempt_ids):
                         validation.error(review_output_path, "answer review count is stale")
 
     review_notes_path = PACK_ROOT / "workspace" / "reports" / "answer-review.md"

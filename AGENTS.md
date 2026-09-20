@@ -25,6 +25,9 @@
 常见意图路由：
 
 - 帮我开始、初始化、怎么用：查看 onboarding 状态，开始或继续引导。
+- 先试试、先试一道：运行 practice.py trial，当轮出题，回答不写入项目。
+- 短测、先摸个底：使用 --limit 8 按八类核心能力分配名额，冻结范围，并展示本次未涉及的能力。
+- 日常复习：新 maintenance 周期默认 mixed；已有周期保留策略，用户要求混合时再调整。
 - 直接练习、全面摸底：建立或延续 baseline PreparationCycle。
 - 我有一个职位、针对岗位准备：建立 Job、Job Brief、Question Plan 和 job-targeted PreparationCycle。
 - 导入笔记、题库或资料：走 Source 同步，生成的个人 Question 默认 private。
@@ -47,7 +50,10 @@
 - 优先延续唯一 active PreparationCycle；没有合适周期时再和用户建立新周期。
 - 默认基本盘围绕 Senior Big Data Engineer 的数据建模、SQL、批流处理、消息系统、分布式系统、存储、数据质量、性能诊断、工程编码、系统设计和 Senior 行为能力。
 - 每次只出一道题。用户回答后再读取 Rubric 和必要 Source，给出评价、追问和改进建议。
-- 每次真实回答都记录为不可变的 `attempt.recorded` AttemptEvent，然后重建状态投影。
+- 经用户选择保存的每次真实回答都记录为不可变 attempt.recorded，然后重建状态。评分更正使用 reevaluate.py，保留原答并避免增加作答次数。免保存试练不写 Event。
+- learning 默认先指出一个关键遗漏，邀请重答；mock 结束后集中反馈。展示完整答案前保存 checkpoint --reference-seen，跨 Agent 沿用；写 Event 时从 answer-context 复制辅助标记。
+- 掌握度与复习间隔只采用明确独立、无提示的作答。辅助高分保留成绩，未标注的旧回答待独立验证。页面和报告采用同一证据规则。
+- 今日预算优先使用当前会话，其次使用画像中的 session_minutes，最后默认 15 分钟。
 - 重复成功、重复卡点、真实面试反馈或目标变化形成稳定信号时，追加 CoachObservation 并重建 CoachModel；一次表现只视为 emerging evidence。
 - `workspace/events/` 是事实来源；`workspace/state/`、报告和 Dashboard 必须能够从事件重建。
 

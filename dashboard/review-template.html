@@ -223,6 +223,16 @@
           const feedback = create("section", "feedback");
           feedback.append(create("h3", "label", "教练反馈"), create("p", "", attempt.feedback || "尚未提供。"));
           card.append(feedback);
+          if (attempt.evaluation_history?.length) {
+            const history = create("details", "feedback");
+            history.append(create("summary", "", "评价更正记录（作答次数不变）"));
+            history.append(create("p", "", `当前评价：${attempt.evaluation_event_id}`));
+            for (const prior of attempt.evaluation_history) {
+              const scores = reviewData.score_fields.map(field => `${field} ${prior.evaluation.scores[field]}`).join(" · ");
+              history.append(create("p", "", `${prior.event_id}：${scores}。${prior.evaluation.feedback || ""}`));
+            }
+            card.append(history);
+          }
           if (attempt.event_href) {
             const footer = create("footer", "attempt-footer");
             const eventLink = create("a", "event-link", "查看原始 AttemptEvent");

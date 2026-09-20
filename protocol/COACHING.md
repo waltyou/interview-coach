@@ -92,12 +92,15 @@ Question 的 `rubric` 为空时，以 `source_refs` 对应章节作为评价依�
 
 - 用户原始回答。
 - 使用过的提示。
+- 本次辅助程度 assistance：independent、hints 或 reference_seen。看过完整答案后即使没有分级提示也必须记录 reference_seen；旧事件缺少该字段时不推断为独立作答。
 - Question ID 与 revision。
 - PreparationCycle ID 与 PracticeSession ID。
 - 四维评分、遗漏和反馈。
 - 执行评价的 Agent 标识。
 
-Event 创建后保持只读。需要纠正历史时，追加一条更正 Event；v0.3 允许在尚未发布或共享前直接修正明显的录入错误。
+Event 创建后保持只读。用户质疑评分时，先对照原回答和 Rubric 重新核对，解释维持或修正的依据。需要更正评价时，将完整评价对象写入私有 JSON，运行 `python scripts/reevaluate.py --attempt-id <原始回答ID> --evaluation <评价JSON路径> --reason "更正依据"`。脚本追加 attempt.reevaluated，通过 supersedes 关联最近的评价，并保留 corrected_at 和 correction_reason。原回答、提示、题目、所属周期和作答时间保持原值。
+
+重建、历史、复习册和 Dashboard 统一使用最新有效评价，真实作答次数及最近作答日期不增加；复习间隔从原作答日期按新分数计算。原始与更正文件都保留。已完成周期的固定报告仍表示结束时的情况，查当前评价时读取事件。已有 CoachObservation 不自动改写；若更正影响相关判断，Agent 追加 supersede 观察并重建 CoachModel。
 
 一次回答可以成为 CoachObservation 的证据，但不要把单次高分或低分直接当作稳定强项或弱项。出现重复成功、重复卡点、沟通模式、目标变化或真实面试反馈等值得跨会话保留的信号时，追加有明确 evidence reference 的 CoachObservation，并运行 `scripts/coach_model.py rebuild`。用户纠正的是事实时更新 CandidateProfile；Coach 修正自己的判断时，用新观察 supersede 旧观察。
 
@@ -113,7 +116,13 @@ python scripts/rebuild_state.py
 
 Dashboard 刷新时还会从全部 AttemptEvent 重建 `workspace/reports/answer-review.md`。复习册按 Question 归组，保留每次原回答、建议表达、遗漏点和教练反馈。它是可重建投影，不能替代只追加 Event。
 
-状态重建规则：
+掌握证据与练习记录分开。独立证据必须显式记录 assistance=independent，且 hints_used 为空。scores、knowledge_score、review_interval_days 和 next_due_at 取最近独立证据的分数与原作答时间；辅助高分不替代它，也不延长其复习间隔。最近任何一次练习保留在 latest_attempt_scores、last_attempt_at 和 last_event_id 中，evidence_event_id 指向独立证据。
+
+没有独立证据时 scores 和 knowledge_score 为 null，evidence_status 为 awaiting_independent。从第一次记录的练习次日安排一次独立验证（间隔 1 天）；此后的辅助练习不把这个日期向后推。旧事件缺少 assistance 时同样待验证，原始评分和评价照常保留。覆盖只表示练过；当天已练题目仍跳过自动选题，用户明确要求重答时继续。
+
+四维平均分、强弱项和最近进步都以独立证据为依据；无独立证据单列为待验证。已结束周期的固定报告保留当时语义，新报告标明独立作答分数。CoachObservation 是独立保存的判断，必要时根据新证据追加修正，不批量改写历史。
+
+独立作答的间隔规则：
 
 ```text
 knowledge_score = min(recall, correctness, depth)
@@ -167,13 +176,20 @@ stage_targeted  针对 InterviewStage 的短时强化
 4. 使用 `start_cycle.py --kind job_targeted --job-id <job-id>` 创建 PreparationCycle。脚本只冻结该 Job 的 Question Plan，不会把同 topic 的整个题库一并加入。
 5. Job Brief 或 Question Plan 后续可以继续修订；已经创建的 PreparationCycle 保持原有题目快照。
 
-支持三种选择策略：
+支持四种选择策略：
 
 ```text
 coverage_once          每题覆盖一次后结束
-spaced                 只依据 next_due_at 复习
+spaced                 只选择已到期题目，不引入新题
+mixed                  日常练习，每日按两道到期题、一道新题交替；某类为空时使用另一类
 coverage_then_spaced   先覆盖全部，再按 next_due_at 复习
 ```
+
+maintenance 新周期默认使用 mixed；baseline 保持 coverage_then_spaced。已有周期的策略原样保留，用户要求日常混合复习时再调整该周期 review_policy。首次覆盖按一级 topic 的已覆盖题数优先补齐能力，再在该能力内抽题；Job 精选顺序优先。
+
+用户要求短测时创建 `start_cycle.py --name "8题短测" --kind baseline --visibility public --limit 8 --policy coverage_once`。按数据建模、系统设计、沟通与 Senior 行为、SQL、数据处理与分布式系统、存储与表格式、数据质量与故障诊断、工程编码八类能力分配名额。每类至少一题后再填剩余名额；请求少于八题时优先建模、系统设计和沟通。尊重用户指定的 topic 和 visibility，缺少某类时明确列出，不突破范围补题。
+
+创建时在 diagnostic 中冻结能力范围、可用能力、抽样前主题、选中题目的能力与主题映射。报告和 Dashboard 使用该快照，明确列出本次未涉及、尚未作答、尚无独立证据和当前题库或范围缺少的能力。八题练完只说明完成了短测，每类一道题仍只能提供初步判断。旧周期缺少快照时只报告已有范围，不猜测当初被排除的题目。
 
 新的 PreparationCycle 会重置 CycleProgress，但保留 MasteryState 和全部 AttemptEvent。新周期中所有快照题目都重新具备被覆盖的资格。
 

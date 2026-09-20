@@ -544,7 +544,7 @@
         const promptLink = create("a", "", question.prompt);
         promptLink.href = `#${questionAnchor(question.id)}`;
         prompt.append(promptLink, create("small", "", `${question.id} · ${question.topic} · ${question.visibility} · rev ${question.revision}`));
-        const score = question.knowledge_score === null ? "—" : `${question.knowledge_score}/4`;
+        const score = question.knowledge_score === null ? (question.attempt_count ? "待独立验证" : "未作答") : `${question.knowledge_score}/4`;
         row.append(prompt, statusPill(question.status), create("div", "cell-muted", score), create("div", "cell-muted", question.next_due_at ?? "—"));
         list.append(row);
       });

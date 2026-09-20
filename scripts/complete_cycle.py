@@ -16,7 +16,7 @@ from common import (
     without_internal_fields,
     write_json,
 )
-from rebuild_state import build_cycle_progress, latest_event, rebuild
+from rebuild_state import build_cycle_progress, latest_event, mastery_evidence, rebuild
 
 
 def parse_args() -> argparse.Namespace:
@@ -83,6 +83,7 @@ def build_report(
         question = questions[question_id]
         attempts = by_question.get(question_id, [])
         latest = latest_event(attempts) if attempts else None
+        evidence = mastery_evidence(attempts)
         state = progress_by_id[question_id]
         question_reports.append(
             {
@@ -98,14 +99,18 @@ def build_report(
                 "last_attempt_at": state["last_attempt_at"],
                 "next_due_at": state["next_due_at"],
                 "last_event_id": state["last_event_id"],
-                "missing_points": latest["evaluation"]["missing_points"] if latest else [],
+                "missing_points": evidence["evaluation"]["missing_points"] if evidence else [],
+                "evidence_status": state.get("evidence_status", "unseen"),
+                "evidence_event_id": state.get("evidence_event_id"),
                 "event_ids": [event["id"] for event in attempts],
             }
         )
 
+    from diagnostic import coverage
     return {
+        "diagnostic_coverage": coverage(cycle, progress),
         "$schema": "../../../protocol/schemas/cycle-report.schema.json",
-        "schema_version": 2,
+        "schema_version": 3,
         "cycle_id": cycle["id"],
         "generated_at": generated_at,
         "cycle": {
@@ -131,7 +136,7 @@ def build_report(
 
 def score_text(scores: dict[str, int] | None) -> str:
     if scores is None:
-        return "未作答"
+        return "待独立验证"
     return "/".join(
         str(scores[field])
         for field in ("recall", "correctness", "depth", "communication")
@@ -168,23 +173,32 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         "评分顺序为 recall / correctness / depth / communication。",
         "",
-        f"本周期最近一次评分平均值：{average_text}。",
+        f"本周期最新独立作答评分平均值：{average_text}。",
         "",
         "## 题目记录",
         "",
-        "| 题目 | 状态 | 回答次数 | 最近评分 | 知识分 | 下次复习 |",
+        "| 题目 | 状态 | 回答次数 | 独立作答评分 | 知识分 | 下次复习 |",
         "| --- | --- | ---: | --- | ---: | --- |",
     ]
     for item in report["questions"]:
         prompt = " ".join(item["prompt"].split()).replace("|", "\\|")
         lines.append(
             f"| {prompt} | {item['status']} | {item['attempt_count']} | "
-            f"{score_text(item['scores'])} | "
+            f"{score_text(item['scores']) if item['attempt_count'] else '未作答'} | "
             f"{item['knowledge_score'] if item['knowledge_score'] is not None else '-'} | "
             f"{item['next_due_at'] or '-'} |"
         )
 
     lines.extend(["", "## 主要遗漏", ""])
+    diagnostic = report.get("diagnostic_coverage")
+    if diagnostic:
+        from diagnostic import capability_label
+        for key, label in [("not_included_capabilities", "本次未涉及的能力"),
+                           ("unavailable_capabilities", "当前题库或所选范围缺少的能力"),
+                           ("untested_capabilities", "尚未作答的能力"),
+                           ("unverified_capabilities", "尚无独立作答证据的能力")]:
+            lines.extend([f"{label}：{'、'.join(capability_label(name) for name in diagnostic[key]) or '无'}。", ""])
+        lines.extend(["短测仅提供初步观察；每个能力的一道题不能代表全面掌握。", ""])
     recurring = report["highlights"]["recurring_missing_points"]
     if recurring:
         lines.extend(f"- {item['point']}（{item['count']} 次）" for item in recurring)

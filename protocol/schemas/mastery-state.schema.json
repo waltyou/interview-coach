@@ -6,7 +6,7 @@
   "required": ["schema_version", "learner_id", "generated_at", "questions", "derived_from_events"],
   "properties": {
     "$schema": { "type": "string" },
-    "schema_version": { "const": 2 },
+    "schema_version": { "enum": [2, 3] },
     "learner_id": { "type": "string", "minLength": 1 },
     "generated_at": { "type": "string", "format": "date-time" },
     "questions": {
@@ -32,10 +32,13 @@
             "uniqueItems": true
           },
           "scores": {
-            "type": "object",
+            "type": ["object", "null"],
             "additionalProperties": { "type": "integer", "minimum": 0, "maximum": 4 }
           },
-          "knowledge_score": { "type": "integer", "minimum": 0, "maximum": 4 },
+          "evidence_status": { "enum": ["independent", "awaiting_independent"] },
+          "evidence_event_id": { "type": ["string", "null"] },
+          "latest_attempt_scores": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0, "maximum": 4 } },
+          "knowledge_score": { "type": ["integer", "null"], "minimum": 0, "maximum": 4 },
           "review_interval_days": { "type": "integer", "minimum": 1 },
           "last_attempt_at": { "type": "string", "format": "date-time" },
           "next_due_at": { "type": "string", "format": "date" },

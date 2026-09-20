@@ -51,6 +51,7 @@ def preparation_cycle(question_ids: list[str]) -> dict:
 
 def attempt(question_id: str, score: int = 3) -> dict:
     return {
+        "assistance": "independent",
         "id": f"attempt.20260805.{question_id}",
         "occurred_at": "2026-08-05T10:00:00+08:00",
         "learner_id": "me",
@@ -70,6 +71,21 @@ def attempt(question_id: str, score: int = 3) -> dict:
 
 
 class ReviewFlowTests(unittest.TestCase):
+    def test_spaced_prioritizes_due_even_with_unseen_questions(self) -> None:
+        current = preparation_cycle(["q.old", "q.new"])
+        current["review_policy"] = "spaced"
+        progress = build_cycle_progress(current, [attempt("q.old", 0)],
+                                        "2026-08-06T10:00:00+08:00", date(2026, 8, 6))
+        result = select_result(current, progress, {qid: question(qid) for qid in current["question_ids"]})
+        self.assertEqual("q.old", result["question_id"])
+
+    def test_spaced_does_not_introduce_unseen_questions(self) -> None:
+        current = preparation_cycle(["q.new"])
+        current["review_policy"] = "spaced"
+        progress = build_cycle_progress(current, [], "2026-08-06T10:00:00+08:00", date(2026, 8, 6))
+        result = select_result(current, progress, {"q.new": question("q.new")})
+        self.assertEqual("no_question_due", result["status"])
+
     def test_answered_question_is_not_selected_again_before_due(self) -> None:
         question_ids = ["q.spark.first", "q.spark.second"]
         current_cycle = preparation_cycle(question_ids)

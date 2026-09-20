@@ -79,9 +79,10 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--policy",
-        choices=("coverage_once", "spaced", "coverage_then_spaced"),
-        default="coverage_then_spaced",
+        choices=("coverage_once", "spaced", "coverage_then_spaced", "mixed"),
+        default=None,
     )
+    parser.add_argument("--limit", type=int, help="Short baseline: balanced sample across topics (for example 8)")
     parser.add_argument("--planned", action="store_true")
     return parser.parse_args()
 
@@ -117,6 +118,14 @@ def main() -> None:
     )
     if not question_ids:
         raise SystemExit("No active Question matches the requested topics")
+    diagnostic = None
+    if args.limit is not None:
+        if args.limit < 1 or args.kind != "baseline":
+            raise SystemExit("--limit must be positive and is only supported for baseline cycles")
+        pool = question_ids
+        question_ids = balanced_sample(pool, questions, args.limit)
+        from diagnostic import snapshot
+        diagnostic = snapshot(pool, question_ids, questions)
     if job is not None and topics == ["*"]:
         topics = sorted({questions[question_id]["topic"] for question_id in question_ids})
 
@@ -135,12 +144,14 @@ def main() -> None:
         "target_roles": roles,
         "topics": topics,
         "question_set_policy": "snapshot",
-        "review_policy": args.policy,
+        "review_policy": args.policy or ("mixed" if args.kind == "maintenance" else "coverage_then_spaced"),
         "same_day_repeat": False,
         "question_ids": question_ids,
     }
     if job is not None:
         cycle["job_id"] = job["id"]
+    if diagnostic is not None:
+        cycle["diagnostic"] = diagnostic
     write_json(output_path, cycle)
     from build_dashboard import build_dashboard
 
@@ -151,6 +162,11 @@ def main() -> None:
         f"path={output_path.relative_to(PACK_ROOT).as_posix()} "
         f"dashboard={dashboard_path.relative_to(PACK_ROOT).as_posix()}"
     )
+
+
+def balanced_sample(question_ids: list[str], questions: dict[str, dict], limit: int) -> list[str]:
+    from diagnostic import sample
+    return sample(question_ids, questions, limit)
 
 
 if __name__ == "__main__":

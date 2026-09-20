@@ -163,6 +163,7 @@ def public_cycle(
                 "attempt_count": state["attempt_count"],
                 "scores": state["scores"],
                 "knowledge_score": state["knowledge_score"],
+                "evidence_status": state.get("evidence_status", "unseen"),
                 "review_interval_days": state["review_interval_days"],
                 "last_attempt_at": state["last_attempt_at"],
                 "next_due_at": state["next_due_at"],

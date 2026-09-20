@@ -31,6 +31,8 @@ def build_review_groups(
                 {
                     "sequence": sequence,
                     "id": event["id"],
+                    "evaluation_event_id": event.get("evaluation_event_id", event["id"]),
+                    "evaluation_history": event.get("evaluation_history", []),
                     "event_path": (
                         event["_path"].relative_to(PACK_ROOT).as_posix()
                         if event.get("_path")
@@ -92,7 +94,7 @@ def render_review_markdown(
     lines = [
         "# Interview Coach 回答复习册",
         "",
-        f"> 生成时间：{generated_at}  ",
+        f"> 生成时间：{generated_at}<br>",
         f"> 共 {len(groups)} 道题、{attempt_count} 次回答。内容由只追加的 AttemptEvent 自动生成；请勿在此文件中直接维护历史。",
         "",
         "这份复习册按题目归组，最近一次回答优先，并保留此前每次尝试。原回答用来恢复真实表达，建议表达用来练习结构，注意点用来决定下一轮重点。",
@@ -139,6 +141,11 @@ def render_review_markdown(
                 lines.extend(f"- {point}" for point in attempt["missing_points"])
             else:
                 lines.append("- 当前评价没有记录额外注意点。")
+            if attempt.get("evaluation_history"):
+                lines.extend(["", f"当前评价依据：`{attempt['evaluation_event_id']}`。评分更正未增加作答次数。", ""])
+                for prior in attempt["evaluation_history"]:
+                    old_scores = prior["evaluation"]["scores"]
+                    lines.append(f"- 此前评价 `{prior['event_id']}`：" + " · ".join(f"{key} {old_scores[key]}" for key in SCORE_FIELDS))
             lines.extend(
                 [
                     "",

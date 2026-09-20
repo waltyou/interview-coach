@@ -1,7 +1,7 @@
 {
   "$schema": "protocol/schemas/manifest.schema.json",
   "protocol": "interview-coach-context-pack",
-  "protocol_version": "0.10.0",
+  "protocol_version": "0.12.0",
   "instructions": "protocol/COACHING.md",
   "terminology": "protocol/TERMS.md",
   "onboarding": {
@@ -64,7 +64,10 @@
     "candidate.discover",
     "candidate.profile.maintain",
     "coach.observe",
-    "coach-model.rebuild"
+    "coach-model.rebuild",
+    "practice.trial",
+    "practice.resume",
+    "attempt.reevaluate"
   ],
   "default_review_policy": "coverage_then_spaced"
 }

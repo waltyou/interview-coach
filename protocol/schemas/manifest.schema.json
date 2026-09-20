@@ -58,7 +58,7 @@
       "items": { "type": "string", "minLength": 1 }
     },
     "default_review_policy": {
-      "enum": ["coverage_once", "spaced", "coverage_then_spaced"]
+      "enum": ["coverage_once", "spaced", "coverage_then_spaced", "mixed"]
     }
   },
   "additionalProperties": false

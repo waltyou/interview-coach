@@ -43,7 +43,8 @@
       "uniqueItems": true
     },
     "question_set_policy": { "enum": ["snapshot", "dynamic"] },
-    "review_policy": { "enum": ["coverage_once", "spaced", "coverage_then_spaced"] },
+    "review_policy": { "enum": ["coverage_once", "spaced", "coverage_then_spaced", "mixed"] },
+    "diagnostic": {"type": "object", "required": ["blueprint_version", "scope_capabilities", "available_capabilities", "pool_topics", "question_capabilities", "question_topics"], "properties": {"scope_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "available_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "pool_topics": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "blueprint_version": {"const": 1}, "question_capabilities": {"type": "object", "additionalProperties": {"type": "string"}}, "question_topics": {"type": "object", "additionalProperties": {"type": "string"}}}, "additionalProperties": false},
     "same_day_repeat": { "type": "boolean" },
     "question_ids": {
       "type": "array",

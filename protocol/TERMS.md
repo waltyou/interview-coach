@@ -56,15 +56,15 @@ Source 的内容单元分别是 document、page、slide 和 sheet。Question 引
 
 ## PracticeSession
 
-用户与 Agent 一次连续的练习对话。一个 PreparationCycle 可以包含多个 PracticeSession。v0.3 通过 AttemptEvent 的 `practice_session_id` 分组，暂不建立独立文件。
+用户与 Agent 一次可暂停和恢复的练习。一个 PreparationCycle 可以包含多个 PracticeSession。私人 workspace/sessions/ 保存当前题目快照、已用提示、作答阶段、目标、时间预算和模式；AttemptEvent 通过 practice_session_id 关联。旧 Event 不要求补建会话文件。
 
 ## AttemptEvent
 
-用户对一道题的一次真实回答及其评价。AttemptEvent 是训练历史的事实来源。
+用户对一道题的一次真实回答及其评价（attempt.recorded），是训练历史的事实来源。attempt.reevaluated 保存对该回答的评价更正，通过 supersedes 关联最近评价；它不构成新的真实作答。
 
 ## CycleProgress
 
-某个 PreparationCycle 中每道题的覆盖、到期和评分状态。它是可重建投影。
+某个 PreparationCycle 中每道题的覆盖、到期与独立掌握状态。最近练习成绩与独立证据分别保存；辅助练习计入次数和覆盖，但不替代独立掌握。无明确独立证据时显示待独立验证。它是可重建投影。
 
 ## CycleReport
 
@@ -72,7 +72,7 @@ PreparationCycle 结束时生成的固定总结。JSON 供 Agent 读取，Markdo
 
 ## MasteryState
 
-跨 PreparationCycle 聚合的长期掌握状态。它是可重建投影。
+跨 PreparationCycle 聚合的长期独立掌握状态。独立证据决定评分与复习间隔，辅助练习保留历史但不延后独立验证。它是可重建投影。
 
 ## InterviewStage
 

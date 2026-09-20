@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse
 import json
 import random
-from typing import Any
+from collections import Counter
+from datetime import date, timedelta
+from typing import Any, TypeVar
 
 from common import PACK_ROOT, STATE_ROOT, load_cycles, load_json, load_questions
 from rebuild_state import rebuild
@@ -70,13 +72,29 @@ def select_result(
         if progress_by_id.get(question["id"], {}).get("status") == "unseen"
     ]
     policy = cycle["review_policy"]
-    if unseen and policy in {"coverage_once", "coverage_then_spaced", "spaced"}:
+    today = progress.get("generated_at", "")[:10]
+    due = [question for question in eligible
+           if progress_by_id.get(question["id"], {}).get("status") == "due"
+           and (cycle.get("same_day_repeat", False)
+                or (progress_by_id[question["id"]].get("last_attempt_at") or "")[:10] != today)]
+    # A daily block starts with two reviews, then introduces one new question.
+    introduce_new = (not due or progress["statistics"]["attempts_today"] % 3 == 2)
+    if unseen and (policy in {"coverage_once", "coverage_then_spaced"}
+                   or policy == "mixed" and introduce_new):
         if cycle.get("kind") in {"job_targeted", "stage_targeted"}:
             selected = unseen[0]
             reason = "unseen_curated_order"
         else:
-            selected = choose(unseen, seed)
-            reason = "unseen_random"
+            covered_topics = Counter(
+                question["topic"].split(".")[0] for question in eligible
+                if progress_by_id.get(question["id"], {}).get("status") != "unseen"
+            )
+            topics = sorted({question["topic"].split(".")[0] for question in unseen})
+            least = min(covered_topics[topic] for topic in topics)
+            topic = choose([topic for topic in topics if covered_topics[topic] == least], seed)
+            selected = choose([question for question in unseen
+                               if question["topic"].split(".")[0] == topic], seed)
+            reason = "unseen_topic_coverage"
         return public_question(selected, reason, cycle["id"], progress)
 
     if policy == "coverage_once":
@@ -86,31 +104,32 @@ def select_result(
             "cycle_progress": progress_summary(progress),
         }
 
-    due = [
-        question
-        for question in eligible
-        if progress_by_id.get(question["id"], {}).get("status") == "due"
-    ]
     if due:
         due.sort(
             key=lambda question: (
                 progress_by_id[question["id"]]["next_due_at"],
-                min(
-                    progress_by_id[question["id"]]["scores"][field]
-                    for field in ("recall", "correctness", "depth")
-                ),
+                progress_by_id[question["id"]].get("knowledge_score")
+                if progress_by_id[question["id"]].get("knowledge_score") is not None else -1,
             )
         )
-        earliest_due = progress_by_id[due[0]["id"]]["next_due_at"]
-        tied = [question for question in due if progress_by_id[question["id"]]["next_due_at"] == earliest_due]
+        first = progress_by_id[due[0]["id"]]
+        tied = [question for question in due
+                if progress_by_id[question["id"]]["next_due_at"] == first["next_due_at"]
+                and progress_by_id[question["id"]]["scores"] == first["scores"]]
         selected = choose(tied, seed)
         return public_question(selected, "due_for_review", cycle["id"], progress)
 
     future_dates = sorted(
         item["next_due_at"]
         for item in progress["questions"]
-        if item["next_due_at"]
+        if item["next_due_at"] and item["next_due_at"] > today
+        and item["question_id"] in {q["id"] for q in eligible}
     )
+    if today and any(progress_by_id[q["id"]].get("status") == "due"
+                     and (progress_by_id[q["id"]].get("last_attempt_at") or "")[:10] == today
+                     for q in eligible):
+        future_dates.append((date.fromisoformat(today) + timedelta(days=1)).isoformat())
+        future_dates.sort()
     return {
         "status": "no_question_due",
         "cycle_id": cycle["id"],

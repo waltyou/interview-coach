@@ -16,7 +16,8 @@
   ],
   "properties": {
     "$schema": { "type": "string" },
-    "schema_version": { "const": 2 },
+    "schema_version": { "enum": [2, 3] },
+    "diagnostic_coverage": {"type": ["object", "null"], "required": ["scope_capabilities", "not_included_capabilities", "unavailable_capabilities", "untested_capabilities", "unverified_capabilities"], "properties": {"scope_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "not_included_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "unavailable_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "untested_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}, "unverified_capabilities": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}}, "additionalProperties": false},
     "cycle_id": { "type": "string", "pattern": "^cycle\\." },
     "generated_at": { "type": "string", "format": "date-time" },
     "cycle": {
@@ -45,7 +46,7 @@
         "completed_at": { "type": "string", "format": "date-time" },
         "target_roles": { "type": "array", "items": { "type": "string" } },
         "topics": { "type": "array", "items": { "type": "string" } },
-        "review_policy": { "enum": ["coverage_once", "spaced", "coverage_then_spaced"] }
+        "review_policy": { "enum": ["coverage_once", "spaced", "coverage_then_spaced", "mixed"] }
       },
       "additionalProperties": false
     },
@@ -108,6 +109,8 @@
           "status": { "enum": ["unseen", "covered", "due"] },
           "attempt_count": { "type": "integer", "minimum": 0 },
           "scores": { "type": ["object", "null"] },
+          "evidence_status": { "enum": ["unseen", "independent", "awaiting_independent"] },
+          "evidence_event_id": { "type": ["string", "null"] },
           "knowledge_score": { "type": ["integer", "null"], "minimum": 0, "maximum": 4 },
           "review_interval_days": { "type": ["integer", "null"], "minimum": 1 },
           "last_attempt_at": { "type": ["string", "null"], "format": "date-time" },

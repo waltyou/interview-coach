@@ -43,6 +43,8 @@ def question_history(question_id: str, learner_id: str) -> dict[str, Any]:
                 "answer": event["answer"],
                 "hints_used": event["hints_used"],
                 "evaluation": event["evaluation"],
+                "evaluation_event_id": event.get("evaluation_event_id", event["id"]),
+                "evaluation_history": event.get("evaluation_history", []),
             }
             for event in attempts
         ],
@@ -87,6 +89,8 @@ def cycle_history(cycle_id: str, limit: int) -> dict[str, Any]:
             for item in progress["questions"]
             if item["status"] == "unseen"
         ],
+        "awaiting_independent_question_ids": [item["question_id"] for item in progress["questions"]
+                                             if item.get("evidence_status") == "awaiting_independent"],
         "weak_questions": [
             {
                 "question_id": item["question_id"],
@@ -108,7 +112,7 @@ def mastery_history(learner_id: str, limit: int) -> dict[str, Any]:
     mastery = load_json(mastery_path)
     questions = load_questions()
     items = list(mastery["questions"])
-    items.sort(key=lambda item: (knowledge_score(item["scores"]), item["last_attempt_at"]))
+    items.sort(key=lambda item: (knowledge_score(item["scores"]) if item["scores"] else -1, item["last_attempt_at"]))
     return {
         "learner_id": learner_id,
         "total_questions_attempted": len(items),

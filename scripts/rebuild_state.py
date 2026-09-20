@@ -19,8 +19,38 @@ from common import (
 
 def next_due_at(event: dict[str, Any]) -> str:
     attempted_date = parse_datetime(event["occurred_at"]).date()
-    score = knowledge_score(event["evaluation"]["scores"])
-    return (attempted_date + timedelta(days=REVIEW_INTERVAL_DAYS[score])).isoformat()
+    interval = REVIEW_INTERVAL_DAYS[knowledge_score(event["evaluation"]["scores"])] if independent_attempt(event) else 1
+    return (attempted_date + timedelta(days=interval)).isoformat()
+
+
+def independent_attempt(event: dict[str, Any]) -> bool:
+    return event.get("assistance") == "independent" and not event.get("hints_used")
+
+
+def mastery_evidence(attempts: list[dict[str, Any]]) -> dict[str, Any] | None:
+    independent = [event for event in attempts if independent_attempt(event)]
+    return latest_event(independent) if independent else None
+
+
+def mastery_projection(attempts: list[dict[str, Any]]) -> dict[str, Any]:
+    latest = latest_event(attempts)
+    evidence = mastery_evidence(attempts)
+    # Assisted repetition never moves the evidence date forward. With no
+    # independent evidence, schedule one check after the first recorded practice.
+    first = min(attempts, key=lambda event: (event["occurred_at"], event["id"]))
+    scores = evidence["evaluation"]["scores"] if evidence else None
+    score = knowledge_score(scores) if scores is not None else None
+    return {
+        "scores": scores,
+        "knowledge_score": score,
+        "review_interval_days": REVIEW_INTERVAL_DAYS[score] if score is not None else 1,
+        "next_due_at": next_due_at(evidence or first),
+        "last_attempt_at": latest["occurred_at"],
+        "last_event_id": latest["id"],
+        "latest_attempt_scores": latest["evaluation"]["scores"],
+        "evidence_event_id": evidence["id"] if evidence else None,
+        "evidence_status": "independent" if evidence else "awaiting_independent",
+    }
 
 
 def latest_event(events: list[dict[str, Any]]) -> dict[str, Any]:
@@ -93,21 +123,15 @@ def build_cycle_progress(
             )
             continue
 
-        latest = latest_event(attempts)
-        score = knowledge_score(latest["evaluation"]["scores"])
-        due_at = next_due_at(latest)
+        projection = mastery_projection(attempts)
+        due_at = projection["next_due_at"]
         status = "due" if date.fromisoformat(due_at) <= today else "covered"
         question_states.append(
             {
                 "question_id": question_id,
                 "status": status,
                 "attempt_count": len(attempts),
-                "scores": latest["evaluation"]["scores"],
-                "knowledge_score": score,
-                "review_interval_days": REVIEW_INTERVAL_DAYS[score],
-                "last_attempt_at": latest["occurred_at"],
-                "next_due_at": due_at,
-                "last_event_id": latest["id"],
+                **projection,
             }
         )
 
@@ -116,7 +140,7 @@ def build_cycle_progress(
     covered = len(question_states) - unseen
     return {
         "$schema": "../../../protocol/schemas/cycle-progress.schema.json",
-        "schema_version": 2,
+        "schema_version": 3,
         "cycle_id": cycle["id"],
         "learner_id": cycle["learner_id"],
         "cycle_status": cycle["status"],
@@ -146,25 +170,18 @@ def build_mastery(
 
     questions: list[dict[str, Any]] = []
     for question_id, attempts in sorted(by_question.items()):
-        latest = latest_event(attempts)
-        score = knowledge_score(latest["evaluation"]["scores"])
         questions.append(
             {
                 "question_id": question_id,
                 "total_attempts": len(attempts),
                 "cycles_seen": sorted({event["cycle_id"] for event in attempts}),
-                "scores": latest["evaluation"]["scores"],
-                "knowledge_score": score,
-                "review_interval_days": REVIEW_INTERVAL_DAYS[score],
-                "last_attempt_at": latest["occurred_at"],
-                "next_due_at": next_due_at(latest),
-                "last_event_id": latest["id"],
+                **mastery_projection(attempts),
             }
         )
 
     return {
         "$schema": "../../../protocol/schemas/mastery-state.schema.json",
-        "schema_version": 2,
+        "schema_version": 3,
         "learner_id": learner_id,
         "generated_at": generated_at,
         "questions": questions,

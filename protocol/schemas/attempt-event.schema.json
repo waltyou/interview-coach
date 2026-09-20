@@ -21,13 +21,17 @@
     "$schema": { "type": "string" },
     "schema_version": { "const": 2 },
     "id": { "type": "string", "pattern": "^attempt\\." },
-    "type": { "const": "attempt.recorded" },
+    "type": { "enum": ["attempt.recorded", "attempt.reevaluated"] },
+    "supersedes": { "type": "string", "pattern": "^attempt\\." },
+    "corrected_at": { "type": "string", "format": "date-time" },
+    "correction_reason": { "type": "string", "minLength": 1 },
     "occurred_at": { "type": "string", "format": "date-time" },
     "learner_id": { "type": "string", "minLength": 1 },
     "cycle_id": { "type": "string", "pattern": "^cycle\\." },
     "practice_session_id": { "type": "string", "pattern": "^practice-session\\." },
     "question_id": { "type": "string", "pattern": "^q\\." },
     "question_revision": { "type": "integer", "minimum": 1 },
+    "assistance": { "enum": ["independent", "hints", "reference_seen"] },
     "answer": {
       "type": "object",
       "required": ["text"],
@@ -77,5 +81,14 @@
       "additionalProperties": false
     }
   },
+  "allOf": [{
+    "if": { "properties": { "type": { "const": "attempt.reevaluated" } } },
+    "then": { "required": ["supersedes", "corrected_at", "correction_reason"] },
+    "else": { "not": { "anyOf": [
+      { "required": ["supersedes"] },
+      { "required": ["corrected_at"] },
+      { "required": ["correction_reason"] }
+    ] } }
+  }],
   "additionalProperties": false
 }
