@@ -310,7 +310,21 @@
         </header>
 
         <section id="overview" class="section">
-          <div class="section-head"><div><h2>系统总览</h2><p>数据来自当前仓库。重新生成 Dashboard 即可同步最新状态。</p></div><span class="section-index">01 / OVERVIEW</span></div>
+          <div class="section-head"><div><h2>今天练什么</h2><p id="daily-budget">先接着练，再按今天的时间安排任务。</p></div><span class="section-index">01 / TODAY</span></div>
+          <article class="panel" style="padding:24px;margin-bottom:24px">
+            <p id="daily-message"></p>
+            <ol id="daily-tasks"></ol>
+            <label for="practice-command">复制给 Coach 开始练习</label>
+            <textarea id="practice-command" class="search-input" rows="3" readonly style="display:block;width:100%;margin:12px 0"></textarea>
+            <button id="copy-practice" type="button">复制练习指令</button>
+            <p id="copy-status" role="status"></p>
+            <h3>优先改善</h3><div id="daily-gaps"></div>
+            <h3>最近一次进步</h3><p id="daily-improvement"></p>
+            <p id="daily-untested"></p>
+            <p id="daily-not-included"></p>
+            <p id="daily-unavailable"></p>
+            <p id="daily-unverified"></p>
+          </article>
           <div class="metrics">
             <a class="metric metric-link" href="#source-library"><span class="metric-label">知识文档</span><strong id="metric-sources" class="metric-value">0</strong><small id="metric-sources-detail" class="metric-detail"></small></a>
             <a class="metric metric-link" href="#question-details"><span class="metric-label">题库</span><strong id="metric-questions" class="metric-value">0</strong><small id="metric-questions-detail" class="metric-detail"></small></a>
@@ -320,7 +334,7 @@
         </section>
 
         <section id="current-cycle" class="section">
-          <div class="section-head"><div><h2>当前准备周期</h2><p>先完成全面覆盖，建立真实 MasteryState；后续再加入职位相关性的针对训练。</p></div><span class="section-index">02 / CURRENT</span></div>
+          <div class="section-head"><div><h2>当前准备周期</h2><p>全面摸底关注能力覆盖，日常练习混合到期复习和新题。</p></div><span class="section-index">02 / CURRENT</span></div>
           <div id="cycle-container"></div>
         </section>
 
@@ -461,6 +475,48 @@
     }
 
     function renderOverview() {
+      const plan = dashboardData.daily_plan;
+      if (plan) {
+        byId("daily-budget").textContent = `按 ${plan.minutes} 分钟安排，优先使用当前练习预算。`;
+        byId("daily-message").textContent = `${plan.as_of} 的建议：${plan.message} 页面是生成时的快照，开始练习时会重新核对状态。`;
+        for (const task of plan.tasks) {
+          const item = document.createElement("li");
+          item.textContent = `${task.prompt}（约 ${task.minutes} 分钟）· ${task.reason}`;
+          byId("daily-tasks").append(item);
+        }
+        byId("practice-command").value = plan.command;
+        byId("copy-practice").addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(plan.command);
+            byId("copy-status").textContent = "已复制，粘贴给 Coach 即可。";
+          } catch {
+            byId("practice-command").focus();
+            byId("practice-command").select();
+            byId("copy-status").textContent = "已选中指令，请使用系统复制快捷键。";
+          }
+        });
+        if (!plan.gaps.length) byId("daily-gaps").textContent = "当前没有足够的独立作答低分证据，可继续练习观察。";
+        for (const gap of plan.gaps) {
+          const item = document.createElement("p");
+          const question = dashboardData.questions.items.find(q => q.id === gap.question_id);
+          item.textContent = `${question?.prompt || gap.question_id}：${gap.evidence.join("；")}（${gap.score}/4，依据 ${gap.event_id}）`;
+          byId("daily-gaps").append(item);
+        }
+        const improvement = plan.improvement;
+        byId("daily-improvement").textContent = improvement
+          ? `${improvement.question_id} 最近无提示作答从 ${improvement.from}/4 提升到 ${improvement.to}/4。依据：${improvement.evidence.join("、")}。单次变化仍需后续验证。`
+          : "尚无可比较的无提示进步记录。";
+        byId("daily-untested").textContent = plan.untested_topics.length ? `尚未测到：${plan.untested_topics.join("、")}。这些主题的能力有待观察。` : "";
+        const diagnostic = plan.diagnostic_coverage;
+        const labels = names => names.map(name => plan.capability_labels?.[name] || name).join("、");
+        if (diagnostic) {
+          byId("daily-not-included").textContent = `本次未涉及的能力：${labels(diagnostic.not_included_capabilities) || "无"}。短测完成仅表示所选题目已练完。`;
+          byId("daily-unavailable").textContent = diagnostic.unavailable_capabilities.length ? `当前题库或所选范围缺少：${labels(diagnostic.unavailable_capabilities)}。` : "";
+          byId("daily-unverified").textContent = `尚无独立作答证据的能力：${labels(diagnostic.unverified_capabilities) || "无"}。单题表现只提供初步观察。`;
+        } else if (plan.awaiting_independent_question_ids?.length) {
+          byId("daily-unverified").textContent = `${plan.awaiting_independent_question_ids.length} 道题待独立验证；辅助练习和辅助程度未记录的旧回答均保留原始评分。`;
+        }
+      }
       byId("metric-sources").textContent = dashboardData.sources.total;
       const pendingSources = countOf(dashboardData.sources.extraction_statuses, "pending");
       byId("metric-sources-detail").textContent = `${dashboardData.sources.statuses.map(item => `${item.count} ${item.name}`).join(" · ")} · ${pendingSources} pending`;

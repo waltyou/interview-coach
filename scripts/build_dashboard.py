@@ -260,7 +260,11 @@ def collect_dashboard_data() -> dict[str, Any]:
             }
         )
 
+    from daily_plan import daily_plan
+    from practice import load_sessions
+    from discover import PROFILE_PATH, load_profile
     return {
+        "daily_plan": daily_plan(cycles, questions, events, load_sessions(), profile=load_profile() if PROFILE_PATH.is_file() else None),
         "generated_at": now_iso(),
         "protocol_version": manifest["protocol_version"],
         "capabilities": manifest["capabilities"],
