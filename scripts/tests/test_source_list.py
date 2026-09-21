@@ -7,7 +7,6 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-
 SCRIPT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPT_ROOT))
 
@@ -18,9 +17,13 @@ import initialize  # noqa: E402
 class SourceListTests(unittest.TestCase):
     def test_source_list_resolves_includes_excludes_and_comments(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
+            # Match the canonical paths returned by resolve_source_list, including
+            # macOS temp symlinks and Windows short directory names.
+            root = Path(directory).resolve()
             (root / "tech" / "interview" / "nested").mkdir(parents=True)
-            (root / "tech" / "interview" / "one.md").write_text("# one", encoding="utf-8")
+            (root / "tech" / "interview" / "one.md").write_text(
+                "# one", encoding="utf-8"
+            )
             (root / "tech" / "interview" / "nested" / "two.md").write_text(
                 "# two", encoding="utf-8"
             )
@@ -88,7 +91,9 @@ class SourceListTests(unittest.TestCase):
                 "repository_relative",
                 side_effect=lambda value: value.resolve().relative_to(root.resolve()),
             ):
-                catalog = initialize.build_catalog([path], "2026-08-08T00:00:00+08:00", old_catalog)
+                catalog = initialize.build_catalog(
+                    [path], "2026-08-08T00:00:00+08:00", old_catalog
+                )
                 path.write_text("# Spark\nchanged\n", encoding="utf-8")
                 changed = initialize.build_catalog(
                     [path], "2026-08-08T00:01:00+08:00", catalog
@@ -100,7 +105,9 @@ class SourceListTests(unittest.TestCase):
         self.assertEqual("tech/interview/spark.md", source["path"])
         self.assertEqual("markdown", source["format"])
         self.assertEqual(initial_hash, source["questions_extracted_from_sha256"])
-        self.assertEqual(["tech/interview/spark.md"], initialize.pending_source_paths(changed))
+        self.assertEqual(
+            ["tech/interview/spark.md"], initialize.pending_source_paths(changed)
+        )
 
     def test_mark_extracted_accepts_only_selected_ready_sources(self) -> None:
         catalog = {
