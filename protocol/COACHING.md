@@ -54,7 +54,7 @@ PracticeSession 保存在 Manifest 的 sessions root（默认 `workspace/session
 
 暂停、隔天或更换 Agent 时保留同一未完成会话。用户明确结束或另开一次时将旧会话标记 completed，再创建新会话。已结束周期中的旧会话仅用于回顾；多个 active 周期或未完成会话存在歧义时先选择，不按修改时间猜测。
 
-阶段为 `ready`、`awaiting_answer`、`awaiting_followup`、`awaiting_retry`、`completed`。出题、提供提示和提出追问前都保存 checkpoint。恢复时展示当前题和必要上下文；已用提示沿用原序号，已公开的提示可重新展示。题目已修订或归档时保留快照并说明变化，由用户决定继续还是换题。
+阶段为 `ready`、`awaiting_answer`、`awaiting_followup`、`awaiting_retry`、`teaching`、`completed`。teaching 通过 teach.py 保存和退出。出题、提供提示和提出追问前都保存 checkpoint。恢复时展示当前题和必要上下文；已用提示沿用原序号，已公开的提示可重新展示。题目已修订或归档时保留快照并说明变化，由用户决定继续还是换题。
 
 ```text
 python scripts/practice.py checkpoint --session-id <id> --hint-level 1 --hint-text "已给出的提示"
@@ -73,6 +73,12 @@ python scripts/practice.py finish --session-id <id>
 准备换题时先写 AttemptEvent、重建状态，再将会话标记 ready。若写入后中断而未更新 checkpoint，后续 Agent 先核对该会话、题目和时间对应的 Event，使用已保存的回答继续反馈，避免重复记录或要求用户重答。用户明确要求重答是新的真实作答，允许绕过当天自动选题的去重。
 
 旧 Event 只有 practice_session_id 时仍可回顾历史；旧对话没有保存的提示或待答阶段无法还原，应明确说明并从新会话开始。
+
+## 局部教学
+
+用户要求讲解、表示未理解或 learning 回答暴露理解缺口时，读取 Manifest.teaching.instructions（protocol/TEACHING.md）。先保存已完成的正式回答，再判断记忆、理解、迁移或表达卡点。理解缺口进入 Teach，记忆遗漏继续提示，表达问题继续口述练习。mock 结束后再教学。
+
+PracticeSession 的 teaching 阶段保存嵌入式 TeachingSession，暂停或继续时优先恢复教学。局部检查只存入教学记录；原题的正式重答继续写 AttemptEvent。教学中针对原题的解释或提示沿用 reference_seen；使用 answer-context 保存实际帮助条件。即时迁移成功用于结束教学，长期掌握仍等待后续独立作答。
 
 ## 提示阶梯
 

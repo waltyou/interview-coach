@@ -89,3 +89,7 @@ InterviewStage 结束后的结构化复盘。整理为受支持的 Source 并加
 不要使用 `Round`、`ReviewRound` 或 `InterviewRound`。准备复习使用 PreparationCycle，真实招聘轮次使用 InterviewStage。
 
 “初始化”需要指明对象：首次产品引导称 Onboarding，扫描和同步资料称 Source initialization。
+
+## TeachingSession
+
+围绕一个理解目标的可恢复教学过程，包含探测、局部学习路径、单步解释、理解检查与即时迁移验证。以 schema_version=1 嵌入私人 PracticeSession.teaching_sessions，保留原题快照（可空）、原始回答、帮助条件和下一步。小检查只影响教学推进；长期掌握由后续独立 AttemptEvent 支持。

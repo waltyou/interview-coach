@@ -20,6 +20,12 @@
     "protocol_version": { "type": "string", "pattern": "^0\\.[0-9]+\\.[0-9]+$" },
     "instructions": { "type": "string", "minLength": 1 },
     "terminology": { "type": "string", "minLength": 1 },
+    "teaching": {
+      "type": "object",
+      "required": ["instructions"],
+      "properties": { "instructions": { "type": "string", "minLength": 1 } },
+      "additionalProperties": false
+    },
     "onboarding": {
       "type": "object",
       "required": ["instructions", "guide", "state"],

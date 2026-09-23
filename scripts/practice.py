@@ -10,11 +10,12 @@ from uuid import uuid4
 from common import PACK_ROOT, load_cycles, load_json, load_questions, now_iso, write_json
 
 SESSION_ROOT = PACK_ROOT / "workspace" / "sessions"
-STAGES = {"awaiting_answer", "awaiting_followup", "awaiting_retry", "ready", "completed"}
+STAGES = {"awaiting_answer", "awaiting_followup", "awaiting_retry", "ready", "teaching", "completed"}
 
 
 def session_issues(session: dict, cycles: dict, questions: dict) -> list[str]:
-    issues = []
+    from teach import teaching_issues
+    issues = teaching_issues(session)
     if session.get("schema_version") != 1:
         issues.append("unsupported session schema_version")
     if not re.fullmatch(r"practice-session\.[A-Za-z0-9.-]+", session.get("id", "")):
@@ -113,6 +114,9 @@ def start_session(cycle: dict, *, goal="完成今天的练习", minutes=None, mo
 
 
 def checkpoint(session: dict, *, selection=None, stage=None, hint=None, pending_prompt=None, reference_seen=False, minutes=None) -> dict:
+    if stage == "teaching" or (session.get("stage") == "teaching" and
+                              (selection is not None or stage is not None or hint is not None or pending_prompt is not None or reference_seen)):
+        raise ValueError("Use teach.py to update or finish the active teaching loop")
     if session["stage"] == "completed" and (selection is not None or hint is not None or stage not in {None, "completed"} or pending_prompt is not None or reference_seen or minutes is not None):
         raise ValueError("A completed session cannot be resumed; start a new session")
     result = deepcopy(session)
@@ -158,6 +162,15 @@ def resume_result(session: dict, cycle: dict, questions: dict) -> dict | None:
         raise ValueError("; ".join(issues))
     if session["stage"] in {"ready", "completed"}:
         return None
+    if session["stage"] == "teaching":
+        from teach import active_teaching
+        current = session.get("current_question")
+        return {"status": "resume_teaching", "practice_session_id": session["id"],
+                "cycle_id": cycle["id"], "stage": "teaching", "teaching": deepcopy(active_teaching(session)),
+                "current_question": current, "mode": session["mode"],
+                "time_budget_minutes": session["time_budget_minutes"],
+                "question_changed": bool(current and (questions[current["question_id"]]["revision"] != current["question_revision"]
+                                          or questions[current["question_id"]]["status"] != "active"))}
     current = session["current_question"]
     question = questions[current["question_id"]]
     return {"status": "resume", "practice_session_id": session["id"], "cycle_id": cycle["id"],

@@ -18,6 +18,7 @@
     "pending_prompt"
   ],
   "properties": {
+    "teaching_sessions": { "type": "array", "items": { "$ref": "teaching-session.schema.json" } },
     "assistance": { "enum": ["independent", "hints", "reference_seen", "unknown"] },
     "reference_seen_questions": { "type": "array", "items": { "type": "string", "pattern": "^q\\." }, "uniqueItems": true },
     "schema_version": {
@@ -56,6 +57,7 @@
     "stage": {
       "enum": [
         "ready",
+        "teaching",
         "awaiting_answer",
         "awaiting_followup",
         "awaiting_retry",

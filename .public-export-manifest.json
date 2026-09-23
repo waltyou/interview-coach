@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generator": "scripts/export_public.py",
-  "content_sha256": "80c5d79e23487a9020253c118ede22347b952719973bde869209135fe67b743e",
+  "content_sha256": "1d95098fa6300717df901c35409149eaca7b66d9af15eaaee9a7e83d6bc9ee6c",
   "files": [
     {
       "path": ".github/workflows/platforms.yml",
@@ -15,8 +15,8 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "68eb700b60bb5513a8e61861f9a3822a411acfe21de4a312959003b6f2233368",
-      "size_bytes": 7247
+      "sha256": "5665f715bd42110dc2add12a39dbfc3a87b7b22e80b1e3050f5ffa44dfd67e3d",
+      "size_bytes": 7709
     },
     {
       "path": "LICENSE",
@@ -25,8 +25,8 @@
     },
     {
       "path": "README.md",
-      "sha256": "d9911bfdd47e04a29877d9c442c1a60557dfda1109908e41f45bdf7da4898696",
-      "size_bytes": 6529
+      "sha256": "1ec35692698a3892f60f7a312897a96ec4ae8670c65b8f5b099fb1b5b9631026",
+      "size_bytes": 6887
     },
     {
       "path": "dashboard/README.md",
@@ -45,8 +45,8 @@
     },
     {
       "path": "docs/HANDBOOK.md",
-      "sha256": "8b20e7c91bd8b14de67439e3ac814dc4045870b888dd002fb9e428979b58e49d",
-      "size_bytes": 11949
+      "sha256": "201ca66791ff91ccce578b3512c67d33e0e555ae7e1e0371e2f70878192156ef",
+      "size_bytes": 13037
     },
     {
       "path": "docs/PLATFORMS.md",
@@ -505,13 +505,13 @@
     },
     {
       "path": "manifest.json",
-      "sha256": "0a94ea64c7ff18391e5f3773398dc61dcc5c98928514574603d1a689c4312e73",
-      "size_bytes": 2083
+      "sha256": "56f442b056f61888a40b4ff2f6597a2ee31e55593ebe2ab3d7f86c7199266b69",
+      "size_bytes": 2214
     },
     {
       "path": "protocol/COACHING.md",
-      "sha256": "bdf516750b4bba0998deffb25daef824617be1edb045c708afa0457784ac9429",
-      "size_bytes": 24207
+      "sha256": "4d17b17395e3ca711d11cfde97d9aca12a1396e50dfbbd000e26b3f7ab619a7c",
+      "size_bytes": 25022
     },
     {
       "path": "protocol/DISCOVERY.md",
@@ -524,9 +524,14 @@
       "size_bytes": 7026
     },
     {
+      "path": "protocol/TEACHING.md",
+      "sha256": "3dbd1505294ce83e814b5f878beb8450f39ff75d818f19c22e8ff4678482e428",
+      "size_bytes": 7472
+    },
+    {
       "path": "protocol/TERMS.md",
-      "sha256": "139b685634abe25598a7c5b5878fb39d6960e290b830a9520b12fdb8a2b0d8a4",
-      "size_bytes": 6055
+      "sha256": "489165640258b4ccef5e88f5e9efbd1414065a5ce192d6cc5ca5b208295dad3f",
+      "size_bytes": 6447
     },
     {
       "path": "protocol/examples/attempt-event.example.json",
@@ -570,8 +575,8 @@
     },
     {
       "path": "protocol/schemas/manifest.schema.json",
-      "sha256": "f1a79d4b9a6871293ef14774321393dfe6786f0acfc8ecf39a556a0053e160ae",
-      "size_bytes": 2214
+      "sha256": "a6e12cae914bf496a3341671eccb630a03c282610b87880d5a3e10c088060f39",
+      "size_bytes": 2419
     },
     {
       "path": "protocol/schemas/mastery-state.schema.json",
@@ -585,8 +590,8 @@
     },
     {
       "path": "protocol/schemas/practice-session.schema.json",
-      "sha256": "eba95731e9ba10e4f10f3452e58346de1ba311394187eda75fbb27c1719e5181",
-      "size_bytes": 2469
+      "sha256": "d8a22540b36909b71e780d9a49d57a77c10b3312b925756bc58aed78f87d4bea",
+      "size_bytes": 2586
     },
     {
       "path": "protocol/schemas/preparation-cycle.schema.json",
@@ -602,6 +607,11 @@
       "path": "protocol/schemas/source-catalog.schema.json",
       "sha256": "dfbb943b6c46cc5143006c70f547271a55142b544cccd564ac1b1c24489ab00b",
       "size_bytes": 1892
+    },
+    {
+      "path": "protocol/schemas/teaching-session.schema.json",
+      "sha256": "e0488807409e48abe0b543b050f234709ca1a396a72f7a2257fb7be2a33df81e",
+      "size_bytes": 2332
     },
     {
       "path": "resume/.gitignore",
@@ -710,8 +720,8 @@
     },
     {
       "path": "scripts/daily_plan.py",
-      "sha256": "1f8971d0ffa6efb39807cd3f8257a7f7371801faf0296ae151639609a8bb8c77",
-      "size_bytes": 6401
+      "sha256": "caa1a2b37e531643ebc649093efd26359b32b307780a9e4a2feedb743006e52f",
+      "size_bytes": 7182
     },
     {
       "path": "scripts/diagnostic.py",
@@ -750,8 +760,8 @@
     },
     {
       "path": "scripts/practice.py",
-      "sha256": "7fd74003676faf451b1374f131a5c94bc89e18301a58e65a83c4d523facb17aa",
-      "size_bytes": 13031
+      "sha256": "23f6595142b4631e1b47474fbc465d8660722a9825e0c63cc5aa77f971dcf2b0",
+      "size_bytes": 14105
     },
     {
       "path": "scripts/rebuild_state.py",
@@ -777,6 +787,11 @@
       "path": "scripts/start_cycle.py",
       "sha256": "7a9dc9b87857dba127e58e0fdbbe8c2fb0629f7e995524bb0246933899e13139",
       "size_bytes": 5845
+    },
+    {
+      "path": "scripts/teach.py",
+      "sha256": "d616abd1559a5352e6de992303ef13a84f346ba75954ac3100f20ed6f26be113",
+      "size_bytes": 12459
     },
     {
       "path": "scripts/tests/test_answer_review.py",
@@ -825,13 +840,18 @@
     },
     {
       "path": "scripts/tests/test_source_list.py",
-      "sha256": "19a9bc0268de2be468e81587802e8ba9fe7d65f5c1dd10404504eb5c5303bdf0",
-      "size_bytes": 5438
+      "sha256": "65287782afc564049f6f0c7fdd657540e2e85dc6197fb4b96952bcd0272c4332",
+      "size_bytes": 5600
+    },
+    {
+      "path": "scripts/tests/test_teaching.py",
+      "sha256": "7636dc2c52a5ad077676af6a575cf89b9b98205dbc153f38d25afa68d23ed6b3",
+      "size_bytes": 9852
     },
     {
       "path": "scripts/validate.py",
-      "sha256": "aefcf64846ded5566d11931fca5af3da53945fcedebdd15ac9518d39e85c9a7b",
-      "size_bytes": 42080
+      "sha256": "ceedd39598808bde09559bbfbb145f140bdda7513bee97c90afd7fd1a84bab2d",
+      "size_bytes": 42430
     },
     {
       "path": "source-list.txt",
@@ -920,8 +940,8 @@
     },
     {
       "path": "workspace/sessions/README.md",
-      "sha256": "96c66cf9b6713ef8865efb902d1c4841617d55dcf883feae69e3320df1eecb11",
-      "size_bytes": 784
+      "sha256": "0a056404955211c66680b6206c46f9dfba4f1c0804ef5d6c9044b2133fe3554e",
+      "size_bytes": 1246
     },
     {
       "path": "workspace/sources/.gitkeep",

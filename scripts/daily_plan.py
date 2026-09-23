@@ -34,7 +34,18 @@ def daily_plan(cycles: dict, questions: dict, events: list, sessions: list, *, t
     preview = deepcopy(progress)
     task_minutes = min(5, minutes)
     capacity = max(1, minutes // task_minutes)
-    if current and current[0].get("current_question"):
+    teaching = current and current[0].get("stage") == "teaching"
+    if teaching:
+        from teach import active_teaching
+        session = current[0]
+        lesson = active_teaching(session)
+        base["tasks"].append({"question_id": (session.get("current_question") or {}).get("question_id"),
+                              "prompt": lesson["goal"], "minutes": minutes,
+                              "reason": lesson["next_action"], "stage": "teaching",
+                              "practice_session_id": session["id"]})
+        base["command"] = f"继续教学 {lesson['id']}，先恢复上次卡点和待回答的小问题。"
+        capacity = 1
+    if not teaching and current and current[0].get("current_question"):
         session = current[0]
         q = session["current_question"]
         base["tasks"].append({"question_id": q["question_id"], "prompt": q["prompt"], "minutes": task_minutes,
@@ -55,6 +66,8 @@ def daily_plan(cycles: dict, questions: dict, events: list, sessions: list, *, t
                 item.update(status="covered", next_due_at=None)
         preview["statistics"]["attempts_today"] += 1
     base["message"] = f"每题约 {task_minutes} 分钟；后续题目会根据实际作答调整。" if base["tasks"] else "当前策略下没有可练题目，可查看历史或调整准备范围。"
+    if teaching:
+        base["message"] = "先继续上次教学，根据理解检查决定下一步。"
     covered_topics = {questions[s["question_id"]]["topic"].split(".")[0] for s in progress["questions"]
                       if s["status"] != "unseen" and s["question_id"] in questions}
     all_topics = set(cycle["diagnostic"]["pool_topics"]) if cycle.get("diagnostic") else {

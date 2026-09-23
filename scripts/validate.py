@@ -50,7 +50,7 @@ CYCLE_STATUSES = {"planned", "active", "completed", "archived"}
 CYCLE_KINDS = {"baseline", "maintenance", "job_targeted", "stage_targeted"}
 REVIEW_POLICIES = {"coverage_once", "spaced", "coverage_then_spaced", "mixed"}
 JOB_STATUSES = {"considering", "interviewing", "offer", "closed", "withdrawn"}
-EXPECTED_PROTOCOL_VERSION = "0.12.0"
+EXPECTED_PROTOCOL_VERSION = "0.13.0"
 
 
 class Validation:
@@ -141,6 +141,11 @@ def validate_manifest(validation: Validation) -> dict[str, Any] | None:
     if missing_roots:
         validation.error(path, f"manifest roots are missing: {', '.join(sorted(missing_roots))}")
     instructions = PACK_ROOT / manifest["instructions"]
+    teaching = manifest.get("teaching", {})
+    if not isinstance(teaching, dict) or not isinstance(teaching.get("instructions"), str):
+        validation.error(path, "manifest teaching instructions are missing")
+    elif not (PACK_ROOT / teaching["instructions"]).is_file():
+        validation.error(path, "teaching instructions do not exist")
     if not instructions.is_file():
         validation.error(path, f"instructions do not exist: {manifest['instructions']}")
     onboarding = manifest.get("onboarding")

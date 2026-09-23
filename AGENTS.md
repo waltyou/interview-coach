@@ -79,3 +79,7 @@
 
 - 把当前仓库根目录视为唯一运行上下文。文档、命令、链接和示例路径都必须从该根目录成立。
 - 不引入父目录仓库名称、维护者个人路径、个人文件名或本机绝对路径。需要示例时使用角色化通用名称。
+
+## Teach 入口
+
+用户说教我、这里没懂、继续上次教学，或 learning 练习暴露理解缺口时，读取 Manifest.teaching.instructions 并执行 protocol/TEACHING.md。先读会话中的 teaching_sessions，使用 teach.py 保存探测、路径、讲解、检查与续接点。教学小检查只进入私人会话；原题重答从 answer-context 沿用帮助标记。mock 结束后再教学。免保存试练继续仅在对话中教学。

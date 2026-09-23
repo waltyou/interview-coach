@@ -162,3 +162,7 @@ git push origin main
 ## License
 
 [MIT](LICENSE)
+
+## 分步教学
+
+说教我这个概念、这里没懂或继续上次教学。Coach 根据已有理解安排局部路径，每次讲一步并检查，再用新场景验证。正式教学随练习保存，可暂停和续接；即时教学成果与长期独立掌握分别记录。使用说明见 docs/HANDBOOK.md，执行协议见 protocol/TEACHING.md。
