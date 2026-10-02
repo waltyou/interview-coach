@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.sql.incremental-deduplication",
-  "revision": 1,
+  "revision": 3,
   "status": "active",
   "visibility": "public",
   "topic": "sql",
@@ -12,25 +12,43 @@
     "senior-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "一张增量事件表 events(event_id, entity_id, event_time, ingest_time, operation, payload) 可能重复、乱序并包含更新与删除。请用 SQL 产出每个 entity 的最新有效状态，并说明你的去重顺序、迟到数据、相同时间戳、增量重跑和幂等策略。",
+  "prompt": "给定完整事件历史 events(event_id, entity_id, event_time, ingest_time, operation, payload)，字段均非 NULL，operation 为 UPSERT 或 DELETE，UPSERT 的 payload 是完整状态。同一 event_id 的多条记录是该事件修订，先保留 ingest_time 最大者；同 ID 同摄取时间内容冲突的事件隔离。再按 (event_time, ingest_time, event_id) 字典序确定每个实体的最新事件。请写 SQL 返回 entity_id、is_deleted、payload；DELETE 保留墓碑且 payload=NULL。",
   "rubric": [
-    "先明确 event_id、entity_id、事件时间与摄取时间的业务语义，以及什么叫重复和最新",
-    "使用窗口函数按实体分区，并用确定性的 event_time、ingest_time 和唯一键排序选择版本",
-    "正确处理 delete/tombstone、同时间戳冲突、NULL 和缺失前序事件，而不是只过滤重复行",
-    "区分 append-only 事件历史与 current-state 输出，说明 MERGE/upsert 或快照重建的适用条件",
-    "设计 watermark、回看窗口或受影响分区重算，使迟到数据能够修正结果且增量作业可重跑",
-    "通过唯一约束、审计列、输入输出计数和对账保证幂等与可验证性，并讨论大表 shuffle/partition pruning"
+    "先规范事件修订，隔离同事件同摄取时间内容冲突",
+    "按业务时间、摄取时间与事件ID形成确定实体顺序",
+    "UPSERT 是完整状态，DELETE 保留墓碑且输出 payload=NULL",
+    "追问：历史更正可能撤回原最新状态，需要保留足够事件历史重算受影响实体",
+    "追问：原子替换与确定计算确保重跑一致"
   ],
   "hints": [
-    "最新必须由完整、稳定的排序键定义。",
-    "考虑同一批输入执行两次后结果是否完全相同。"
+    "先区分同一个事件的修订与同一个实体的多次事件。",
+    "选最新状态之后再解释DELETE，避免先过滤删除事件而复活旧状态。"
   ],
   "follow_ups": [
-    "迟到一周的更正事件到达时，如何只重算必要范围？",
-    "如果 event_id 也不可靠，你还能依据哪些事实识别重复？"
+    "现在每批只收到增量，历史更正可能改变旧事件的 event_time。你需要保留什么历史才能正确重建受影响实体？",
+    "怎样保证受影响实体的原子更新和重跑一致？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-23T15:08:30+08:00",
-  "updated_at": "2026-08-23T15:08:30+08:00"
+  "updated_at": "2026-10-02T21:24:43+08:00",
+  "coach_notes": [
+    "主问与追问分阶段提出。Rubric 中标为追问的项目只在实际提出后评价；参考素材不构成候选人必须选择的故事或措辞。",
+    "将全历史推导与增量维护分开，避免默认一个 MERGE 就能处理任意历史更正。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "1e894ac6c049ffd0f6ba9cf3348cde8077db2db1e4d01bc941995f4c245d8589",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:43+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。增量去重：最新状态的依据：只提供增量表却要求最新状态，缺少历史或目标状态；更新是全量替换还是 patch、删除及时间冲突如何处理也未确定。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：给定完整事件历史 events(event_id, entity_id, event_time, ingest_time, operation, payload)，字段均非 NULL，operation 为 UPSERT 或 DELETE，UPSERT 的 payload 是完整状态。同一 event_id 的多条记录是该事件修订，先保留 ingest_time 最大者；同 ID 同摄取时间内容冲突的事件隔离。再按 (event_time, ingest_time, event_id) 字典序确定每个实体的最新事件。请写 SQL 返回 entity_id、is_deleted、payload；DELETE 保留墓碑且 payload=NULL。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕增量去重；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：现在每批只收到增量，历史更正可能改变旧事件的 event_time。你需要保留什么历史才能正确重建受影响实体？；怎样保证受影响实体的原子更新和重跑一致？",
+      "evaluation_alignment": "已逐项核对题干、rubric及分级提示。提示按请求提供，不预设题干已撤去的结论：先区分同一个事件的修订与同一个实体的多次事件。；选最新状态之后再解释DELETE，避免先过滤删除事件而复活旧状态。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

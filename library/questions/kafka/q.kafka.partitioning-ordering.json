@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.kafka.partitioning-ordering",
-  "revision": 1,
+  "revision": 3,
   "status": "active",
   "visibility": "public",
   "topic": "kafka",
@@ -12,25 +12,42 @@
     "senior-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "一个 Kafka topic 承载用户行为事件，要求同一用户有序、可以水平扩展，并避免热点用户拖慢全局。你会如何设计 message key、partition 数、副本和生产者确认策略？扩分区或 key 分布变化会带来哪些正确性与运维影响？",
+  "prompt": "Kafka topic 承载用户行为事件，要求同一用户的事件按照进入日志的顺序被串行处理。允许不同用户并行。你会怎样设计 key、分区和消费方式，并在热点用户出现时控制对其他用户的影响？先说明生产者数量及重试带来的假设。",
   "rubric": [
-    "说明 Kafka 只保证单 partition 内的记录顺序，同一用户有序通常要求稳定地映射到同一 partition",
-    "根据吞吐、消费者并行度、broker 能力、未来增长和恢复时间估算 partition 数，而不是越多越好",
-    "识别热点 key、空 key、key 倾斜和大消息，并讨论拆 key、局部有序或业务聚合等取舍",
-    "解释 replication factor、min.insync.replicas、acks 和 producer retry 对持久性、可用性与延迟的影响",
-    "指出增加 partition 会改变 key 到 partition 的映射，可能破坏跨变更时段的同 key 顺序假设",
-    "使用 partition 吞吐、produce latency、under-replicated partitions 和 broker 磁盘/网络指标验证设计"
+    "明确进入日志顺序与业务发生时间顺序不同",
+    "稳定key分区及串行消费与用户顺序契约一致",
+    "对热点说明隔离、吞吐与顺序的取舍",
+    "追问：业务时间迟到、扩分区、生产确认策略分别分析"
   ],
   "hints": [
-    "先明确需要的是全局顺序，还是实体级顺序。",
-    "分区既是并行单位，也是顺序和故障恢复边界。"
+    "本题要求用户级日志顺序，先明确哪些步骤可能改变处理顺序。",
+    "分区同时约束消费并行度和热点隔离。"
   ],
   "follow_ups": [
-    "某个超级用户占据单分区 30% 流量，但业务仍要求其事件有序，你会怎么处理？",
-    "为什么随意增加 partition 可能让下游状态计算得到错误结果？"
+    "如果要求按业务发生时间有序，且事件会迟到，还需要什么机制？",
+    "扩分区时怎样保护已有顺序约定？",
+    "副本与生产者确认策略如何影响可靠性？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-23T15:08:30+08:00",
-  "updated_at": "2026-08-23T15:08:30+08:00"
+  "updated_at": "2026-10-02T21:24:43+08:00",
+  "coach_notes": [
+    "只展示主问或当前一项追问；Rubric中追问项目仅在实际提出后评价，未提出的阶段不计遗漏。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "c22a5820d4a3a6d0e34b678892821711cbd38a9f91b9075530c287057c9c05a2",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:43+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。Kafka 有序：业务时间与写入顺序：同一用户有序没有定义排序依据；若多生产者或迟到事件存在，业务时间排序与进入日志顺序并不等同。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：Kafka topic 承载用户行为事件，要求同一用户的事件按照进入日志的顺序被串行处理。允许不同用户并行。你会怎样设计 key、分区和消费方式，并在热点用户出现时控制对其他用户的影响？先说明生产者数量及重试带来的假设。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕Kafka 有序；后续3项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：如果要求按业务发生时间有序，且事件会迟到，还需要什么机制？；扩分区时怎样保护已有顺序约定？；副本与生产者确认策略如何影响可靠性？",
+      "evaluation_alignment": "已逐项核对题干、rubric及分级提示。提示按请求提供，不预设题干已撤去的结论：本题要求用户级日志顺序，先明确哪些步骤可能改变处理顺序。；分区同时约束消费并行度和热点隔离。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.python.single-pass-batching",
-  "revision": 1,
+  "revision": 3,
   "status": "active",
   "visibility": "public",
   "topic": "python",
@@ -12,26 +12,42 @@
     "senior-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "实现 batch_apply(records, batch_size, transform)：records 是无 len()、不可切片且只能消费一次的迭代器；每次最多取 batch_size 条，把该批的 iterator 传给 transform，惰性返回结果。最后不足一批也处理，batch_size 必须为正整数。说明异常时已经消费到哪里。",
+  "prompt": "实现 batch_apply(records, batch_size, transform)，返回惰性结果迭代器。records 只能遍历一次；batch_size 必须是正整数（bool 不算），非法值在调用 batch_apply 时抛 ValueError。每次请求一个结果时，从上游取至多 batch_size 条组成独立批次，将该批的 iterator 传给 transform，返回其单个结果；结果不展开。transform 可以只消费部分批次，但不会保留 iterator。整批均视为已消费，下一批从其后开始。空输入不调用 transform，末批不足也处理；异常直接向调用方传播。",
   "rubric": [
-    "只获取一个迭代器并逐批前进，不重复遍历输入",
-    "使用 islice 或等价逻辑构造非空批，空输入立即结束",
-    "验证正整数参数，拒绝零和负数",
-    "最后不足一批仍调用 transform",
-    "逐批产生结果，缓冲 O(batch_size) 另加 transform 自身空间",
-    "批已从上游读出后 transform 失败不能凭空重放，需缓存或外部 checkpoint",
-    "测试一次性 iterator、尾批、非法参数和 transform 异常"
+    "调用时验证 batch_size 为正整数且拒绝 bool",
+    "惰性分批，每批独立且至多 batch_size 条，transform 的单个返回值不展开",
+    "transform 只消费部分时仍跳过该批余下记录，下一批不串批",
+    "空输入不调用 transform，尾批处理，异常传播并准确解释上游位置",
+    "追问：超大批次重新明确流式所有权、耗尽责任和重试边界"
   ],
   "hints": [
-    "先确定一批的所有权和消费边界。",
-    "成功或失败时上游都可能已经前进。"
+    "把一批视为独立所有权，transform少读不应改变下一批的起点。",
+    "调用时参数校验与第一次next时消费上游发生在不同时间。"
   ],
   "follow_ups": [
-    "如果 transform 只读取批的一部分，下一批从哪里开始？",
-    "要求失败批重试时，接口需要增加什么状态？"
+    "用 transform=lambda it: next(it)、输入 [1,2,3,4,5]、batch_size=2 验证结果为 [1,3,5]。若 transform 抛异常，上游已经消费到哪里？",
+    "如果一批数据本身也超内存，你会怎样重新设计消费契约？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-09-20T21:46:34+08:00",
-  "updated_at": "2026-09-20T21:46:34+08:00"
+  "updated_at": "2026-10-02T21:24:43+08:00",
+  "coach_notes": [
+    "主问与追问分阶段提出。Rubric 中标为追问的项目只在实际提出后评价；参考素材不构成候选人必须选择的故事或措辞。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "3031798714bc09263845edb482d675d566ace503889d622e1a2cecaa70072a60",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:42+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。惰性分批：transform 消费边界：transform 是否会耗尽输入、是否返回迭代器以及下一批从哪里开始都不明确。不同实现可能丢数据或串批。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：实现 batch_apply(records, batch_size, transform)，返回惰性结果迭代器。records 只能遍历一次；batch_size 必须是正整数（bool 不算），非法值在调用 batch_apply 时抛 ValueError。每次请求一个结果时，从上游取至多 batch_size 条组成独立批次，将该批的 iterator 传给 transform，返回其单个结果；结果不展开。transform 可以只消费部分批次，但不会保留 iterator。整批均视为已消费，下一批从其后开始。空输入不调用 transform，末批不足也处理；异常直接向调用方传播。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕惰性分批；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：用 transform=lambda it: next(it)、输入 [1,2,3,4,5]、batch_size=2 验证结果为 [1,3,5]。若 transform 抛异常，上游已经消费到哪里？；如果一批数据本身也超内存，你会怎样重新设计消费契约？",
+      "evaluation_alignment": "已逐项核对题干、rubric及分级提示。提示按请求提供，不预设题干已撤去的结论：把一批视为独立所有权，transform少读不应改变下一批的起点。；调用时参数校验与第一次next时消费上游发生在不同时间。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

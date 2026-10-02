@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.spark.535119bf3b67",
-  "revision": 2,
+  "revision": 3,
   "status": "active",
   "topic": "spark",
   "kind": "system-design",
@@ -12,24 +12,41 @@
     "senior-data-engineer"
   ],
   "origin": "explicit-heading",
-  "prompt": "在实际生产环境中，Spark Streaming 和 Structured Streaming 是两种处理流数据的技术。请详细阐述这两种技术的核心设计思想、编程模型、容错机制和执行效率上的区别。你认为在什么场景下应该选择哪种技术？",
+  "prompt": "以 Spark 3.5.x 为范围，一个团队已有基于 DStream 的微批作业，正在评估迁移到 Structured Streaming。请比较二者的编程模型、状态与恢复方式，并说明为了判断迁移收益，你会收集哪些工作负载和下游写入要求。",
   "rubric": [
-    "说明 Spark Streaming 以 DStream 和 micro-batch RDD 序列为核心，Structured Streaming 把流建模为持续追加的无界表",
-    "比较两者 API、Catalyst/Spark SQL 优化能力、状态管理、事件时间和 watermark 支持",
-    "说明 checkpoint、WAL/offset、状态存储和 sink 提交如何影响容错与 exactly-once",
-    "比较 micro-batch 与 continuous processing 等执行模式的延迟、吞吐和功能限制",
-    "根据已有代码资产、事件时间需求、状态复杂度、延迟 SLA 与 sink 语义选择并给出迁移方案"
+    "以Spark 3.5.x比较DStream与Structured Streaming的数据和编程模型",
+    "状态、事件时间及恢复语义准确",
+    "收集负载、延迟目标与上下游契约再判断迁移",
+    "追问：以固定输入与故障实验验证正确性、吞吐与延迟"
   ],
   "hints": [
     "分别比较编程模型、执行模型、状态、时间语义和恢复。"
   ],
   "follow_ups": [
-    "Structured Streaming 的无界表模型如何复用 DataFrame API？",
-    "exactly-once 为什么依赖 source 与 sink？"
+    "新增事件时间窗口和迟到修正需求时，怎样验证迁移后的语义、吞吐和延迟？",
+    "端到端exactly-once对source和sink有什么要求？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-05T21:54:18+08:00",
-  "updated_at": "2026-08-10T21:35:29+08:00",
-  "visibility": "public"
+  "updated_at": "2026-10-02T21:17:52+08:00",
+  "visibility": "public",
+  "coach_notes": [
+    "只展示主问或当前一项追问；Rubric中追问项目仅在实际提出后评价，未提出的阶段不计遗漏。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "4191d00ba5d05d6ee6a2d4ebc78a7e36989efc0efaca635dd26870b9dbe072c1",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:17:51+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。流处理对比：版本和迁移情境：缺少版本与工作负载，执行效率比较容易成为无条件优劣判断。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：以 Spark 3.5.x 为范围，一个团队已有基于 DStream 的微批作业，正在评估迁移到 Structured Streaming。请比较二者的编程模型、状态与恢复方式，并说明为了判断迁移收益，你会收集哪些工作负载和下游写入要求。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕流处理对比；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：新增事件时间窗口和迟到修正需求时，怎样验证迁移后的语义、吞吐和延迟？；端到端exactly-once对source和sink有什么要求？",
+      "evaluation_alignment": "本次对照题干核对的评价点：以Spark 3.5.x比较DStream与Structured Streaming的数据和编程模型；状态、事件时间及恢复语义准确；收集负载、延迟目标与上下游契约再判断迁移；追问：以固定输入与故障实验验证正确性、吞吐与延迟。未提出的追问不计遗漏。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

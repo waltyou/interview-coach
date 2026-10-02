@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.spark.1fb86bac7d3e",
-  "revision": 3,
+  "revision": 4,
   "status": "active",
   "topic": "spark",
   "kind": "explanation",
@@ -12,26 +12,41 @@
     "senior-data-engineer"
   ],
   "origin": "explicit-heading",
-  "prompt": "以 Apache Spark 3.5.x 为范围。在 Spark SQL 中，一个 SQL 语句或 DataFrame API 调用会经历一个复杂的执行计划优化过程。请详细阐述 Catalyst 优化器是如何将一个逻辑计划（Logical Plan）逐步转换和优化为物理计划（Physical Plan）的？你能描述一下这个过程中几个关键的优化阶段（如规则匹配、成本模型）吗？请尽可能结合源码中的关键类和概念进行说明。",
+  "prompt": "以 Spark 3.5.x 为范围，说明一条包含过滤、Join 和聚合的批处理 DataFrame 查询，从构建到由 Action 触发执行，会经历哪些计划阶段。请区分解析、分析、逻辑优化、物理规划和执行前准备，并说明 Catalyst 在其中承担哪些职责。",
   "rubric": [
-    "说明 Parser 生成 unresolved logical plan，Analyzer 借助 SessionCatalog 解析 relation、attribute、function、cast 和 alias",
-    "说明 Optimizer 以 RuleExecutor batch 对逻辑计划做列裁剪、常量传播、谓词下推等规则优化",
-    "说明 SparkPlanner/SparkStrategies 可以为逻辑节点产生候选 SparkPlan，并讨论统计信息与 CBO join reorder",
-    "说明 QueryExecution 对物理计划执行 preparations，插入 exchange、确保分布与排序要求，并通过 PlanChangeLogger 观察规则变化",
-    "说明 AQE 用已物化 Query Stage 的运行时统计替换逻辑片段、重新优化并在成本更低时采用新计划",
-    "能用 explain、plan change log、SQL UI 和关键源码类定位计划为何发生变化"
+    "区分构建DataFrame与Action触发执行",
+    "解析、分析、逻辑优化、物理规划和执行准备的边界明确",
+    "结合过滤、Join或聚合说明Catalyst职责",
+    "追问：用计划、规则日志或源码验证变化，解释AQE介入时机"
   ],
   "hints": [
     "按 Parser、Analyzer、Optimizer、Planner、Preparations、AQE 顺序回答。"
   ],
   "follow_ups": [
-    "Rule 与 Strategy 的输入输出有什么不同？",
-    "某个过滤条件未下推时，怎样定位是在解析、规则优化还是物理计划阶段受阻？",
-    "怎样通过最小输入与计划变化日志验证自定义 Rule 的正确性？"
+    "选择一个过滤下推或Join选择的例子，结合explain和相关源码类说明怎样验证计划变化。",
+    "AQE何时介入，使用什么信息？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-05T21:54:18+08:00",
-  "updated_at": "2026-09-20T21:46:34+08:00",
-  "visibility": "public"
+  "updated_at": "2026-10-02T21:17:52+08:00",
+  "visibility": "public",
+  "coach_notes": [
+    "只展示主问或当前一项追问；Rubric中追问项目仅在实际提出后评价，未提出的阶段不计遗漏。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "c1baffaaa6adedf45fb40f41b566014bb197b167073684735deb03467b242043",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:17:51+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。Catalyst：计划阶段和执行触发：原题把 SQL 与任意 DataFrame API 调用的优化执行混为一句，并要求尽可能多的源码概念，回答边界不清。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：以 Spark 3.5.x 为范围，说明一条包含过滤、Join 和聚合的批处理 DataFrame 查询，从构建到由 Action 触发执行，会经历哪些计划阶段。请区分解析、分析、逻辑优化、物理规划和执行前准备，并说明 Catalyst 在其中承担哪些职责。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕Catalyst；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：选择一个过滤下推或Join选择的例子，结合explain和相关源码类说明怎样验证计划变化。；AQE何时介入，使用什么信息？",
+      "evaluation_alignment": "本次对照题干核对的评价点：区分构建DataFrame与Action触发执行；解析、分析、逻辑优化、物理规划和执行准备的边界明确；结合过滤、Join或聚合说明Catalyst职责；追问：用计划、规则日志或源码验证变化，解释AQE介入时机。未提出的追问不计遗漏。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

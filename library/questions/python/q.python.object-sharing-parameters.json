@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "python",
+  "kind": "scenario",
+  "difficulty": 2,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-27T22:00:08+08:00",
+  "updated_at": "2026-09-27T22:00:08+08:00",
+  "id": "q.python.object-sharing-parameters",
+  "prompt": "一个 Python 数据清洗函数接收计数值和一条可修改的记录。预测下面两行输出，指出形参和实参，并解释函数内每次赋值写回哪里。若调用方希望同时获得更新后的计数值和一条独立的新记录，你会如何调整函数接口？\n\n```python\ndef clean(count, row):\n    count += 1\n    row[0] += 1\n    row = [99]\n    return count, row\n\na = [10]\ncount = 0\nresult = clean(count, a)\nprint(count, a)\nprint(result)\n```",
+  "rubric": [
+    "输出依次为 0 [11] 和 (1, [99])。",
+    "形参是函数定义中的 count、row；调用 clean(count, a) 时实参表达式是调用方的 count、a。形参起初分别绑定到求值得到的整数对象和列表对象，调用本身不自动复制对象。",
+    "count += 1 重新绑定局部名字 count；row[0] += 1 把结果整数的引用写回共享列表第一个位置，因此 a 成为 [11]；整数 10 自身保持不变。",
+    "row = [99] 将局部名字 row 绑定到新列表，a 继续引用原列表；返回值通过 result 显式传回调用方。",
+    "若要求输入保持原样，可先复制此题的一层整数列表，再修改副本并 return count + 1, new_row，由调用方接收返回值。说明原地修改或返回新值的接口约定；嵌套可变内容需要另行决定复制范围。"
+  ],
+  "hints": [
+    "先画出调用前后名字指向的对象。",
+    "区分对名字赋值、对列表某个位置赋值，以及显式返回值。"
+  ],
+  "follow_ups": [
+    "把调用改成 clean(count, a.copy())，调用方的 a 会是什么？为什么？",
+    "仅写 row = [99] 能否替换调用方变量 a 的绑定？需要怎样返回和接收新列表？"
+  ]
+}

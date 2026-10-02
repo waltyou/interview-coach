@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.spark.e4f842352f82",
-  "revision": 2,
+  "revision": 4,
   "status": "active",
   "visibility": "public",
   "topic": "spark",
@@ -13,25 +13,42 @@
     "senior-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "给定每个节点的 CPU、内存和实例单价，你会怎样设计一组成本有效的 Spark executor 配置，并证明成本下降没有以吞吐量或稳定性为代价？请讨论 executor 数、cores、memory、memoryOverhead、driver、shuffle partitions 与 dynamic allocation。",
+  "prompt": "你需要降低一组 Spark 批处理任务的成本，同时维持现有吞吐与稳定性。在提出 executor 配置前，你会收集哪些节点规格、价格、负载和运行指标？请说明如何据此设计候选配置及对照实验，并定义接受新配置的标准。",
   "rubric": [
-    "预留操作系统和集群管理器资源，再根据可用 CPU/内存估算每节点 executor 数量",
-    "解释 executor cores 过多会放大 GC 和并发竞争，过少会增加进程开销并浪费 CPU",
-    "正确区分 executor heap 与 memoryOverhead，并根据容器超限、Python/堆外使用调整",
-    "调整 cores 时同步调整 executor 数和 shuffle partitions，保证比较的是相近并行度",
-    "调参实验期间控制 dynamic allocation 等变量，用运行时间、处理量、失败率、CPU/内存利用率和实例成本比较",
-    "承认不存在 one-size-fits-all，并给出 CPU wait、内存密集、倾斜和动态负载下的不同策略"
+    "收集节点资源、价格、工作量、SLO与基线",
+    "解释executor数量、cores、heap及overhead约束",
+    "对照实验控制数据、版本及并行度，验收吞吐、稳定性和总成本",
+    "没有具体规格时接受参数化方法，不要求臆造唯一配置",
+    "追问：控制动态资源分配的实验干扰"
   ],
   "hints": [
-    "先算单节点能放下几个 executor，再算整个集群。",
-    "成本指标至少要同时包含节点小时数和处理量。"
+    "先列出完成容量估算缺少的资源与负载数据。",
+    "成本指标同时考虑节点小时数、处理量和失败重试。"
   ],
   "follow_ups": [
-    "Container killed for exceeding memory limits 时应该先改 heap 还是 memoryOverhead？",
-    "为什么测试新配置时常先关闭 dynamic allocation？"
+    "拿到节点可用CPU、内存和实测负载后，怎样约束executor数、cores、heap与memoryOverhead？",
+    "怎样控制dynamic allocation对实验的影响？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T21:35:29+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-10-02T21:24:43+08:00",
+  "coach_notes": [
+    "只展示主问或当前一项追问；Rubric中追问项目仅在实际提出后评价，未提出的阶段不计遗漏。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "752ebbfb34925f06d1bccb3ab584242788c5ffb2ba0581237bf362fab4c07d37",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:43+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。Executor 调优：称已给定但没有数据：题干说给定节点 CPU、内存与单价，却没有实际值；也缺少负载与基线，无法算出一组具体配置。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：你需要降低一组 Spark 批处理任务的成本，同时维持现有吞吐与稳定性。在提出 executor 配置前，你会收集哪些节点规格、价格、负载和运行指标？请说明如何据此设计候选配置及对照实验，并定义接受新配置的标准。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕Executor 调优；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：拿到节点可用CPU、内存和实测负载后，怎样约束executor数、cores、heap与memoryOverhead？；怎样控制dynamic allocation对实验的影响？",
+      "evaluation_alignment": "已逐项核对题干、rubric及分级提示。提示按请求提供，不预设题干已撤去的结论：先列出完成容量估算缺少的资源与负载数据。；成本指标同时考虑节点小时数、处理量和失败重试。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

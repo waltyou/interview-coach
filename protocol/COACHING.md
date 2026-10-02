@@ -10,6 +10,10 @@
 
 CandidateProfile 存在时，开始规划前先读取其中已确认的背景、目标和偏好。CoachModel 存在时同时读取，但把它视为基于证据的可重建判断，而不是候选人事实。需要继续了解用户或更新画像时遵循 `DISCOVERY.md`。
 
+## 题目质量
+
+新建、导入、复盘派生和修订题目统一执行 [Question 质量与入库协议](QUESTION-QUALITY.md)。题库外草稿由 Agent 完成七项语义检查，通过 `author_question.py` 写入完整 Question。`coach_notes` 保存澄清口径及教练素材，出题时只展示 Prompt 或当前追问。Rubric 中追问项目只在实际提出后评价；技术细节和参考答案的读取仍遵循当前练习模式与辅助标记。
+
 ## 默认 Coach 与用户扩展
 
 公共版本默认是一名面向 **Senior Big Data Engineer** 的 Coach。内置题库优先覆盖数据架构与建模、SQL、批流处理、消息系统、分布式系统、存储与表格式、数据质量、性能与故障诊断、工程编码、系统设计和 Senior 行为能力。它是可直接练习的基线，不承诺穷尽某个岗位的全部技术栈。
@@ -253,7 +257,7 @@ archived -> active
 
 归档题目时保留所有 AttemptEvent、CycleProgress 和 MasteryState。active PreparationCycle 选择下一题时跳过已经 archived 的 Question。
 
-Question 生成后直接进入训练，不建立独立审核状态。`visibility=public` 的题目保存在 `library/questions/`；`visibility=private` 的题目保存在 `workspace/questions/`。无法确认能否公开时默认归为 `private`。PreparationCycle 默认可以同时快照两类题目。
+Question 完成质量协议后以 active 入库，不建立第三种题目状态。自动抽取的草稿保存在 workspace/imports/questions/，不属于 Question Bank，也不会进入训练。`visibility=public` 的题目保存在 `library/questions/`；`visibility=private` 的题目保存在 `workspace/questions/`。无法确认能否公开时默认归为 `private`。PreparationCycle 默认可以同时快照两类题目。
 
 ## InterviewExperience 进入题库
 
@@ -265,7 +269,7 @@ Question 生成后直接进入训练，不建立独立审核状态。`visibility
 4. 从 Source 中生成完整 Question，并检查重复题和 SourceRef。Prompt 必须脱离 Source 独立成立；不得保留“这种思维”“上述方法”等没有先行词的指代，也不得只复制章节主题名。
 5. 非 Markdown SourceRef 使用 `unit_label` 与 `unit` 定位 page、slide 或 sheet，并用 `heading` 记录该单元内的标题或主题。
 6. 判断题目是 `public` 还是 `private`；具体公司、个人职业经历和项目上下文题默认私人。同时检查能否提炼可独立训练的通用问题，或为已有公共题补充有价值的场景与追问。已有共享授权且满足准入条件时优先沉淀公共内容；无法确认时使用 `private`，不为增加数量强行转换。
-7. 题目直接设为 `active`，需要时补充 Rubric、Hints 和 Follow-ups。
+7. 按 QUESTION-QUALITY.md 完成独立题干、Rubric、Hints、Follow-ups 与逐题审查证据，通过 author_question.py 以 active 入库。
 8. 完成整份 Source 的语义与视觉抽取后，运行 `initialize.py --mark-extracted <repository-relative-path>` 记录本次内容哈希。部分处理时保持 pending。
 9. 新题默认只进入未来 PreparationCycle；当前题目快照必须由用户明确刷新。
 

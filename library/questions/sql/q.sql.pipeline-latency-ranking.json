@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.sql.pipeline-latency-ranking",
-  "revision": 1,
+  "revision": 3,
   "status": "active",
   "visibility": "public",
   "topic": "sql",
@@ -12,26 +12,42 @@
     "senior-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "任务运行表 runs(run_id, owner_id, started_at, finished_at, status, ingest_time) 可重复摄取；同 run_id 的 ingest_time 严格不同。请先取最新版本，再计算上一完整 UTC 自然月内各 owner 的成功运行次数和平均耗时，仅保留至少三次有效成功运行的 owner，并返回平均耗时最短的两个不同名次，保留并列。无效时间记录不进入次数和平均值，并单独统计异常数。",
+  "prompt": "给定 runs(run_id, owner_id, started_at, finished_at, status, ingest_time)。同 run_id 的 ingest_time 严格不同，先取最新版本；owner_id 非 NULL，status=SUCCESS 表示成功。月份按 started_at 的 UTC 日期确定。请统计上一完整自然月各 owner 的有效成功次数和平均耗时秒数，仅保留至少三次者，并返回平均耗时最短的两个不同名次，保留并列。有效要求起止时间非 NULL 且 finished_at>=started_at，排名使用未舍入均值。另输出异常计数表：同月 SUCCESS 中结束时间缺失或倒置的记录按 owner 计数；开始时间缺失的 SUCCESS 单列为无法归属月份，按 owner 统计全量最新记录中的数量。",
   "rubric": [
-    "先按 run_id/ingest_time 去重，再过滤状态和 started_at 所属月份",
-    "使用半开自然月范围并处理跨年",
-    "有效耗时要求起止非空且结束不早于开始",
-    "同一有效集合计算次数和平均值，异常可观测",
-    "在 owner 聚合后做 DENSE_RANK，保留前两档",
-    "声明时间差单位、数值精度和排名口径",
-    "讨论最新版本扫描范围与分区裁剪不能破坏正确性"
+    "先按 run_id 选最新，再按 started_at UTC 月份及 SUCCESS 过滤",
+    "有效成功集合起止齐全且耗时非负，次数和平均值使用同一集合",
+    "先筛至少三次，再以未舍入均值排名取前两档并保留并列",
+    "按题干分别统计当月结束时间异常和全量开始时间缺失，不混淆分母",
+    "追问：跨月更正决定去重所需扫描范围"
   ],
   "hints": [
-    "先确定最新记录是否仍然成功。",
-    "聚合与排名分两层完成。"
+    "先决定每次运行的最新版本，再确定它的月份与状态。",
+    "有效成功运行、结束时间异常和开始时间缺失是不同统计集合。"
   ],
   "follow_ups": [
-    "如果只扫描当月摄取分区，跨月更正是否会漏掉？",
-    "若要求恰好两名 owner，怎样定义稳定 tie-breaker？"
+    "为什么先按月份过滤再去重可能得到错误结果？",
+    "只扫描当月摄取分区，会漏掉哪些跨月更正？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-09-20T21:46:34+08:00",
-  "updated_at": "2026-09-20T21:46:34+08:00"
+  "updated_at": "2026-10-02T21:24:43+08:00",
+  "coach_notes": [
+    "主问与追问分阶段提出。Rubric 中标为追问的项目只在实际提出后评价；参考素材不构成候选人必须选择的故事或措辞。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "c6cc43163253fa848ce0e9ccbce50d4c817d027d91e1ce015d600a7d8ef69334",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:43+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。任务延迟排名：月份归属和异常统计：月份按开始还是结束不明；异常数的范围、粒度及与排名结果的关系未定义。Rubric 已选 started_at，应放进题干。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：给定 runs(run_id, owner_id, started_at, finished_at, status, ingest_time)。同 run_id 的 ingest_time 严格不同，先取最新版本；owner_id 非 NULL，status=SUCCESS 表示成功。月份按 started_at 的 UTC 日期确定。请统计上一完整自然月各 owner 的有效成功次数和平均耗时秒数，仅保留至少三次者，并返回平均耗时最短的两个不同名次，保留并列。有效要求起止时间非 NULL 且 finished_at>=started_at，排名使用未舍入均值。另输出异常计数表：同月 SUCCESS 中结束时间缺失或倒置的记录按 owner 计数；开始时间缺失的 SUCCESS 单列为无法归属月份，按 owner 统计全量最新记录中的数量。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕任务延迟排名；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：为什么先按月份过滤再去重可能得到错误结果？；只扫描当月摄取分区，会漏掉哪些跨月更正？",
+      "evaluation_alignment": "已逐项核对题干、rubric及分级提示。提示按请求提供，不预设题干已撤去的结论：先决定每次运行的最新版本，再确定它的月份与状态。；有效成功运行、结束时间异常和开始时间缺失是不同统计集合。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

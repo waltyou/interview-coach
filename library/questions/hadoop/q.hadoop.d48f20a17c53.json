@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.hadoop.d48f20a17c53",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "hadoop",
@@ -13,25 +13,42 @@
     "big-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "请结合 HDFS 架构解释客户端读写文件的完整路径：NameNode 与 DataNode 如何分工，Block、副本、Packet、Chunk Checksum、写入 Pipeline 和 ACK 队列如何协作。客户端、DataNode 或 NameNode 在写入时失败，lease、pipeline、block 与 HA 恢复分别怎样工作？",
+  "prompt": "以副本存储的 HDFS 为范围，请说明客户端写入一个新文件时，NameNode、DataNode 和客户端怎样协作，从分配 Block 到确认写入完成。再简要比较读取路径。",
   "rubric": [
-    "说明 NameNode 管理命名空间和 Block 元数据，DataNode 存储并上报副本，数据路径通常不经过 NameNode",
-    "写路径包含权限与路径检查、Block 分配、拓扑感知的副本 Pipeline、Packet/Checksum 和反向 ACK",
-    "读路径从 NameNode 获得副本位置，优先读取就近 DataNode，校验失败时切换副本",
-    "DataNode 失败时客户端重建 Pipeline 并重发未确认 Packet，NameNode 后续补足副本",
-    "客户端失败后通过 lease recovery 与 block recovery 统一最后一个 Block 的副本状态和长度",
-    "区分传统单 NameNode 描述与现代 Active/Standby、JournalNodes、Failover Controller 下的 HA 恢复"
+    "明确NameNode元数据与DataNode数据路径职责",
+    "解释Block分配、Pipeline、Packet/Checksum与ACK",
+    "读取定位副本并校验，和写入路径进行比较",
+    "追问：分别分析DataNode失效、客户端退出和HA切换"
   ],
   "hints": [
     "元数据控制路径和实际数据路径要分开描述。",
     "按 pipeline setup、data streaming、close 三阶段分析故障。"
   ],
   "follow_ups": [
-    "为什么 HDFS 采用 Packet ACK 队列？",
-    "NameNode 切换后如何避免两个 Active 同时提供写服务？"
+    "写入中一个DataNode失效时怎样继续？",
+    "客户端退出后未完成的文件怎样恢复？",
+    "启用HA时NameNode切换会怎样影响写入？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T22:36:58+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-10-02T21:17:53+08:00",
+  "coach_notes": [
+    "只展示主问或当前一项追问；Rubric中追问项目仅在实际提出后评价，未提出的阶段不计遗漏。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "37936b5654a0310e11b348aedce80126e6531249a856dac94f3cbd324ecf5aa5",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:17:51+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。HDFS：正常路径与多种故障分开：读写路径、三类角色故障、lease 和 HA 同时出现，候选人需一次记住过多回答任务。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：以副本存储的 HDFS 为范围，请说明客户端写入一个新文件时，NameNode、DataNode 和客户端怎样协作，从分配 Block 到确认写入完成。再简要比较读取路径。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕HDFS；后续3项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：写入中一个DataNode失效时怎样继续？；客户端退出后未完成的文件怎样恢复？；启用HA时NameNode切换会怎样影响写入？",
+      "evaluation_alignment": "本次对照题干核对的评价点：明确NameNode元数据与DataNode数据路径职责；解释Block分配、Pipeline、Packet/Checksum与ACK；读取定位副本并校验，和写入路径进行比较；追问：分别分析DataNode失效、客户端退出和HA切换。未提出的追问不计遗漏。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "python",
+  "kind": "scenario",
+  "difficulty": 2,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-27T22:00:08+08:00",
+  "updated_at": "2026-09-27T22:00:08+08:00",
+  "id": "q.python.list-augmented-assignment",
+  "prompt": "数据处理函数需要给一条记录的标签列表追加标记。下面代码只使用 Python 内置 int 和 list。预测两行输出，解释相同 += 在整数和列表上的效果，以及列表 + 与 += 的差异。若要求函数保留输入标签列表原样并返回新列表，应怎样实现？\n\n```python\ndef enrich(n, tags):\n    n += 1\n    tags += [\"checked\"]\n    tags = tags + [\"exported\"]\n    tags += [\"done\"]\n    print(n, tags)\n\na = [10, [\"raw\"]]\nenrich(a[0], a[1])\nprint(a)\n```",
+  "rubric": [
+    "函数内输出 11 和标签列表 [raw, checked, exported, done]（各标签为字符串）；函数外 a 为 [10, [raw, checked]]。",
+    "传参规则相同，差异来自对象类型和操作：整数不可变，n += 1 把局部名字绑定到结果整数；无须声称一定新分配整数对象。",
+    "内置列表 tags += [checked] 原地扩展 a[1] 指向的列表；tags = tags + [exported] 先生成新列表，再重新绑定 tags。",
+    "最后的 tags += [done] 修改的是新列表，a[1] 仍指向只追加了 checked 的原列表。",
+    "可使用 return tags + [checked, exported, done] 返回新列表（标签均为字符串）；这是一层新的列表，复制不自动递归。接口应明确副作用。不要把内置列表的 += 行为泛化为所有类型的通用规则。"
+  ],
+  "hints": [
+    "逐行标记 tags 和 a[1] 是否仍指向同一个列表。",
+    "内置 list 的原地扩展与普通拼接，返回对象及赋值效果有什么区别？"
+  ],
+  "follow_ups": [
+    "将 tags = tags + [\"exported\"] 改为 tags += [\"exported\"] 后，外部结果如何变化？",
+    "如果把整数 n 换成单元素列表，并执行 n[0] += 1，调用方会看到什么？"
+  ]
+}

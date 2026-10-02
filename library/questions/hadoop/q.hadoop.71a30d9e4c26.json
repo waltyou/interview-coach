@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.hadoop.71a30d9e4c26",
-  "revision": 2,
+  "revision": 3,
   "status": "active",
   "visibility": "public",
   "topic": "hadoop",
@@ -13,26 +13,41 @@
     "big-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "请从 InputSplit 开始完整解释一个 MapReduce 作业直到输出文件落盘的过程，重点说明 Map 端 buffer、spill、sort、combiner、partition，Shuffle 拉取与归并，以及 Reduce 端执行。哪些阶段会产生磁盘 I/O？数据倾斜如何识别和缓解？",
+  "prompt": "请以按 key 聚合为例，说明一个 Hadoop MapReduce 作业从 InputSplit 到最终输出的流程。重点解释 Map 输出怎样经历缓冲、分区、排序、spill 与 Shuffle，最后如何交给 Reducer；指出主要磁盘 I/O 发生在哪里。",
   "rubric": [
-    "区分 InputFormat/InputSplit、RecordReader、Mapper、Reducer 和 OutputFormat 的职责",
-    "描述 Map 输出进入环形缓冲区、达到阈值后按分区排序并 spill 到本地磁盘",
-    "说明 Combiner 可选且必须满足语义条件，Partitioner 决定 key 进入哪个 Reducer",
-    "解释 Reducer 通过网络拉取各 Mapper 分区、在内存和磁盘归并排序后按 key 分组",
-    "列出输入读取、Map spill/merge、Shuffle copy/merge、Reduce spill 与最终 HDFS 写入等 I/O",
-    "从 key 分布、分区函数、热点记录和 Reducer 运行时间识别倾斜，并给出采样、加盐、二阶段聚合、广播小表或自定义分区策略"
+    "区分InputSplit、RecordReader、Mapper与Reducer职责",
+    "解释Map缓冲、分区、排序、spill、merge及Shuffle拉取归并",
+    "指出主要磁盘I/O与按key分组的路径",
+    "追问：Combiner满足语义条件且次数不保证；倾斜以分布和任务证据诊断"
   ],
   "hints": [
     "分别沿 Map 端、网络 Shuffle、Reduce 端三段回答。",
     "数据倾斜的信号通常是少数 Reducer 远慢于其他任务。"
   ],
   "follow_ups": [
-    "Combiner 为什么不能保证执行次数？",
-    "Map 输出压缩会怎样影响 CPU、网络和磁盘？",
-    "在相同输入下比较先 Join 再聚合与先局部聚合再 Join，哪些业务粒度和代数条件允许等价重写？"
+    "Combiner在什么条件下能使用？",
+    "只有少数Reducer明显变慢时，怎样判断并处理数据倾斜？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T22:36:58+08:00",
-  "updated_at": "2026-09-20T21:46:34+08:00"
+  "updated_at": "2026-10-02T21:17:53+08:00",
+  "coach_notes": [
+    "只展示主问或当前一项追问；Rubric中追问项目仅在实际提出后评价，未提出的阶段不计遗漏。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "b4ed16b1f5e885a4695b26b3afcf2dba469f745be5a29fa1a88cf0f69bb7bd07",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:17:51+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。MapReduce：流程与倾斜排障分开：从输入到输出的完整机制已经是一个主问，末尾再加倾斜诊断使主题发生切换。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：请以按 key 聚合为例，说明一个 Hadoop MapReduce 作业从 InputSplit 到最终输出的流程。重点解释 Map 输出怎样经历缓冲、分区、排序、spill 与 Shuffle，最后如何交给 Reducer；指出主要磁盘 I/O 发生在哪里。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕MapReduce；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：Combiner在什么条件下能使用？；只有少数Reducer明显变慢时，怎样判断并处理数据倾斜？",
+      "evaluation_alignment": "本次对照题干核对的评价点：区分InputSplit、RecordReader、Mapper与Reducer职责；解释Map缓冲、分区、排序、spill、merge及Shuffle拉取归并；指出主要磁盘I/O与按key分组的路径；追问：Combiner满足语义条件且次数不保证；倾斜以分布和任务证据诊断。未提出的追问不计遗漏。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

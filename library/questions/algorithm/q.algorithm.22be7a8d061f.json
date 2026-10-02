@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.algorithm.22be7a8d061f",
-  "revision": 1,
+  "revision": 3,
   "status": "active",
   "visibility": "public",
   "topic": "algorithm",
@@ -13,24 +13,41 @@
     "spark-engineer"
   ],
   "origin": "generated",
-  "prompt": "实现从 n 个元素中找出最大的 k 个元素，并分析时间与空间复杂度。随后把方案扩展到 Spark RDD：每个分区如何保留局部 Top K，怎样合并结果，如何避免把所有数据收集到 Driver？",
+  "prompt": "给定整数数组 nums 和整数 k，返回其中最大的 k 个元素，按降序排列；重复值按出现次数保留。k<=0 时返回空列表，k>=len(nums) 时返回全部元素。请实现并分析复杂度。",
   "rubric": [
-    "能解释时间复杂度和空间复杂度衡量输入规模增长时资源消耗的方式",
-    "本地方案使用大小为 k 的最小堆，时间 O(n log k)、额外空间 O(k)",
-    "正确处理 k<=0、k>=n、重复值和自定义排序键",
-    "分布式方案在 mapPartitions 中生成局部 Top K，再以树形聚合或受控合并得到全局 Top K",
-    "说明局部 Top K 的并集包含全局 Top K，并分析分区数、序列化和 Driver 内存成本"
+    "按次数保留重复值，结果降序，覆盖空输入及 k 边界",
+    "实现正确并分析时间和额外空间，允许堆、排序或选择算法等合理方案",
+    "追问：局部 Top K 与受控合并保证全局结果，分析 Driver 和网络成本"
   ],
   "hints": [
-    "要找最大的 k 个元素，应让堆顶保留当前候选中的最小值。",
-    "先在数据所在分区缩小规模。"
+    "想一想：扫描过程中是否只需保留k个候选值？",
+    "维护候选集合中最小值，可以判断新元素是否值得保留。"
   ],
   "follow_ups": [
-    "如果 k 接近 n，排序是否更合适？",
-    "数据倾斜会怎样影响各分区 Top K 的计算？"
+    "数据改为 Spark RDD，最终 k 个结果可放入 Driver 内存。怎样计算全局 Top K 并限制传输与 Driver 内存开销？",
+    "k 接近输入规模时，你会怎样调整算法？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-10T22:36:58+08:00",
-  "updated_at": "2026-08-10T22:36:58+08:00"
+  "updated_at": "2026-10-02T21:24:42+08:00",
+  "coach_notes": [
+    "主问与追问分阶段提出。Rubric 中标为追问的项目只在实际提出后评价；参考素材不构成候选人必须选择的故事或措辞。",
+    "先问本地实现，完成后再提出分布式扩展。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "e87a5c45deb6c444e65c4e0b7e3e8f1028f4c2295fa7494f6fb4d44450a57c9e",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:42+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。Top K：元素与返回语义：元素类型、重复值计数、输出顺序和 k 的边界均未约定；这些选择会改变实现和测试。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：给定整数数组 nums 和整数 k，返回其中最大的 k 个元素，按降序排列；重复值按出现次数保留。k<=0 时返回空列表，k>=len(nums) 时返回全部元素。请实现并分析复杂度。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕Top K；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：数据改为 Spark RDD，最终 k 个结果可放入 Driver 内存。怎样计算全局 Top K 并限制传输与 Driver 内存开销？；k 接近输入规模时，你会怎样调整算法？",
+      "evaluation_alignment": "已逐项核对题干、rubric及分级提示。提示按请求提供，不预设题干已撤去的结论：想一想：扫描过程中是否只需保留k个候选值？；维护候选集合中最小值，可以判断新元素是否值得保留。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

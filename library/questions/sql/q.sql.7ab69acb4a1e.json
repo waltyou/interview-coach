@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.sql.7ab69acb4a1e",
-  "revision": 3,
+  "revision": 5,
   "status": "active",
   "topic": "sql",
   "kind": "coding",
@@ -11,27 +11,42 @@
     "senior-data-engineer"
   ],
   "origin": "real-interview",
-  "prompt": "给定 employee(employee_id, department_id, salary)，请写 SQL 返回每个部门薪资排名前三的员工。先明确同薪并列时的产品语义，再分别说明需要恰好三行和需要保留并列第三名时应使用什么窗口函数。",
+  "prompt": "给定 employee(employee_id, department_id, salary)，employee_id 唯一，字段均非 NULL。请分别写 SQL：一，按薪资降序返回每部门最多三名员工，同薪按 employee_id 升序；二，返回每部门前三个不同薪资档位的全部员工。输出全部三列，并解释两种查询在并列时的差别。",
   "rubric": [
-    "使用 PARTITION BY department_id 并按 salary DESC 排序计算部门内名次",
-    "说明 ROW_NUMBER 会强制得到行级顺序，若排序不唯一需要增加稳定的 tie-breaker",
-    "说明 DENSE_RANK 会保留并列薪资且名次不跳号，过滤 <= 3 可能返回多于三人",
-    "能根据业务对并列的定义选择 ROW_NUMBER、RANK 或 DENSE_RANK，而不是机械套用",
-    "使用子查询或 CTE 后过滤窗口结果，避免在不支持 QUALIFY 的方言中直接写入 WHERE",
-    "考虑 NULL salary、重复员工记录和大表分区/排序成本等边界与工程问题"
+    "第一种用确定性薪资与员工ID顺序取最多三人，人数不足全取",
+    "第二种返回前三个不同薪资档位且保留并列",
+    "窗口计算与结果过滤层次合法，输出员工完整三列",
+    "追问：理解第三行扩展并列与第三个薪资档位不同"
   ],
   "hints": [
-    "关键不只是 Top 3，而是并列时到底要三行还是三个薪资档位。",
-    "窗口函数的结果通常需要在外层查询中过滤。"
+    "用薪资100、100、90、80的四人部门比较两种返回语义。",
+    "一个要求行级顺序，另一个要求不同薪资档位。"
   ],
   "follow_ups": [
-    "如果要返回每个部门薪资前三且最近入职的员工，排序规则应如何定义？",
-    "在百亿行数据上执行这条 SQL，你会如何检查和优化物理执行计划？",
-    "先完成一个热身：返回每个部门最高薪资的全部并列员工，再扩展为前三个不同薪资档位。"
+    "若改为先取前三名员工，再包含与第三名同薪的所有员工，结果和 SQL 会怎样变化？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-05T21:54:18+08:00",
-  "updated_at": "2026-09-20T21:46:34+08:00",
-  "visibility": "public"
+  "updated_at": "2026-10-02T21:24:43+08:00",
+  "visibility": "public",
+  "coach_notes": [
+    "主问与追问分阶段提出。Rubric 中标为追问的项目只在实际提出后评价；参考素材不构成候选人必须选择的故事或措辞。",
+    "三种业务语义分别对应独立要求，避免把 RANK 与 DENSE_RANK 混称为保留并列。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "947e20cd72a85db54ef359a2c16799f3baf3bba3709f2bac8a90cb5c5df45f24",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:43+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。部门薪资前三：名次含义：恰好三行在人数不足时不可满足；保留并列第三可能表示前三行扩展并列，也可能表示前三个不同薪资档位。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：给定 employee(employee_id, department_id, salary)，employee_id 唯一，字段均非 NULL。请分别写 SQL：一，按薪资降序返回每部门最多三名员工，同薪按 employee_id 升序；二，返回每部门前三个不同薪资档位的全部员工。输出全部三列，并解释两种查询在并列时的差别。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕部门薪资前三；后续1项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：若改为先取前三名员工，再包含与第三名同薪的所有员工，结果和 SQL 会怎样变化？",
+      "evaluation_alignment": "已逐项核对题干、rubric及分级提示。提示按请求提供，不预设题干已撤去的结论：用薪资100、100、90、80的四人部门比较两种返回语义。；一个要求行级顺序，另一个要求不同薪资档位。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

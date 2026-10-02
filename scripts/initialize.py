@@ -18,7 +18,6 @@ from common import (
     load_questions,
     now_iso,
     question_completeness_issues,
-    question_root_for_visibility,
     question_topic,
     repository_relative,
     resolve_source_list,
@@ -41,7 +40,7 @@ QUESTION_PREFIX = re.compile(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Synchronize selected sources and extract explicit interview questions"
+        description="Synchronize sources and stage question drafts for semantic review"
     )
     parser.add_argument(
         "--mark-extracted",
@@ -200,11 +199,19 @@ def normalized_prompt(heading: str) -> str:
 
 
 def prompt_from_section(heading: str, section_lines: list[str]) -> str:
-    """Prefer an explicit Q: paragraph when a heading is only a short label."""
-    for line in section_lines:
+    """Preserve multiline input/schema/code; never treat this as admission review."""
+    for index, line in enumerate(section_lines):
         match = BODY_QUESTION_PATTERN.match(line)
         if match:
-            return normalized_prompt(match.group(1))
+            body = [match.group(1)]
+            fenced = False
+            for following in section_lines[index + 1:]:
+                if following.strip().startswith(("```", "~~~")):
+                    fenced = not fenced
+                if not fenced and re.match(r"^\s*(?:#{1,6}\s+|(?:A|Answer|答案|解析|Rubric|Hints?|Follow-ups?)\s*[:：])", following, re.I):
+                    break
+                body.append(following)
+            return "\n".join(body).strip()
     return normalized_prompt(heading)
 
 
@@ -258,7 +265,7 @@ def extract_questions(path: Path, created_at: str) -> list[dict[str, Any]]:
         extracted.append(
             {
                 "$schema": "../../../protocol/schemas/question.schema.json",
-                "schema_version": 2,
+                "schema_version": 3,
                 "id": question_id(relative_path, heading, topic),
                 "revision": 1,
                 "status": "active",
@@ -372,6 +379,22 @@ def write_question_indexes(indexed_at: str) -> None:
         write_json(root / "index.json", index)
 
 
+def stage_question_draft(question: dict[str, Any], source: Path) -> tuple[Path, str]:
+    """Keep extracted material outside the bank and never overwrite human edits."""
+    output = PACK_ROOT / "workspace" / "imports" / "questions" / f"{question['id']}.json"
+    digest = hashlib.sha256(source.read_bytes()).hexdigest()
+    if output.exists():
+        previous = load_json(output)
+        status = "preserved" if previous.get("source_content_sha256") == digest else "stale"
+        return output, status
+    write_json(output, {
+        "source_content_sha256": digest,
+        "review_instructions": "protocol/QUESTION-QUALITY.md",
+        "draft": without_internal_fields(question),
+    })
+    return output, "staged"
+
+
 def main() -> None:
     args = parse_args()
     indexed_at = now_iso()
@@ -384,7 +407,7 @@ def main() -> None:
     write_json(SOURCE_CATALOG_PATH, catalog)
 
     known_sources = existing_source_map()
-    created = 0
+    staged = 0
     preserved = 0
     for path in markdown_files:
         if repository_relative(path).as_posix() not in pending_before:
@@ -405,11 +428,14 @@ def main() -> None:
             if key in known_sources:
                 preserved += 1
                 continue
-            output_root = question_root_for_visibility(question["visibility"])
-            output_path = output_root / question["topic"] / f"{question['id']}.json"
-            write_json(output_path, without_internal_fields(question))
+            output_path, draft_status = stage_question_draft(question, path)
+            if draft_status != "staged":
+                preserved += 1
+                if draft_status == "stale":
+                    print(f"stale_draft={output_path.relative_to(PACK_ROOT).as_posix()}")
+                continue
             known_sources[key] = question
-            created += 1
+            staged += 1
 
     marked = mark_sources_extracted(catalog, args.mark_extracted)
     if marked:
@@ -420,7 +446,7 @@ def main() -> None:
     dashboard_path, _ = build_dashboard()
     pending_after = pending_source_paths(catalog)
     print(
-        f"sources={len(markdown_files)} questions_created={created} "
+        f"sources={len(markdown_files)} questions_created=0 drafts_staged={staged} "
         f"questions_preserved={preserved} "
         f"pending_extraction={len(pending_after)} marked_extracted={len(marked)} "
         f"dashboard={dashboard_path.relative_to(PACK_ROOT).as_posix()}"

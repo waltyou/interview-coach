@@ -33,6 +33,7 @@ from common import (
     resolve_source_list,
 )
 from source_readers import SOURCE_UNIT_LABELS, SourceReadError, source_format
+from question_quality import content_issues, review_issues
 from onboard import ONBOARDING_STATE_PATH, state_issues
 from discover import PROFILE_PATH, profile_issues
 from coach_model import (
@@ -50,7 +51,7 @@ CYCLE_STATUSES = {"planned", "active", "completed", "archived"}
 CYCLE_KINDS = {"baseline", "maintenance", "job_targeted", "stage_targeted"}
 REVIEW_POLICIES = {"coverage_once", "spaced", "coverage_then_spaced", "mixed"}
 JOB_STATUSES = {"considering", "interviewing", "offer", "closed", "withdrawn"}
-EXPECTED_PROTOCOL_VERSION = "0.13.0"
+EXPECTED_PROTOCOL_VERSION = "0.14.0"
 
 
 class Validation:
@@ -391,6 +392,9 @@ def load_and_validate_questions(
             if question["status"] == "active":
                 for issue in question_completeness_issues(question["prompt"]):
                     validation.error(path, f"incomplete Question prompt: {issue}")
+            if "quality_review" in question:
+                for issue in content_issues(question) + review_issues(question):
+                    validation.error(path, issue)
             if question.get("evaluation_basis") == "rubric" and not question.get("rubric"):
                 validation.error(path, "rubric evaluation requires at least one rubric item")
 

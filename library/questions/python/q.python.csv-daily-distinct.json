@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.python.csv-daily-distinct",
-  "revision": 1,
+  "revision": 3,
   "status": "active",
   "visibility": "public",
   "topic": "python",
@@ -12,26 +12,42 @@
     "senior-data-engineer"
   ],
   "origin": "generated",
-  "prompt": "请实现 daily_distinct(csv_path, timezone)：CSV 含 event_time 和 visitor_key，时间字段为带偏移量的 ISO 8601 字符串。返回按指定业务时区划分的每日唯一访客数。声明编码、坏行与空键策略，并说明输入文件或去重状态超内存时的精确和近似方案。",
+  "prompt": "请实现 daily_distinct(csv_path, timezone)。输入为带表头的 UTF-8 CSV，包含 event_time 和 visitor_key；event_time 是带偏移量的 ISO 8601 时间，timezone 是 IANA 时区名。返回按日期升序排列的 (YYYY-MM-DD, 唯一访客数) 列表，只输出存在有效记录的日期。写代码前请声明空 visitor_key 和坏行的处理策略，并在实现中保持一致。",
   "rubric": [
-    "使用标准 CSV parser 正确处理引号、逗号、换行和 header",
-    "解析带偏移时间并转换业务时区后取日期",
-    "按日期维护唯一键集合或等价准确去重",
-    "坏行可观测且策略明确，输出顺序稳定",
-    "时间接近 O(n)，空间由不同日期/访客组合决定",
-    "流式读取只限制原始文件驻留，不限制 distinct 状态",
-    "精确方案可外部排序/分区，近似方案需声明误差和可合并性"
+    "标准 CSV parser 处理表头、引号、逗号和换行",
+    "带偏移时间转业务时区后按日期和访客键精确去重",
+    "实现声明的坏行和空键策略，输出排序后的日期计数列表",
+    "流式读取与去重状态空间分开分析",
+    "追问：跨日期边界测试，精确外部去重与近似误差有明确条件"
   ],
   "hints": [
-    "把文件解析与去重状态分开设计。",
-    "接近午夜的同一时刻可能对应不同自然日。"
+    "先将带偏移时间转换到业务时区，再取日期。",
+    "逐行读取文件与去重集合占用的内存是两回事。"
   ],
   "follow_ups": [
-    "如何设计跨时区与重复记录测试？",
-    "每个分区独立 count distinct 后为什么通常不能直接求和？"
+    "怎样验证跨时区日期边界和重复记录？",
+    "文件或去重状态超出内存时，精确和近似方案分别怎样设计？"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-09-20T21:46:34+08:00",
-  "updated_at": "2026-09-20T21:46:34+08:00"
+  "updated_at": "2026-10-02T21:24:42+08:00",
+  "coach_notes": [
+    "主问与追问分阶段提出。Rubric 中标为追问的项目只在实际提出后评价；参考素材不构成候选人必须选择的故事或措辞。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "cdd1d5678e907adc0ac4bbf5ebbb7a6257d5355fa6d7831e292cd66d149e7f8c",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:42+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。CSV 日去重：输出契约：已有带偏移时间与业务时区，但没有返回类型；编码和坏行策略允许自行声明，应明确这一点。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：请实现 daily_distinct(csv_path, timezone)。输入为带表头的 UTF-8 CSV，包含 event_time 和 visitor_key；event_time 是带偏移量的 ISO 8601 时间，timezone 是 IANA 时区名。返回按日期升序排列的 (YYYY-MM-DD, 唯一访客数) 列表，只输出存在有效记录的日期。写代码前请声明空 visitor_key 和坏行的处理策略，并在实现中保持一致。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕CSV 日去重；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：怎样验证跨时区日期边界和重复记录？；文件或去重状态超出内存时，精确和近似方案分别怎样设计？",
+      "evaluation_alignment": "已逐项核对题干、rubric及分级提示。提示按请求提供，不预设题干已撤去的结论：先将带偏移时间转换到业务时区，再取日期。；逐行读取文件与去重集合占用的内存是两回事。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-09-20T21:46:34+08:00",
+  "generated_at": "2026-10-02T21:24:43+08:00",
   "visibility": "public",
   "questions": [
     {
@@ -9,7 +9,7 @@
       "visibility": "public",
       "topic": "algorithm",
       "kind": "coding",
-      "prompt": "实现从 n 个元素中找出最大的 k 个元素，并分析时间与空间复杂度。随后把方案扩展到 Spark RDD：每个分区如何保留局部 Top K，怎样合并结果，如何避免把所有数据收集到 Driver？",
+      "prompt": "给定整数数组 nums 和整数 k，返回其中最大的 k 个元素，按降序排列；重复值按出现次数保留。k<=0 时返回空列表，k>=len(nums) 时返回全部元素。请实现并分析复杂度。",
       "file": "algorithm/q.algorithm.22be7a8d061f.json"
     },
     {
@@ -18,7 +18,7 @@
       "visibility": "public",
       "topic": "algorithm",
       "kind": "coding",
-      "prompt": "数据平台需要一个进程内的表元数据缓存。请实现固定容量的 LRU Cache，使 get 和 put 平均 O(1)，说明访问顺序、更新和淘汰如何协作，并分析容量为零、并发调用与元数据失效的边界。",
+      "prompt": "请实现单线程 LRUCache(capacity)，容量为非负整数，键和值均为整数。get(key) 返回缓存值，未命中返回 None；put(key,value) 写入或更新并标记为最近使用，超出容量时淘汰最久未使用项。capacity=0 时始终为空。get 和 put 平均时间复杂度要求 O(1)。",
       "file": "algorithm/q.algorithm.58cf31a9e620.json"
     },
     {
@@ -27,7 +27,7 @@
       "visibility": "public",
       "topic": "big-data-architecture",
       "kind": "concept",
-      "prompt": "企业当前直接在业务数据库上运行分析报表。你会根据哪些业务和技术信号决定是否建设独立数据仓库？请比较 OLTP 与 OLAP 的访问模式，设计数据进入、建模、质量校验与服务链路，并解释引入独立分析平台后的收益和代价。",
+      "prompt": "企业正在业务数据库上运行分析报表。你会根据哪些业务和技术信号，判断是否需要独立的数据仓库？请结合 OLTP 与 OLAP 的访问模式说明收益、代价及暂缓建设的条件。",
       "file": "big-data-architecture/q.big-data-architecture.8f3e589a35db.json"
     },
     {
@@ -45,7 +45,7 @@
       "visibility": "public",
       "topic": "data-modeling",
       "kind": "system-design",
-      "prompt": "请为一个电商分析场景设计维度模型，支持订单金额、转化率、复购和按商品、用户、地区、渠道的历史分析。你会如何确定业务过程与事实表粒度，区分事实和维度，处理多币种、退货、迟到事实以及 Slowly Changing Dimension？",
+      "prompt": "一个电商业务希望按商品、用户、地区和渠道分析每日成交金额，并按成交时的属性解释历史结果。请先澄清成交口径和订单与订单行的关系，再设计核心事实表与维度，说明每张表的粒度。",
       "file": "data-modeling/q.data-modeling.dimensional-modeling.json"
     },
     {
@@ -144,7 +144,7 @@
       "visibility": "public",
       "topic": "hadoop",
       "kind": "explanation",
-      "prompt": "请从 InputSplit 开始完整解释一个 MapReduce 作业直到输出文件落盘的过程，重点说明 Map 端 buffer、spill、sort、combiner、partition，Shuffle 拉取与归并，以及 Reduce 端执行。哪些阶段会产生磁盘 I/O？数据倾斜如何识别和缓解？",
+      "prompt": "请以按 key 聚合为例，说明一个 Hadoop MapReduce 作业从 InputSplit 到最终输出的流程。重点解释 Map 输出怎样经历缓冲、分区、排序、spill 与 Shuffle，最后如何交给 Reducer；指出主要磁盘 I/O 发生在哪里。",
       "file": "hadoop/q.hadoop.71a30d9e4c26.json"
     },
     {
@@ -153,7 +153,7 @@
       "visibility": "public",
       "topic": "hadoop",
       "kind": "explanation",
-      "prompt": "请结合 HDFS 架构解释客户端读写文件的完整路径：NameNode 与 DataNode 如何分工，Block、副本、Packet、Chunk Checksum、写入 Pipeline 和 ACK 队列如何协作。客户端、DataNode 或 NameNode 在写入时失败，lease、pipeline、block 与 HA 恢复分别怎样工作？",
+      "prompt": "以副本存储的 HDFS 为范围，请说明客户端写入一个新文件时，NameNode、DataNode 和客户端怎样协作，从分配 Block 到确认写入完成。再简要比较读取路径。",
       "file": "hadoop/q.hadoop.d48f20a17c53.json"
     },
     {
@@ -180,7 +180,7 @@
       "visibility": "public",
       "topic": "iceberg",
       "kind": "explanation",
-      "prompt": "什么是 Apache Iceberg，它如何把对象存储或分布式文件系统中的不可变数据文件组织成一张支持事务和演进的分析表？请从 catalog、metadata JSON、snapshot、manifest list、manifest、data/delete files 的层级解释一次读取和一次写入，并说明 schema evolution、hidden partitioning、time travel、并发提交和 row-level update/delete 分别如何实现。",
+      "prompt": "对象存储中已经有一批 Parquet 文件。引入 Apache Iceberg 后，它会怎样把这些文件组织成一张可一致读取和提交更新的分析表？请围绕一次读取和一次写入，解释 catalog、表元数据、snapshot 与 manifest 的关系。",
       "file": "iceberg/q.iceberg.table-format-foundations.json"
     },
     {
@@ -261,7 +261,7 @@
       "visibility": "public",
       "topic": "kafka",
       "kind": "scenario",
-      "prompt": "一个 Kafka topic 承载用户行为事件，要求同一用户有序、可以水平扩展，并避免热点用户拖慢全局。你会如何设计 message key、partition 数、副本和生产者确认策略？扩分区或 key 分布变化会带来哪些正确性与运维影响？",
+      "prompt": "Kafka topic 承载用户行为事件，要求同一用户的事件按照进入日志的顺序被串行处理。允许不同用户并行。你会怎样设计 key、分区和消费方式，并在热点用户出现时控制对其他用户的影响？先说明生产者数量及重试带来的假设。",
       "file": "kafka/q.kafka.partitioning-ordering.json"
     },
     {
@@ -288,7 +288,7 @@
       "visibility": "public",
       "topic": "python",
       "kind": "coding",
-      "prompt": "请实现 daily_distinct(csv_path, timezone)：CSV 含 event_time 和 visitor_key，时间字段为带偏移量的 ISO 8601 字符串。返回按指定业务时区划分的每日唯一访客数。声明编码、坏行与空键策略，并说明输入文件或去重状态超内存时的精确和近似方案。",
+      "prompt": "请实现 daily_distinct(csv_path, timezone)。输入为带表头的 UTF-8 CSV，包含 event_time 和 visitor_key；event_time 是带偏移量的 ISO 8601 时间，timezone 是 IANA 时区名。返回按日期升序排列的 (YYYY-MM-DD, 唯一访客数) 列表，只输出存在有效记录的日期。写代码前请声明空 visitor_key 和坏行的处理策略，并在实现中保持一致。",
       "file": "python/q.python.csv-daily-distinct.json"
     },
     {
@@ -301,12 +301,39 @@
       "file": "python/q.python.ee452f006c7b.json"
     },
     {
+      "id": "q.python.list-augmented-assignment",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "scenario",
+      "prompt": "数据处理函数需要给一条记录的标签列表追加标记。下面代码只使用 Python 内置 int 和 list。预测两行输出，解释相同 += 在整数和列表上的效果，以及列表 + 与 += 的差异。若要求函数保留输入标签列表原样并返回新列表，应怎样实现？\n\n```python\ndef enrich(n, tags):\n    n += 1\n    tags += [\"checked\"]\n    tags = tags + [\"exported\"]\n    tags += [\"done\"]\n    print(n, tags)\n\na = [10, [\"raw\"]]\nenrich(a[0], a[1])\nprint(a)\n```",
+      "file": "python/q.python.list-augmented-assignment.json"
+    },
+    {
+      "id": "q.python.nested-list-aliasing",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "scenario",
+      "prompt": "一个批处理程序让两条记录复用同一个标签列表。以下两段代码分别独立运行。预测各自输出，解释替换外层列表某个位置与修改共享内层列表的区别。如果每条记录应有独立的标签列表，应如何初始化？\n\n```python\n# A\ninner = [10]\nrows = [inner, inner]\nrows[0].append(30)\nprint(rows, inner)\n\n# B（重新初始化）\ninner = [10]\nrows = [inner, inner]\nrows[0] = [99]\nrows[1][0] = 20\nprint(rows, inner)\n```",
+      "file": "python/q.python.nested-list-aliasing.json"
+    },
+    {
+      "id": "q.python.object-sharing-parameters",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "scenario",
+      "prompt": "一个 Python 数据清洗函数接收计数值和一条可修改的记录。预测下面两行输出，指出形参和实参，并解释函数内每次赋值写回哪里。若调用方希望同时获得更新后的计数值和一条独立的新记录，你会如何调整函数接口？\n\n```python\ndef clean(count, row):\n    count += 1\n    row[0] += 1\n    row = [99]\n    return count, row\n\na = [10]\ncount = 0\nresult = clean(count, a)\nprint(count, a)\nprint(result)\n```",
+      "file": "python/q.python.object-sharing-parameters.json"
+    },
+    {
       "id": "q.python.single-pass-batching",
       "status": "active",
       "visibility": "public",
       "topic": "python",
       "kind": "coding",
-      "prompt": "实现 batch_apply(records, batch_size, transform)：records 是无 len()、不可切片且只能消费一次的迭代器；每次最多取 batch_size 条，把该批的 iterator 传给 transform，惰性返回结果。最后不足一批也处理，batch_size 必须为正整数。说明异常时已经消费到哪里。",
+      "prompt": "实现 batch_apply(records, batch_size, transform)，返回惰性结果迭代器。records 只能遍历一次；batch_size 必须是正整数（bool 不算），非法值在调用 batch_apply 时抛 ValueError。每次请求一个结果时，从上游取至多 batch_size 条组成独立批次，将该批的 iterator 传给 transform，返回其单个结果；结果不展开。transform 可以只消费部分批次，但不会保留 iterator。整批均视为已消费，下一批从其后开始。空输入不调用 transform，末批不足也处理；异常直接向调用方传播。",
       "file": "python/q.python.single-pass-batching.json"
     },
     {
@@ -387,7 +414,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "explanation",
-      "prompt": "以 Apache Spark 3.5.x 为范围。在 Spark SQL 中，一个 SQL 语句或 DataFrame API 调用会经历一个复杂的执行计划优化过程。请详细阐述 Catalyst 优化器是如何将一个逻辑计划（Logical Plan）逐步转换和优化为物理计划（Physical Plan）的？你能描述一下这个过程中几个关键的优化阶段（如规则匹配、成本模型）吗？请尽可能结合源码中的关键类和概念进行说明。",
+      "prompt": "以 Spark 3.5.x 为范围，说明一条包含过滤、Join 和聚合的批处理 DataFrame 查询，从构建到由 Action 触发执行，会经历哪些计划阶段。请区分解析、分析、逻辑优化、物理规划和执行前准备，并说明 Catalyst 在其中承担哪些职责。",
       "file": "spark/q.spark.1fb86bac7d3e.json"
     },
     {
@@ -432,7 +459,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "system-design",
-      "prompt": "在实际生产环境中，Spark Streaming 和 Structured Streaming 是两种处理流数据的技术。请详细阐述这两种技术的核心设计思想、编程模型、容错机制和执行效率上的区别。你认为在什么场景下应该选择哪种技术？",
+      "prompt": "以 Spark 3.5.x 为范围，一个团队已有基于 DStream 的微批作业，正在评估迁移到 Structured Streaming。请比较二者的编程模型、状态与恢复方式，并说明为了判断迁移收益，你会收集哪些工作负载和下游写入要求。",
       "file": "spark/q.spark.535119bf3b67.json"
     },
     {
@@ -450,7 +477,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "explanation",
-      "prompt": "从源码角度，详细阐述一下 Spark 的 宽窄依赖 (Wide vs. Narrow Dependencies) 机制。宽窄依赖是如何影响 Spark 的任务调度和容错性的？请尽量结合源码中的关键类和方法进行说明。",
+      "prompt": "以 Spark 3.5.x RDD 为范围，什么是窄依赖和 Shuffle 依赖？请用 map、union 与按 key 聚合举例，说明父子分区之间的依赖如何影响 Stage 划分和分区丢失后的重算。",
       "file": "spark/q.spark.85bf856034cf.json"
     },
     {
@@ -477,7 +504,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "explanation",
-      "prompt": "Spark 3 的 AQE 如何利用运行时统计重新优化物理计划？请解释分区合并、倾斜 Join 优化和 Join 策略切换的触发条件与收益，并说明 DPP 如何把维表过滤条件传导到事实表以减少扫描。",
+      "prompt": "以 Spark 3.5.x 为范围，AQE 如何利用已经执行阶段的运行时统计调整后续物理计划？请选择分区合并、倾斜 Join 或 Join 策略切换中的两个例子，解释条件、收益及验证方式。",
       "file": "spark/q.spark.9e28a43e64f7.json"
     },
     {
@@ -486,7 +513,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "explanation",
-      "prompt": "能详细谈谈 Spark 调度（Scheduling） 的全过程吗？请从一个 Job 提交开始，直到 Tasks 在 Executor 上执行，深入剖析这其中涉及的各个组件（如 DAGScheduler、TaskScheduler、SchedulerBackend 等）是如何协同工作的，并且阐述它们各自的核心职责。",
+      "prompt": "以 Spark 3.5.x 为范围，假设 Spark 应用已启动且已有可用 Executor。一次 RDD Action 触发 Job 后，DAGScheduler、TaskScheduler 和 SchedulerBackend 怎样协作，把计算交给 Executor 并接收结果？请用含一次 Shuffle 的计算说明 Stage 和 Task 的产生顺序。",
       "file": "spark/q.spark.a2e6e3577f1c.json"
     },
     {
@@ -513,7 +540,7 @@
       "visibility": "public",
       "topic": "spark",
       "kind": "scenario",
-      "prompt": "给定每个节点的 CPU、内存和实例单价，你会怎样设计一组成本有效的 Spark executor 配置，并证明成本下降没有以吞吐量或稳定性为代价？请讨论 executor 数、cores、memory、memoryOverhead、driver、shuffle partitions 与 dynamic allocation。",
+      "prompt": "你需要降低一组 Spark 批处理任务的成本，同时维持现有吞吐与稳定性。在提出 executor 配置前，你会收集哪些节点规格、价格、负载和运行指标？请说明如何据此设计候选配置及对照实验，并定义接受新配置的标准。",
       "file": "spark/q.spark.e4f842352f82.json"
     },
     {
@@ -558,7 +585,7 @@
       "visibility": "public",
       "topic": "sql",
       "kind": "coding",
-      "prompt": "给定 employee(employee_id, department_id, salary)，请写 SQL 返回每个部门薪资排名前三的员工。先明确同薪并列时的产品语义，再分别说明需要恰好三行和需要保留并列第三名时应使用什么窗口函数。",
+      "prompt": "给定 employee(employee_id, department_id, salary)，employee_id 唯一，字段均非 NULL。请分别写 SQL：一，按薪资降序返回每部门最多三名员工，同薪按 employee_id 升序；二，返回每部门前三个不同薪资档位的全部员工。输出全部三列，并解释两种查询在并列时的差别。",
       "file": "sql/q.sql.7ab69acb4a1e.json"
     },
     {
@@ -603,7 +630,7 @@
       "visibility": "public",
       "topic": "sql",
       "kind": "coding",
-      "prompt": "给定 monthly_sales(product_id, month, revenue)，其中 month 只取 1、2、3。样例数据为 (100,1,100.00)、(100,2,150.00)、(100,3,200.00)、(200,1,80.00)、(200,2,120.00)、(200,3,90.00)。请写 SQL 把月份行转换为 m1、m2、m3 三列，每个 product_id 输出一行；期望结果为产品 100 对应 100、150、200，产品 200 对应 80、120、90。",
+      "prompt": "给定 monthly_sales(product_id, month, revenue)，month 只取 1、2、3，字段均非 NULL。同一产品同一月份可以有多行销售记录，需要累加；某月无记录时输出 0。请写 SQL，每个出现过的 product_id 输出一行 product_id、m1、m2、m3。样例数据为 (100,1,100.00)、(100,2,150.00)、(100,3,200.00)、(200,1,80.00)、(200,2,120.00)、(200,3,90.00)。",
       "file": "sql/q.sql.conditional-aggregation-pivot.json"
     },
     {
@@ -621,7 +648,7 @@
       "visibility": "public",
       "topic": "sql",
       "kind": "coding",
-      "prompt": "给定 sales(sale_id, product_id, sale_date, quantity, price)，样例数据为 (1,100,'2024-01-01',2,10.00)、(2,100,'2024-01-05',1,10.00)、(3,100,'2024-02-01',3,10.00)、(4,200,'2024-01-03',5,20.00)、(5,200,'2024-02-02',2,20.00)、(6,200,'2024-02-10',4,20.00)、(7,300,'2024-01-10',1,30.00)、(8,300,'2024-03-01',2,30.00)。请写 SQL 按 sale_date 升序计算每个产品的累计销售额，销售额为 quantity * price，输出 product_id、sale_date、cumulative_revenue。还需说明同一产品同一天有多条记录时的结果语义。",
+      "prompt": "给定 sales(sale_id, product_id, sale_date, quantity, price)，sale_id 唯一，sale_date 为 DATE，字段均非 NULL。请按产品逐笔累计 quantity*price，同日多笔按 sale_id 升序。输出 sale_id、product_id、sale_date、cumulative_revenue，并按 product_id、sale_date、sale_id 排序。样例数据为 (1,100,'2024-01-01',2,10.00)、(2,100,'2024-01-05',1,10.00)、(3,100,'2024-02-01',3,10.00)、(4,200,'2024-01-03',5,20.00)、(5,200,'2024-02-02',2,20.00)、(6,200,'2024-02-10',4,20.00)、(7,300,'2024-01-10',1,30.00)、(8,300,'2024-03-01',2,30.00)。",
       "file": "sql/q.sql.cumulative-revenue.json"
     },
     {
@@ -657,7 +684,7 @@
       "visibility": "public",
       "topic": "sql",
       "kind": "coding",
-      "prompt": "一张增量事件表 events(event_id, entity_id, event_time, ingest_time, operation, payload) 可能重复、乱序并包含更新与删除。请用 SQL 产出每个 entity 的最新有效状态，并说明你的去重顺序、迟到数据、相同时间戳、增量重跑和幂等策略。",
+      "prompt": "给定完整事件历史 events(event_id, entity_id, event_time, ingest_time, operation, payload)，字段均非 NULL，operation 为 UPSERT 或 DELETE，UPSERT 的 payload 是完整状态。同一 event_id 的多条记录是该事件修订，先保留 ingest_time 最大者；同 ID 同摄取时间内容冲突的事件隔离。再按 (event_time, ingest_time, event_id) 字典序确定每个实体的最新事件。请写 SQL 返回 entity_id、is_deleted、payload；DELETE 保留墓碑且 payload=NULL。",
       "file": "sql/q.sql.incremental-deduplication.json"
     },
     {
@@ -684,7 +711,7 @@
       "visibility": "public",
       "topic": "sql",
       "kind": "coding",
-      "prompt": "任务运行表 runs(run_id, owner_id, started_at, finished_at, status, ingest_time) 可重复摄取；同 run_id 的 ingest_time 严格不同。请先取最新版本，再计算上一完整 UTC 自然月内各 owner 的成功运行次数和平均耗时，仅保留至少三次有效成功运行的 owner，并返回平均耗时最短的两个不同名次，保留并列。无效时间记录不进入次数和平均值，并单独统计异常数。",
+      "prompt": "给定 runs(run_id, owner_id, started_at, finished_at, status, ingest_time)。同 run_id 的 ingest_time 严格不同，先取最新版本；owner_id 非 NULL，status=SUCCESS 表示成功。月份按 started_at 的 UTC 日期确定。请统计上一完整自然月各 owner 的有效成功次数和平均耗时秒数，仅保留至少三次者，并返回平均耗时最短的两个不同名次，保留并列。有效要求起止时间非 NULL 且 finished_at>=started_at，排名使用未舍入均值。另输出异常计数表：同月 SUCCESS 中结束时间缺失或倒置的记录按 owner 计数；开始时间缺失的 SUCCESS 单列为无法归属月份，按 owner 统计全量最新记录中的数量。",
       "file": "sql/q.sql.pipeline-latency-ranking.json"
     },
     {
@@ -792,7 +819,7 @@
       "visibility": "public",
       "topic": "system-design",
       "kind": "scenario",
-      "prompt": "假设你不熟悉设备租赁业务，却需要为其建立分析模型。请演示开始两分钟如何澄清业务目标、指标消费者、时间与准确性要求，声明合理假设，并从业务过程、事实粒度、历史语义和访问模式组织后续设计。暂不展开完整 schema。",
+      "prompt": "一家设备租赁公司希望用数据分析改善经营。请设计它的分析指标与数据模型。你可以先向我澄清业务目标和流程。",
       "file": "system-design/q.system-design.unfamiliar-domain-discovery.json"
     }
   ]

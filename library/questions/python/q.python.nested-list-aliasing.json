@@ -1,0 +1,55 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "revision": 3,
+  "status": "active",
+  "visibility": "public",
+  "topic": "python",
+  "kind": "scenario",
+  "difficulty": 2,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-27T22:00:08+08:00",
+  "updated_at": "2026-10-02T21:24:43+08:00",
+  "id": "q.python.nested-list-aliasing",
+  "prompt": "一个批处理程序让两条记录复用同一个标签列表。以下两段代码分别独立运行。预测各自输出，解释替换外层列表某个位置与修改共享内层列表的区别。如果每条记录应有独立的标签列表，应如何初始化？\n\n```python\n# A\ninner = [10]\nrows = [inner, inner]\nrows[0].append(30)\nprint(rows, inner)\n\n# B（重新初始化）\ninner = [10]\nrows = [inner, inner]\nrows[0] = [99]\nrows[1][0] = 20\nprint(rows, inner)\n```",
+  "rubric": [
+    "A 输出 [[10, 30], [10, 30]] 和 [10, 30]；B 输出 [[99], [20]] 和 [20]。",
+    "rows = [inner, inner] 创建一个外层列表，两个位置保存同一内层列表的引用，不会自动复制内层列表。",
+    "A 的 append 修改共享内层列表，通过两个位置与 inner 都能观察到变化。",
+    "B 的 rows[0] = [99] 替换外层第一个位置保存的引用；rows[1][0] = 20 修改仍由 rows[1] 和 inner 共享的旧内层列表。",
+    "对本题的一层整数标签可用 rows = [inner.copy() for _ in range(2)]，每次循环创建独立列表。rows.copy() 仅复制外层；[inner.copy()] * 2 仍共享一个内层副本。更深的可变结构应按业务所有权明确复制或重建范围。",
+    "追问1：独立副本结果为 rows=[[99],[10]]、inner=[10]。",
+    "追问2：共享内层原地写入99后，局部重新绑定不影响外部，rows=[[99],[99]]、inner=[99]。"
+  ],
+  "hints": [
+    "画出外层的两个位置分别指向哪个对象。",
+    "赋值左侧有几个下标？append 修改的是取到的列表；对下标赋值则写回相应容器的一个位置。"
+  ],
+  "follow_ups": [
+    "重新执行 inner=[10]; rows=[inner.copy() for _ in range(2)]，随后仅执行 rows[0][0]=99。此时 rows 和 inner 分别是什么？",
+    "另行重新执行 inner=[10]; rows=[inner,inner]。定义 clean(x)，函数依次执行 x[0]=99 和 x=[100]，无返回值。调用 clean(rows[0]) 后，rows 和 inner 分别是什么？"
+  ],
+  "coach_notes": [
+    "只展示主问或当前一项追问；Rubric中追问项目仅在实际提出后评价，未提出的阶段不计遗漏。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "8ab02e97a4c149e2b95a9ccbf2653078eaf0b7905a8e8b669f1062cf9d20de89",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:24:43+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。嵌套列表追问：重新初始化指向不明：追问1的独立初始化可能指原代码，也可能指回答中的独立副本；追问2也未固定执行起点。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：一个批处理程序让两条记录复用同一个标签列表。以下两段代码分别独立运行。预测各自输出，解释替换外层列表某个位置与修改共享内层列表的区别。如果每条记录应有独立的标签列表，应如何初始化？\n\n```python\n# A\ninner = [10]\nrows = [inner, inner]\nrows[0].append(30)\nprint(rows, inner)\n\n# B（重新初始化）\ninner = [10]\nrows = [inner, inner]\nrows[0] = [99]\nrows[1][0] = 20\nprint(rows, inner)\n```",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕嵌套列表追问；后续2项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：重新执行 inner=[10]; rows=[inner.copy() for _ in range(2)]，随后仅执行 rows[0][0]=99。此时 rows 和 inner 分别是什么？；另行重新执行 inner=[10]; rows=[inner,inner]。定义 clean(x)，函数依次执行 x[0]=99 和 x=[100]，无返回值。调用 clean(rows[0]) 后，rows 和 inner 分别是什么？",
+      "evaluation_alignment": "主问保留原评分；补齐实际提出后的追问评分：追问1：独立副本结果为 rows=[[99],[10]]、inner=[10]。；追问2：共享内层原地写入99后，局部重新绑定不影响外部，rows=[[99],[99]]、inner=[99]。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
+}

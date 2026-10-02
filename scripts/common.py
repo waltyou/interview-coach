@@ -49,7 +49,8 @@ REVIEW_INTERVAL_DAYS = {0: 1, 1: 2, 2: 4, 3: 10, 4: 30}
 
 QUESTION_INTENT_PATTERN = re.compile(
     r"(为什么|为何|如何|怎么|怎样|什么是|是什么|解释|请|能否|是否|哪些|哪种|"
-    r"谈谈|设计|实现|如果|在什么情况下|区别|对比|比较|阐述|分析|返回|\bvs\.?\b)",
+    r"谈谈|讲述|什么|哪里|设计|实现|如果|在什么情况下|区别|对比|比较|阐述|分析|返回|统计|输出|\bvs\.?\b|"
+    r"\b(?:how|what|why|when|which|describe|explain|implement|design|could|would|calculate)\b)",
     re.IGNORECASE,
 )
 DANGLING_REFERENCE_PATTERN = re.compile(

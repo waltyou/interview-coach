@@ -50,6 +50,10 @@
 - 新导入内容默认 private。不确定隐私、版权或授权边界时，也按 private 处理。
 - 不要把私人 Source、Question、回答、评价、Job Brief、面试复盘或简历移入 `library/`。
 
+## 题目质量
+
+新建、导入、复盘派生或修订 Question 前读取 `protocol/QUESTION-QUALITY.md`。自动导入先生成题库外的私人草稿；Agent 完成题干、契约、问法、范围、追问、评分与事实依据的语义检查，再通过 `scripts/author_question.py` 入库。教练备注不作为候选人题干，未提出的追问不作漏答扣分。
+
 ## Coaching 规则
 
 - 优先延续唯一 active PreparationCycle；没有合适周期时再和用户建立新周期。

@@ -2,7 +2,7 @@
   "$schema": "../../../protocol/schemas/question.schema.json",
   "schema_version": 3,
   "id": "q.iceberg.table-format-foundations",
-  "revision": 1,
+  "revision": 2,
   "status": "active",
   "visibility": "public",
   "topic": "iceberg",
@@ -14,15 +14,12 @@
     "data-platform-engineer"
   ],
   "origin": "generated",
-  "prompt": "什么是 Apache Iceberg，它如何把对象存储或分布式文件系统中的不可变数据文件组织成一张支持事务和演进的分析表？请从 catalog、metadata JSON、snapshot、manifest list、manifest、data/delete files 的层级解释一次读取和一次写入，并说明 schema evolution、hidden partitioning、time travel、并发提交和 row-level update/delete 分别如何实现。",
+  "prompt": "对象存储中已经有一批 Parquet 文件。引入 Apache Iceberg 后，它会怎样把这些文件组织成一张可一致读取和提交更新的分析表？请围绕一次读取和一次写入，解释 catalog、表元数据、snapshot 与 manifest 的关系。",
   "rubric": [
-    "准确定位 Iceberg 是开放 table format，不是对象存储、file format、compute engine 或数据湖本身",
-    "说明 catalog 指向当前 metadata，metadata 保存 schema、partition spec 和 snapshot log，snapshot 通过 manifest list 与 manifests 定义完整文件集合",
-    "解释 manifest 的 partition tuple 与列级统计如何支持 scan planning、partition pruning 和 data skipping",
-    "说明数据与 metadata 大多不可变，提交通过原子切换 metadata pointer 与 optimistic concurrency validation 实现一致性",
-    "说明稳定 field ID 支撑 schema evolution，hidden partition transforms 使查询与物理分区布局解耦",
-    "区分 copy-on-write 与 merge-on-read/delete files，并指出 update/delete 仍有文件重写、读时合并与 compaction 成本",
-    "说明 snapshots 带来 snapshot isolation、time travel 和 rollback，同时需要 snapshot expiration、orphan cleanup、compaction 等维护"
+    "区分table format、文件格式、计算和存储",
+    "沿catalog、metadata、snapshot和manifest说明一次一致读取",
+    "写入生成文件与元数据并经提交形成可见版本",
+    "追问：并发、演进、历史读取和行级变更按明确版本解释"
   ],
   "hints": [
     "从 catalog 一直画到 Parquet data file，先解释一次 scan planning。",
@@ -30,13 +27,30 @@
     "Metadata commit 很轻，不代表任意行级修改没有数据维护成本。"
   ],
   "follow_ups": [
-    "两个 writer 同时基于同一个 snapshot 写入时，哪些冲突可以安全重试，哪些必须失败？",
-    "Iceberg 为什么能够在不重写历史数据的情况下演进 partition spec？",
-    "如果从不做 compaction 和 snapshot expiration，表会出现哪些性能与成本问题？",
-    "Iceberg、Parquet 和 REST Catalog 各自解决什么问题？"
+    "两个writer基于同一snapshot提交时，怎样判断冲突与重试？",
+    "schema与分区演进怎样影响历史数据读取？",
+    "time travel和行级update/delete怎样实现？请说明格式与引擎版本。"
   ],
   "source_refs": [],
   "evaluation_basis": "rubric",
   "created_at": "2026-08-19T21:59:41+08:00",
-  "updated_at": "2026-08-19T21:59:41+08:00"
+  "updated_at": "2026-10-02T21:17:53+08:00",
+  "coach_notes": [
+    "只展示主问或当前一项追问；Rubric中追问项目仅在实际提出后评价，未提出的阶段不计遗漏。"
+  ],
+  "quality_review": {
+    "version": 1,
+    "content_sha256": "45b7d1577606cafa2dae6358814d01b3b9bb619f0dd3053efab383cd2ea71bc0",
+    "reviewer": "Codex",
+    "reviewed_at": "2026-10-02T21:17:51+08:00",
+    "checks": {
+      "standalone": "已脱离Source重读。Iceberg：基础题承载整套功能：基本定义、读写链路、schema、分区、历史、并发和行级变更全部在主问中，缺少深入交流的停顿点。；现题干已修复该问题。",
+      "answer_contract": "本题口径核对：对象存储中已经有一批 Parquet 文件。引入 Apache Iceberg 后，它会怎样把这些文件组织成一张可一致读取和提交更新的分析表？请围绕一次读取和一次写入，解释 catalog、表元数据、snapshot 与 manifest 的关系。",
+      "interview_voice": "主问保留面试官提问；教练安排不混入候选人文本。需备课的事实与角色扮演约定保存在coach_notes。",
+      "scope": "首问围绕Iceberg；后续3项逐个提出。",
+      "followup_context": "已逐项核对继承条件及新增字段或执行起点：两个writer基于同一snapshot提交时，怎样判断冲突与重试？；schema与分区演进怎样影响历史数据读取？；time travel和行级update/delete怎样实现？请说明格式与引擎版本。",
+      "evaluation_alignment": "本次对照题干核对的评价点：区分table format、文件格式、计算和存储；沿catalog、metadata、snapshot和manifest说明一次一致读取；写入生成文件与元数据并经提交形成可见版本；追问：并发、演进、历史读取和行级变更按明确版本解释。未提出的追问不计遗漏。",
+      "factual_basis": "原来源保持不变；个人项目只沿用原题已记录事实；新增接口口径与角色扮演条件是练习设定。版本敏感条目要求声明所选版本并验证，不声称完成最新版本核验。"
+    }
+  }
 }

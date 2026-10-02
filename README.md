@@ -97,7 +97,7 @@ python scripts/coach_model.py status
 python scripts/validate.py
 ```
 
-扫描 `source-list.txt` 中配置的资料：
+扫描 `source-list.txt` 中配置的资料，生成待整理草稿。Coach 完成[题目质量检查](protocol/QUESTION-QUALITY.md)后再加入题库：
 
 ```powershell
 python scripts/initialize.py

@@ -67,7 +67,7 @@ AttemptEvent
 CycleProgress / MasteryState / Dashboard / Report
 ```
 
-原始资料并不会自动变成大量题目。Agent 只提炼能够独立理解、确有训练价值的 Question。每次回答保存为不可变事件，掌握度和 Dashboard 可以随时重建。
+原始资料先形成草稿。Coach 会补足影响作答的输入输出和业务条件，把复杂考点分成主问与追问，并核对评分依据后再加入题库。系统设计题仍保留澄清需求的空间，行为题允许你选择真实经历。故事建议和诊断结论留在教练侧，未提出的追问不会算作漏答。具体维护流程见 [题目质量协议](../protocol/QUESTION-QUALITY.md)。每次回答保存为不可变事件，掌握度和 Dashboard 可以随时重建。
 
 ## Onboarding 生命周期
 
