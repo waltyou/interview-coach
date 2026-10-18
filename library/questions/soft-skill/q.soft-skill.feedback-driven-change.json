@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.soft-skill.feedback-driven-change",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "soft-skill",
+  "kind": "behavioral",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请讲述一次你收到难以接受、但后来影响了你工作方式的反馈。结合数据工程中的设计、交付或协作，说明你如何核实反馈、决定改变什么，以及如何知道改变有效。",
+  "rubric": [
+    "说清反馈指向的具体行为及影响，避免只用过于追求完美等抽象标签。",
+    "区分初始感受与后续行动，通过实例、提问或其他证据理解反馈。",
+    "能辨别反馈中的有效部分和适用边界，解释有分歧时如何验证。",
+    "描述可观察的行为变化、尝试周期及向反馈者回访的过程。",
+    "用后续项目或合作结果检验变化，承认尚未解决的问题。"
+  ],
+  "hints": [
+    "回忆别人具体希望你停止、开始或继续的行为。",
+    "比较收到反馈前后两次相似任务中的实际做法。"
+  ],
+  "follow_ups": [
+    "如果你认为反馈建立在错误事实上，会怎样沟通？",
+    "只有主观评价、没有量化指标时，如何验证改善？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-10-02T15:17:22+08:00",
+  "updated_at": "2026-10-02T15:17:22+08:00"
+}

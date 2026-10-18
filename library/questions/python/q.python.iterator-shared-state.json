@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "python",
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-26T20:57:07+08:00",
+  "updated_at": "2026-09-26T20:57:07+08:00",
+  "id": "q.python.iterator-shared-state",
+  "kind": "scenario",
+  "difficulty": 2,
+  "prompt": "数据处理任务用一个消费者预览记录，再由另一个消费者处理余下记录。预测下面代码每一行 print 的输出，解释 iterable 与 iterator 的区别、遍历状态属于哪个对象，以及为什么第二个 for 可以接着读取。若两个消费者都需要完整数据，应如何设计接口？\n\n```python\nrecords = [10, 20, 30]\na = iter(records)\nb = iter(a)\nc = iter(records)\nprint(a is b)\nfor value in a:\n    print(value)\n    break\nfor value in b:\n    print(value)\nprint(list(a))\nprint(list(c))\nprint(records)\n```",
+  "rubric": [
+    "按顺序给出 True、10、20、30、[]、[10, 20, 30]、[10, 20, 30]；第二个 for 产生 20 和 30 两行输出",
+    "说明列表是 iterable；iter(records) 每次创建独立迭代器，iter(a) 返回 a 自身，因此 a、b 共享遍历状态而 c 独立",
+    "说明 for 先获取迭代器，再反复取值，收到 StopIteration 时结束；break 保留当前进度，不重置迭代器",
+    "说明消耗迭代器不会删除列表元素；耗尽后的同一个迭代器继续保持耗尽",
+    "两个完整消费者可对列表分别创建迭代器；只能单次消费的来源需要缓存、可重放来源或调整为单遍处理，不能靠 iter(existing_iterator) 复制进度"
+  ],
+  "hints": [
+    "画出变量指向的对象，再给每个迭代器标出一份进度。",
+    "比较 iter(records) 与 iter(a) 返回的对象；for 的退出方式也会影响下一次读取位置。"
+  ],
+  "follow_ups": [
+    "如果记录中包含 None，for 会因此结束吗？结束信号是什么？",
+    "如果两个消费者速度相差很大，使用 itertools.tee 时缓冲可能增长到什么程度？"
+  ]
+}

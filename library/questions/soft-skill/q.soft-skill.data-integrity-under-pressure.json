@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.soft-skill.data-integrity-under-pressure",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "soft-skill",
+  "kind": "behavioral",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "某数据交付即将用于业务决策，你发现报告遗漏了一批失败样本，修复会错过承诺时间。负责人建议先按当前口径交付，之后再补。你会如何查证影响、沟通风险、提出可执行选择，并决定是否升级？如有类似真实经历，可据实说明。",
+  "rubric": [
+    "先核实样本遗漏、指标口径及决策影响，区分错误、合理口径差异与尚未证实的推测。",
+    "明确如实呈现数据和已知限制的责任，保留可追踪证据。",
+    "理解时间约束，提出标注限制、缩小使用范围、延迟部分交付或更正等具体选项。",
+    "向正确的责任人沟通影响、紧迫程度和所需决定；对重大持续风险及时升级。",
+    "说明后续更正、通知受影响用户和完善检查机制，避免仅以准时交付判断成功。"
+  ],
+  "hints": [
+    "先问谁会用这个数字作什么决定。",
+    "把可选交付方式与各自可能误导用户的风险摆在一起。"
+  ],
+  "follow_ups": [
+    "负责人坚持隐去已知限制，你会如何记录和升级？",
+    "如果遗漏对指标影响很小，哪些处理可以相应简化？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-10-02T15:17:22+08:00",
+  "updated_at": "2026-10-02T15:17:22+08:00"
+}

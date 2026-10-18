@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.soft-skill.mentoring-reduces-key-person-risk",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "soft-skill",
+  "kind": "behavioral",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请讲述一次你通过培养同事或转移知识，减少数据团队对你个人依赖的经历。说明最初的能力缺口、你的培养与授权方式、交付风险控制，以及对方后来独立完成工作的证据。",
+  "rubric": [
+    "识别具体的单点依赖及其对值班、交付或设计时间的影响。",
+    "了解对方目标与起点，拆出有真实责任且难度递进的任务。",
+    "使用示范、共同处理、独立实践和反馈逐步转移责任，区分培养与简单甩任务。",
+    "提供运行手册、权限边界、复核或兜底措施，控制学习期间的生产风险。",
+    "用独立排障、设计解释或交付表现验证能力，而非只统计培训次数。",
+    "说明释放的时间如何投入团队长期问题，并承认短期指导成本。"
+  ],
+  "hints": [
+    "选一个以前只有你能处理、后来别人能独立处理的任务。",
+    "说明你何时决定减少介入，以及判断依据。"
+  ],
+  "follow_ups": [
+    "进度紧张时，你怎样避免又把所有任务接回来？",
+    "对方采用与你不同但可行的方法时，你如何评审？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-10-02T15:17:22+08:00",
+  "updated_at": "2026-10-02T15:17:22+08:00"
+}

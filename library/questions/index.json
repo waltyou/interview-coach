@@ -301,6 +301,33 @@
       "file": "python/q.python.ee452f006c7b.json"
     },
     {
+      "id": "q.python.generator-lazy-reuse",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "scenario",
+      "prompt": "ETL 作业用生成器转换数据，先求和，再把转换结果交给下游。请给出以下代码的完整输出顺序，解释函数调用、next、yield 和函数结束分别发生了什么，并诊断下游读不到数据的原因。如果转换代价很高，或上游只能读取一次，你会如何修改？\n\n```python\ndef transform(records):\n    print('start')\n    for value in records:\n        print('read', value)\n        yield value * value\n\nsource = iter([2, 3])\ng = transform(source)\nprint('created')\nprint(next(g))\nprint(sum(g))\nprint(list(g))\nprint(list(transform(source)))\n```\n\n比较物化结果、重建生成器和单遍同时聚合与输出的时间、内存与副作用成本。",
+      "file": "python/q.python.generator-lazy-reuse.json"
+    },
+    {
+      "id": "q.python.iterator-shared-state",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "scenario",
+      "prompt": "数据处理任务用一个消费者预览记录，再由另一个消费者处理余下记录。预测下面代码每一行 print 的输出，解释 iterable 与 iterator 的区别、遍历状态属于哪个对象，以及为什么第二个 for 可以接着读取。若两个消费者都需要完整数据，应如何设计接口？\n\n```python\nrecords = [10, 20, 30]\na = iter(records)\nb = iter(a)\nc = iter(records)\nprint(a is b)\nfor value in a:\n    print(value)\n    break\nfor value in b:\n    print(value)\nprint(list(a))\nprint(list(c))\nprint(records)\n```",
+      "file": "python/q.python.iterator-shared-state.json"
+    },
+    {
+      "id": "q.python.lazy-take-iterator",
+      "status": "active",
+      "visibility": "public",
+      "topic": "python",
+      "kind": "coding",
+      "prompt": "数据管道需要预览上游的前 limit 条记录，之后让原上游继续供其他处理使用。实现迭代器类 Take(records, limit)，不使用 yield、切片或整体转为 list。records 可以是只能遍历一次的迭代器，记录可包含 None、0、False；limit 已保证为非负整数。Take 每次请求时最多读取一条上游记录，达到 limit 或上游耗尽时结束，并在结束后持续保持耗尽。请实现 __iter__ 和 __next__，解释 for 如何使用它们，并验证空输入、limit 为零、输入不足和重复 next 的行为。\n\n```python\nsource = iter([None, 0, False, 7])\npreview = Take(source, 2)\nassert iter(preview) is preview\nassert list(preview) == [None, 0]\nassert list(source) == [False, 7]\n```",
+      "file": "python/q.python.lazy-take-iterator.json"
+    },
+    {
       "id": "q.python.list-augmented-assignment",
       "status": "active",
       "visibility": "public",
@@ -382,6 +409,24 @@
       "file": "soft-skill/q.soft-skill.audience-adaptation.json"
     },
     {
+      "id": "q.soft-skill.data-integrity-under-pressure",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "某数据交付即将用于业务决策，你发现报告遗漏了一批失败样本，修复会错过承诺时间。负责人建议先按当前口径交付，之后再补。你会如何查证影响、沟通风险、提出可执行选择，并决定是否升级？如有类似真实经历，可据实说明。",
+      "file": "soft-skill/q.soft-skill.data-integrity-under-pressure.json"
+    },
+    {
+      "id": "q.soft-skill.difficult-peer-feedback",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请讲述一次你向没有汇报关系的同事提出困难反馈的经历，例如其数据变更反复引发返工或评审沟通影响合作。你如何核实事实、选择沟通方式、共同确定改进，并跟进效果？",
+      "file": "soft-skill/q.soft-skill.difficult-peer-feedback.json"
+    },
+    {
       "id": "q.soft-skill.evidence-bounded-decisions",
       "status": "active",
       "visibility": "public",
@@ -398,6 +443,60 @@
       "kind": "behavioral",
       "prompt": "你接到一个范围复杂、信息不完整、要求 10 天上线的数据项目。你会如何拆解这 10 天？请说明如何澄清目标、识别风险、切出可交付的最小范围、安排设计与实现、持续同步，并在发现无法按原范围交付时如何处理。",
       "file": "soft-skill/q.soft-skill.f6ae997e45a3.json"
+    },
+    {
+      "id": "q.soft-skill.failure-accountability-learning",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请讲述一次你的判断或行动导致数据项目未达到预期的经历。说明当时为何作出该选择、何时发现偏差、你承担了什么责任、如何控制损失，以及后来在哪次工作中验证了改进。",
+      "file": "soft-skill/q.soft-skill.failure-accountability-learning.json"
+    },
+    {
+      "id": "q.soft-skill.feedback-driven-change",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请讲述一次你收到难以接受、但后来影响了你工作方式的反馈。结合数据工程中的设计、交付或协作，说明你如何核实反馈、决定改变什么，以及如何知道改变有效。",
+      "file": "soft-skill/q.soft-skill.feedback-driven-change.json"
+    },
+    {
+      "id": "q.soft-skill.mentoring-reduces-key-person-risk",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请讲述一次你通过培养同事或转移知识，减少数据团队对你个人依赖的经历。说明最初的能力缺口、你的培养与授权方式、交付风险控制，以及对方后来独立完成工作的证据。",
+      "file": "soft-skill/q.soft-skill.mentoring-reduces-key-person-risk.json"
+    },
+    {
+      "id": "q.soft-skill.new-team-trust-building",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请讲述一次你加入陌生的数据团队或接手遗留平台的经历。面对与你以往习惯不同的架构和流程，你怎样理解现状、建立信任、交付早期成果，再推动较大改变？",
+      "file": "soft-skill/q.soft-skill.new-team-trust-building.json"
+    },
+    {
+      "id": "q.soft-skill.project-impact-ownership",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请用三分钟介绍一个你最有代表性的数据工程项目。说明业务价值、复杂度、你负责的范围、两个关键决策、可验证的结果，以及交付后你继续承担的责任；随后接受对其中一个决策的深入追问。",
+      "file": "soft-skill/q.soft-skill.project-impact-ownership.json"
+    },
+    {
+      "id": "q.soft-skill.technical-debt-investment",
+      "status": "active",
+      "visibility": "public",
+      "topic": "soft-skill",
+      "kind": "behavioral",
+      "prompt": "请讲述一次你在数据平台短期交付与长期可靠性、维护成本之间作取舍的经历。你如何证明投入或暂缓技术债治理的价值，争取资源、分阶段实施，并验证收益？",
+      "file": "soft-skill/q.soft-skill.technical-debt-investment.json"
     },
     {
       "id": "q.spark.0be84c49d2ca",
@@ -787,6 +886,24 @@
       "file": "system-design/q.system-design.controlled-operations-automation.json"
     },
     {
+      "id": "q.system-design.hot-key-online-repartition",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "system-design",
+      "prompt": "某实时数据聚合平台按租户分片，一个大租户贡献了 40% 的写入并拖慢其他租户。请设计定位热点、临时止损和在线迁移方案。说明多 key 分片偏斜与单 key 热点的区别，以及迁移期间怎样维持正确性和控制延迟。",
+      "file": "system-design/q.system-design.hot-key-online-repartition.json"
+    },
+    {
+      "id": "q.system-design.latest-state-fanout",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "system-design",
+      "prompt": "设计一个实时设备状态看板：高峰有 100 万在线用户，每人订阅 50 台设备，共有 1000 万台设备；活跃设备平均每秒更新一次，每条状态约 100 字节。看板只需最新状态，目标端到端 p99 新鲜度为两秒；审计端另需保留每次原始变化。请澄清活跃比例和热点分布，设计摄取、聚合、分发、客户端连接及恢复流程。",
+      "file": "system-design/q.system-design.latest-state-fanout.json"
+    },
+    {
       "id": "q.system-design.migration-validation-rollback",
       "status": "active",
       "visibility": "public",
@@ -814,6 +931,15 @@
       "file": "system-design/q.system-design.shared-platform-boundaries.json"
     },
     {
+      "id": "q.system-design.stateful-stream-failover",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "system-design",
+      "prompt": "一个流式处理器按设备聚合多个上游的增量事件并输出最新状态。主备节点各自订阅上游，上游可能乱序、重复或丢包；主节点失联后希望十秒内恢复服务。请设计可验证的恢复与切换方案，说明状态一致性的条件，以及网络分区时如何防止旧主继续产生有效输出。",
+      "file": "system-design/q.system-design.stateful-stream-failover.json"
+    },
+    {
       "id": "q.system-design.unfamiliar-domain-discovery",
       "status": "active",
       "visibility": "public",
@@ -821,6 +947,15 @@
       "kind": "scenario",
       "prompt": "一家设备租赁公司希望用数据分析改善经营。请设计它的分析指标与数据模型。你可以先向我澄清业务目标和流程。",
       "file": "system-design/q.system-design.unfamiliar-domain-discovery.json"
+    },
+    {
+      "id": "q.system-design.workload-evidence-storage-choice",
+      "status": "active",
+      "visibility": "public",
+      "topic": "system-design",
+      "kind": "system-design",
+      "prompt": "一个三人数据团队要为内部实时指标平台选择服务存储。已知需求是每秒 2 万次更新、峰值每秒 5000 次按租户查询最近一小时的指标，查询 p99 小于 200ms，数据保留 90 天；团队熟悉关系型数据库，有人建议引入新的分布式存储。请澄清缺失约束，提出至少两个方案，并设计能支持选型的验证过程。",
+      "file": "system-design/q.system-design.workload-evidence-storage-choice.json"
     }
   ]
 }

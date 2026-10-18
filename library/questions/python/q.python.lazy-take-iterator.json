@@ -1,0 +1,36 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "python",
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-09-26T20:57:07+08:00",
+  "updated_at": "2026-09-26T20:57:07+08:00",
+  "id": "q.python.lazy-take-iterator",
+  "kind": "coding",
+  "difficulty": 2,
+  "prompt": "数据管道需要预览上游的前 limit 条记录，之后让原上游继续供其他处理使用。实现迭代器类 Take(records, limit)，不使用 yield、切片或整体转为 list。records 可以是只能遍历一次的迭代器，记录可包含 None、0、False；limit 已保证为非负整数。Take 每次请求时最多读取一条上游记录，达到 limit 或上游耗尽时结束，并在结束后持续保持耗尽。请实现 __iter__ 和 __next__，解释 for 如何使用它们，并验证空输入、limit 为零、输入不足和重复 next 的行为。\n\n```python\nsource = iter([None, 0, False, 7])\npreview = Take(source, 2)\nassert iter(preview) is preview\nassert list(preview) == [None, 0]\nassert list(source) == [False, 7]\n```",
+  "rubric": [
+    "初始化时保存唯一的 iter(records) 和剩余额度，不提前读取元素；__iter__ 返回 self",
+    "__next__ 在额度为零或已耗尽时先抛出 StopIteration，避免额外消费上游；否则调用 next(upstream)，成功后减少额度并返回值",
+    "捕获上游 StopIteration 后标记自身耗尽并重新抛出；完成后持续抛出 StopIteration，其他异常按约定传播而非一概视为正常结束",
+    "None、0、False 均作为正常记录返回，不用值的真假判断结束",
+    "解释 for 通过迭代器协议反复取值并处理 StopIteration；消耗 Take 只推进原上游实际取得的那些元素",
+    "验证示例、空输入、limit=0 不消耗上游、上游不足 limit、到达限制后的重复 next；额外状态空间 O(1)，取得 k 条的包装开销 O(k)"
+  ],
+  "hints": [
+    "把剩余额度与上游是否结束作为状态；先判断额度，再向上游取值。",
+    "下一条数据的值与是否还有下一条数据是两个不同问题。"
+  ],
+  "follow_ups": [
+    "如何用生成器或 itertools.islice 表达相同的有限预览行为？",
+    "如果 __iter__ 每次重置剩余额度，两个消费者交错使用同一个 Take 会出现什么问题？"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.soft-skill.difficult-peer-feedback",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "soft-skill",
+  "kind": "behavioral",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请讲述一次你向没有汇报关系的同事提出困难反馈的经历，例如其数据变更反复引发返工或评审沟通影响合作。你如何核实事实、选择沟通方式、共同确定改进，并跟进效果？",
+  "rubric": [
+    "说明可观察的行为、影响和自己可能缺少的上下文，避免把人格判断当事实。",
+    "说明反馈为什么必要，选择尊重对方且时机合适的沟通渠道。",
+    "呈现关键表达、倾听对方解释和据此调整判断的过程。",
+    "形成明确的改进行为、支持方式和回访时间，保留对方自主性。",
+    "同时观察工作结果与合作关系；持续影响交付时按责任边界升级。"
+  ],
+  "hints": [
+    "将反馈整理为具体行为、造成的影响和可讨论的下一步。",
+    "想一想你给对方提供了哪些帮助。"
+  ],
+  "follow_ups": [
+    "对方认为你越界时，你会怎么回应？",
+    "对方努力很大但问题持续，你如何调整支持或升级？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-10-02T15:17:22+08:00",
+  "updated_at": "2026-10-02T15:17:22+08:00"
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.system-design.hot-key-online-repartition",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "system-design",
+  "kind": "system-design",
+  "difficulty": 4,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "某实时数据聚合平台按租户分片，一个大租户贡献了 40% 的写入并拖慢其他租户。请设计定位热点、临时止损和在线迁移方案。说明多 key 分片偏斜与单 key 热点的区别，以及迁移期间怎样维持正确性和控制延迟。",
+  "rubric": [
+    "按租户、key 和分片观察吞吐、状态大小、CPU、IO、队列及尾延迟，验证读热点、写热点或大状态等不同成因。",
+    "先做限流、配额、隔离和背压等止损，说明公平性与业务代价。",
+    "区分移动多个 key 与拆分单 key；单 key 可在运算可分解时局部聚合后归并，要求严格顺序的操作说明串行瓶颈或业务语义调整。",
+    "说明分片映射版本、快照或状态复制、增量追赶、切换屏障及重试去重的顺序。",
+    "处理旧路由、在途请求、迁移失败和回滚，保证切换期间只有授权 owner 生效或有明确冲突处理规则。",
+    "限制迁移带宽和并发，用负载阈值、冷却期与收益判断避免反复搬迁。",
+    "用热点突发和迁移中故障验证聚合结果、延迟和其他租户隔离效果。"
+  ],
+  "hints": [
+    "先确认热点由很多 key 组成，还是一个必须串行处理的 key。",
+    "沿快照、追赶、切换三个阶段逐个检查新写入去向。"
+  ],
+  "follow_ups": [
+    "简单给 key 加盐会破坏什么语义？",
+    "热点每几分钟更换一次，怎样防止持续迁移造成更大负载？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-10-02T15:17:22+08:00",
+  "updated_at": "2026-10-02T15:17:22+08:00"
+}

@@ -1,0 +1,37 @@
+{
+  "$schema": "../../../protocol/schemas/question.schema.json",
+  "schema_version": 3,
+  "id": "q.soft-skill.failure-accountability-learning",
+  "revision": 1,
+  "status": "active",
+  "visibility": "public",
+  "topic": "soft-skill",
+  "kind": "behavioral",
+  "difficulty": 3,
+  "target_roles": [
+    "senior-data-engineer"
+  ],
+  "origin": "generated",
+  "prompt": "请讲述一次你的判断或行动导致数据项目未达到预期的经历。说明当时为何作出该选择、何时发现偏差、你承担了什么责任、如何控制损失，以及后来在哪次工作中验证了改进。",
+  "rubric": [
+    "明确失败的原定目标、实际偏差及影响，允许结果没有完全挽回。",
+    "如实区分当时的证据与事后认识，承认本可发现却遗漏的信号，不补造事前理由。",
+    "说明个人责任和外部约束，避免把失败完全归因于别人。",
+    "描述发现偏差、及时沟通、恢复或止损的具体行动与取舍。",
+    "把教训落实为决策、验证或协作机制，说明成本和适用边界。",
+    "以之后的真实行为和结果证明改变；尚无后续验证时明确标为待验证。"
+  ],
+  "hints": [
+    "找一个你确实需要改变做法的例子。",
+    "定位发现原假设不成立的时刻，再讲你下一步做了什么。"
+  ],
+  "follow_ups": [
+    "哪些风险当时就能合理预见？你为什么漏掉了？",
+    "采取了合理流程却仍然失败时，你会保留什么、改变什么？",
+    "改进措施是否让交付变慢？怎样判断代价值得？"
+  ],
+  "source_refs": [],
+  "evaluation_basis": "rubric",
+  "created_at": "2026-10-02T15:17:22+08:00",
+  "updated_at": "2026-10-02T15:17:22+08:00"
+}
