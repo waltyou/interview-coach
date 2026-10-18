@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Interview Coach Dashboard</title>
+  <style>
+    :root {
+      --ink: #17211b;
+      --muted: #687169;
+      --line: #d5dad4;
+      --paper: #f3f1e9;
+      --panel: #fffdf7;
+      --nav: #172019;
+      --green: #275d45;
+      --green-soft: #dbeadf;
+      --amber: #bc7028;
+      --amber-soft: #f6e5c8;
+      --red: #9a4e45;
+      --red-soft: #f2dcda;
+      --blue: #315f78;
+      --blue-soft: #dce8ee;
+      --shadow: 0 16px 50px rgba(30, 42, 33, .08);
+      --sans: Inter, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --serif: Georgia, "Noto Serif SC", "Songti SC", serif;
+      --mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); }
+    a { color: inherit; }
+    button, input, select { font: inherit; }
+
+    .shell { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100vh; }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 30px 22px;
+      color: #f5f7f2;
+      background: var(--nav);
+      overflow-y: auto;
+    }
+
+    .brand { font: 750 18px/1.08 var(--mono); letter-spacing: -.04em; }
+    .brand small { display: block; margin-top: 8px; color: #90a096; font-size: 9px; letter-spacing: .11em; }
+
+    .nav { display: grid; gap: 4px; margin-top: 42px; }
+    .nav a { padding: 10px 12px; border-radius: 8px; color: #b3beb6; font-size: 12px; text-decoration: none; }
+    .nav a:hover, .nav a.active { color: white; background: #2c372e; }
+    .nav .nav-label { margin: 22px 12px 6px; color: #718078; font: 700 9px/1 var(--mono); letter-spacing: .11em; text-transform: uppercase; }
+
+    .health {
+      margin-top: 38px;
+      padding: 14px;
+      border: 1px solid #3c493f;
+      border-radius: 10px;
+      color: #aab7ae;
+      font: 10px/1.65 var(--mono);
+    }
+    .health strong { color: #71bd8a; }
+    .dot { display: inline-block; width: 8px; height: 8px; margin-right: 7px; border-radius: 50%; background: #55aa74; box-shadow: 0 0 0 4px rgba(85,170,116,.13); }
+
+    .main { min-width: 0; }
+    .content { width: min(1180px, calc(100% - 64px)); margin: 0 auto; padding: 42px 0 90px; }
+
+    .topbar { display: flex; justify-content: space-between; gap: 30px; align-items: flex-end; padding-bottom: 28px; border-bottom: 1px solid #9ca49d; }
+    .eyebrow { color: var(--green); font: 700 10px/1.4 var(--mono); letter-spacing: .13em; text-transform: uppercase; }
+    .topbar h1 { max-width: 720px; margin: 9px 0 0; font: 500 clamp(40px, 5.2vw, 66px)/.96 var(--serif); letter-spacing: -.045em; }
+    .build-meta { color: #687169; font: 10px/1.65 var(--mono); text-align: right; }
+
+    .section { padding-top: 42px; scroll-margin-top: 16px; }
+    .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 17px; }
+    .section-head h2 { margin: 0; font-size: 23px; letter-spacing: -.035em; }
+    .section-head p { max-width: 650px; margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
+    .section-index { color: #8a928c; font: 700 10px/1 var(--mono); }
+
+    .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .metric { min-height: 132px; padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,253,247,.84); box-shadow: 0 7px 26px rgba(31,44,34,.045); }
+    .metric-link { position: relative; display: block; color: inherit; text-decoration: none; transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+    .metric-link::after { content: "↘"; position: absolute; top: 16px; right: 17px; color: #8a938c; font: 700 13px/1 var(--mono); }
+    .metric-link:hover, .metric-link:focus-visible { border-color: #7d9c87; box-shadow: 0 12px 32px rgba(31,74,50,.12); transform: translateY(-2px); outline: none; }
+    .metric-label { color: var(--muted); font-size: 11px; }
+    .metric-value { display: block; margin-top: 14px; font: 500 40px/1 var(--serif); }
+    .metric-detail { display: block; margin-top: 10px; color: #879089; font: 10px/1.4 var(--mono); }
+
+    .panel { border: 1px solid var(--line); border-radius: 16px; background: rgba(255,253,247,.9); box-shadow: var(--shadow); overflow: hidden; }
+    .panel-head { display: flex; justify-content: space-between; gap: 20px; align-items: center; padding: 17px 19px; border-bottom: 1px solid var(--line); }
+    .panel-head h3 { margin: 0; font-size: 15px; }
+    .panel-head small { color: #818a83; font: 10px/1.4 var(--mono); }
+
+    .cycle-summary { display: grid; grid-template-columns: 1.25fr .75fr; }
+    .cycle-main { padding: 22px; border-right: 1px solid var(--line); }
+    .cycle-title { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+    .cycle-title h3 { margin: 0; font-size: 22px; letter-spacing: -.03em; }
+    .pill { display: inline-flex; align-items: center; padding: 5px 8px; border-radius: 999px; font: 700 9px/1 var(--mono); text-transform: uppercase; }
+    .pill.active, .pill.covered { color: #245b3e; background: var(--green-soft); }
+    .pill.unseen { color: #6b6254; background: #ebe7dc; }
+    .pill.due { color: #864c18; background: var(--amber-soft); }
+    .pill.completed { color: #35576b; background: var(--blue-soft); }
+    .pill.planned { color: #5e5f70; background: #e6e5ee; }
+    .pill.archived { color: #6c6c6c; background: #e3e3e3; }
+    .pill.ready { color: #245b3e; background: var(--green-soft); }
+    .pill.empty { color: #864c18; background: var(--amber-soft); }
+.pill.public { color: #245b3e; background: var(--green-soft); }
+    .pill.private { color: #704b16; background: var(--amber-soft); }
+    .cycle-id { margin-top: 7px; color: #7d867f; font: 10px/1.5 var(--mono); word-break: break-all; }
+    .cycle-meta { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 15px; }
+    .tag { padding: 6px 8px; border: 1px solid #d9ddd7; border-radius: 7px; color: #606961; background: #f8f7f1; font: 10px/1 var(--mono); }
+    .progress-copy { display: flex; justify-content: space-between; margin-top: 24px; color: var(--muted); font: 10px/1 var(--mono); }
+    .progress-track { height: 10px; margin-top: 8px; border-radius: 99px; background: #e3e6e0; overflow: hidden; }
+    .progress-fill { height: 100%; min-width: 0; border-radius: inherit; background: var(--green); }
+    .cycle-stats { display: grid; grid-template-columns: repeat(2, 1fr); }
+    .cycle-stat { display: grid; place-content: center; min-height: 118px; padding: 18px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); text-align: center; }
+    .cycle-stat:nth-child(even) { border-right: 0; }
+    .cycle-stat:nth-last-child(-n+2) { border-bottom: 0; }
+    .cycle-stat strong { font: 500 31px/1 var(--serif); }
+    .cycle-stat span { margin-top: 7px; color: var(--muted); font: 9px/1 var(--mono); text-transform: uppercase; }
+
+    .question-list { margin-top: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); overflow: hidden; }
+    .question-row { display: grid; grid-template-columns: minmax(0, 1fr) 90px 90px 110px; gap: 14px; align-items: center; padding: 14px 17px; border-bottom: 1px solid var(--line); }
+    .question-row:last-child { border-bottom: 0; }
+    .question-row.header { color: #7d867f; background: #e5e8e2; font: 700 9px/1 var(--mono); text-transform: uppercase; }
+    .question-prompt { min-width: 0; }
+    .question-prompt a { display: block; font-size: 12px; font-weight: 700; line-height: 1.55; text-decoration-color: transparent; text-underline-offset: 3px; }
+    .question-prompt a:hover, .question-prompt a:focus-visible { color: var(--green); text-decoration-color: currentColor; outline: none; }
+    .question-prompt small { display: block; margin-top: 4px; color: #899189; font: 9px/1.3 var(--mono); }
+    .cell-muted { color: #677068; font: 10px/1.4 var(--mono); }
+
+    .split { display: grid; grid-template-columns: .78fr 1.22fr; gap: 14px; }
+    .status-stack, .topics { padding: 16px 18px 20px; }
+    .status-item { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid #e2e5df; font-size: 12px; }
+    .status-item:last-child { border-bottom: 0; }
+    .status-item b { font: 600 20px/1 var(--serif); }
+    .topic-row { display: grid; grid-template-columns: minmax(100px, 1fr) minmax(120px, 2fr) 34px; gap: 10px; align-items: center; margin-top: 11px; font-size: 11px; }
+    .topic-track { height: 6px; border-radius: 99px; background: #e1e4df; overflow: hidden; }
+    .topic-fill { height: 100%; border-radius: inherit; background: var(--green); }
+    .topic-count { text-align: right; font: 700 10px/1 var(--mono); }
+
+    .detail-panel { margin-top: 14px; scroll-margin-top: 16px; }
+    .detail-toolbar { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); background: rgba(229,232,226,.45); }
+    .search-input { width: min(480px, 100%); padding: 9px 11px; border: 1px solid #cbd2cb; border-radius: 8px; color: var(--ink); background: #fffef9; font-size: 11px; }
+    .search-input:focus { border-color: #6f947d; box-shadow: 0 0 0 3px rgba(39,93,69,.11); outline: none; }
+    .filter-select { padding: 9px 28px 9px 10px; border: 1px solid #cbd2cb; border-radius: 8px; color: var(--ink); background: #fffef9; font-size: 11px; }
+    .filter-select:focus { border-color: #6f947d; box-shadow: 0 0 0 3px rgba(39,93,69,.11); outline: none; }
+    .detail-count { margin-left: auto; color: #7b847d; font: 10px/1.4 var(--mono); white-space: nowrap; }
+    .directory-list { max-height: 660px; padding: 0 18px 6px; overflow-y: auto; scrollbar-gutter: stable; }
+    .directory-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, .32fr); gap: 18px; padding: 15px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 18px; }
+    .directory-row:last-child { border-bottom: 0; }
+    .directory-title { font-size: 12px; font-weight: 700; line-height: 1.55; text-decoration-color: #9eaaa1; text-underline-offset: 3px; }
+    .directory-title:hover, .directory-title:focus-visible { color: var(--green); outline: none; }
+    .directory-path { display: block; margin-top: 4px; color: #858e87; font: 9px/1.5 var(--mono); overflow-wrap: anywhere; }
+    .directory-description { margin: 0; font-size: 12px; font-weight: 650; line-height: 1.65; }
+    .directory-meta { display: flex; align-content: flex-start; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
+    .directory-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; }
+    .meta-chip { padding: 5px 7px; border: 1px solid #d7dcd6; border-radius: 6px; color: #657068; background: #f8f7f1; font: 9px/1 var(--mono); }
+    .source-links { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+    .source-link { color: var(--green); font: 9px/1.45 var(--mono); text-decoration-color: #8eaa98; text-underline-offset: 3px; }
+    .list-empty { padding: 24px 0; color: #7a837c; text-align: center; font-size: 12px; }
+
+    .architecture { padding: 21px; }
+    .layer-label { display: flex; align-items: center; gap: 12px; margin: 3px 0 11px; color: #768078; font: 700 9px/1 var(--mono); text-transform: uppercase; letter-spacing: .11em; }
+    .layer-label::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+    .nodes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .nodes.two { grid-template-columns: repeat(2, 1fr); }
+    .node { padding: 15px; border: 1px solid #cbd3cc; border-radius: 11px; background: #faf9f3; }
+    .node.reusable { border-color: #8aaf98; background: var(--green-soft); }
+    .node.personal { border-color: #d9b17d; background: #fff2dd; }
+    .node-type { color: #737d75; font: 700 8px/1 var(--mono); text-transform: uppercase; letter-spacing: .11em; }
+    .node h4 { margin: 8px 0 5px; font-size: 13px; }
+    .node p { margin: 0; color: #697169; font-size: 10px; line-height: 1.5; }
+    .arrow { height: 29px; display: grid; place-items: center; color: var(--green); font: 700 17px/1 var(--mono); }
+    .privacy { margin: 13px 0; padding: 10px 12px; border: 1px dashed #c5ccc6; border-radius: 9px; color: #646e66; background: rgba(255,255,255,.5); font-size: 10px; line-height: 1.55; }
+
+    .lifecycle { display: grid; grid-template-columns: repeat(4, 1fr); gap: 11px; padding: 19px; }
+    .state { position: relative; padding: 15px; border: 1px solid #cfd6cf; border-radius: 11px; background: #f9f8f2; }
+    .state + .state::before { content: "→"; position: absolute; left: -19px; top: 44%; color: #75907e; font-weight: 700; }
+    .state b { display: block; color: var(--green); font: 700 11px/1 var(--mono); }
+    .state span { display: block; margin-top: 7px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .intervals { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 0 19px 20px; }
+    .interval { padding: 13px; border-radius: 9px; color: #eaf1eb; background: #263c2e; text-align: center; }
+    .interval strong { font: 500 23px/1 var(--serif); }
+    .interval span { display: block; margin-top: 6px; color: #b9c7bc; font: 9px/1 var(--mono); }
+
+    .history-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+    #attempt-history { scroll-margin-top: 16px; }
+    .review-list { padding: 0 18px 8px; }
+    .review-question { border-bottom: 1px solid var(--line); }
+    .review-question:last-child { border-bottom: 0; }
+    .review-question > summary { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 17px 2px; cursor: pointer; list-style: none; }
+    .review-question > summary::-webkit-details-marker { display: none; }
+    .review-question > summary::after { content: "+"; flex: 0 0 auto; color: var(--green); font: 700 17px/1 var(--mono); }
+    .review-question[open] > summary::after { content: "−"; }
+    .review-summary { min-width: 0; }
+    .review-summary b { display: block; font-size: 13px; line-height: 1.55; }
+    .review-summary small { display: block; margin-top: 5px; color: #808981; font: 9px/1.45 var(--mono); overflow-wrap: anywhere; }
+    .review-latest { flex: 0 0 auto; color: #737d75; font: 9px/1.4 var(--mono); text-align: right; }
+    .review-attempt { margin: 0 0 16px; border: 1px solid #d7dcd6; border-radius: 12px; background: #fbfaf4; overflow: hidden; }
+    .review-attempt-head { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; padding: 14px 16px; border-bottom: 1px solid #dfe3dd; background: #f0f1ea; }
+    .review-attempt-head h4 { margin: 0; font-size: 12px; }
+    .review-attempt-meta { display: block; margin-top: 5px; color: #7a837c; font: 9px/1.5 var(--mono); overflow-wrap: anywhere; }
+    .answer-compare { display: grid; grid-template-columns: 1fr 1fr; }
+    .answer-box { min-width: 0; padding: 16px; }
+    .answer-box + .answer-box { border-left: 1px solid #dfe3dd; background: #f3f6ef; }
+    .answer-box h5, .attention-box h5, .feedback-box h5 { margin: 0 0 9px; color: #637068; font: 700 9px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .answer-box pre { margin: 0; color: #2e3730; font: 11px/1.75 var(--sans); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .attention-box, .feedback-box { padding: 14px 16px; border-top: 1px solid #dfe3dd; }
+    .attention-box { background: #fff7e9; }
+    .attention-box ul { margin: 0; padding-left: 19px; color: #594b37; font-size: 11px; line-height: 1.7; }
+    .attention-box li + li { margin-top: 5px; }
+    .feedback-box p { margin: 0; color: #4f5a52; font-size: 11px; line-height: 1.75; white-space: pre-wrap; }
+    .attempt-file-link, .notebook-link { color: var(--green); font: 9px/1.4 var(--mono); text-decoration-color: #8eaa98; text-underline-offset: 3px; }
+    .attempt-file-link { display: inline-block; margin: 0 16px 14px; }
+    .revision-note { margin-top: 7px; color: #8a531e; font-size: 10px; line-height: 1.5; }
+    .review-entry { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: 22px; }
+    .review-entry h4 { margin: 0; font-size: 18px; letter-spacing: -.025em; }
+    .review-entry p { max-width: 720px; margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .review-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .review-action { display: inline-flex; align-items: center; min-height: 38px; padding: 9px 12px; border: 1px solid #bfc9c1; border-radius: 8px; color: var(--green); background: #f7faf5; font: 700 10px/1.3 var(--mono); text-decoration: none; }
+    .review-action.primary { color: #f4f8f4; border-color: var(--green); background: var(--green); }
+    .review-action:hover, .review-action:focus-visible { box-shadow: 0 5px 16px rgba(39,93,69,.14); transform: translateY(-1px); outline: none; }
+    .empty { padding: 30px 20px; color: #7a837c; text-align: center; font-size: 12px; line-height: 1.65; }
+    .history-list { padding: 6px 17px 14px; }
+    .history-item { padding: 13px 0; border-bottom: 1px solid var(--line); }
+    .history-item:last-child { border-bottom: 0; }
+    .history-item b { display: block; font-size: 12px; line-height: 1.45; }
+    .history-item small { display: block; margin-top: 5px; color: #808981; font: 9px/1.45 var(--mono); }
+    .score-line { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+    .score { padding: 4px 6px; border-radius: 5px; color: #315743; background: #e2ede5; font: 700 8px/1 var(--mono); }
+
+    .guide-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 11px; }
+    .guide-card { padding: 17px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
+    .guide-card h3 { margin: 0 0 7px; font-size: 14px; }
+    .guide-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+    .command { margin-top: 12px; padding: 10px 11px; border-radius: 7px; color: #dfeae1; background: #222b24; font: 10px/1.45 var(--mono); overflow-x: auto; white-space: nowrap; }
+
+    .maintenance-flow { display: flex; gap: 8px; align-items: stretch; padding: 18px; overflow-x: auto; }
+    .maintenance-step { min-width: 155px; padding: 13px; border: 1px solid #cdd4ce; border-radius: 9px; background: #f9f8f2; }
+    .maintenance-step b { display: block; font-size: 11px; }
+    .maintenance-step span { display: block; margin-top: 6px; color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .maintenance-arrow { display: grid; place-items: center; color: #75847a; }
+
+    .footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 48px; padding-top: 20px; border-top: 1px solid #b8beb8; color: #7b847d; font: 9px/1.6 var(--mono); }
+
+    @media (max-width: 1050px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+      .cycle-summary, .split, .history-grid { grid-template-columns: 1fr; }
+      .cycle-main { border-right: 0; border-bottom: 1px solid var(--line); }
+      .question-row { grid-template-columns: minmax(0, 1fr) 80px 80px; }
+      .question-row > :last-child { display: none; }
+      .directory-row { grid-template-columns: 1fr; }
+      .directory-meta { justify-content: flex-start; }
+      .answer-compare { grid-template-columns: 1fr; }
+      .answer-box + .answer-box { border-top: 1px solid #dfe3dd; border-left: 0; }
+      .review-entry { grid-template-columns: 1fr; }
+      .review-actions { justify-content: flex-start; }
+    }
+
+    @media (max-width: 760px) {
+      .shell { display: block; }
+      .sidebar { position: relative; height: auto; padding: 19px; }
+      .nav { display: flex; gap: 5px; margin-top: 18px; overflow-x: auto; }
+      .nav a { flex: 0 0 auto; white-space: nowrap; }
+      .nav .nav-label, .health { display: none; }
+      .content { width: min(100% - 26px, 680px); padding-top: 26px; }
+      .topbar, .section-head { display: block; }
+      .topbar h1 { font-size: clamp(34px, 10.5vw, 44px); overflow-wrap: anywhere; word-break: break-all; }
+      .build-meta, .section-index { margin-top: 16px; text-align: left; }
+      .metrics, .guide-grid { grid-template-columns: 1fr; }
+      .nodes, .nodes.two, .lifecycle, .intervals { grid-template-columns: 1fr; }
+      .state + .state::before { content: "↓"; left: 50%; top: -18px; }
+      .question-row { grid-template-columns: minmax(0, 1fr) 76px; }
+      .question-row > :nth-child(3), .question-row > :nth-child(4) { display: none; }
+      .detail-toolbar { align-items: stretch; flex-direction: column; }
+      .detail-count { margin-left: 0; }
+      .footer { display: block; }
+    }
+  </style>
+</head>
+<body><p style="padding:12px;text-align:center">公共题库预览 · 无私人学习记录 · <a href="../README.md">开始使用</a></p>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">INTERVIEW<br>COACH<small>REPOSITORY DASHBOARD</small></div>
+      <nav class="nav" aria-label="Dashboard sections">
+        <div class="nav-label">Status</div>
+        <a class="active" href="#overview">总览</a>
+        <a href="#current-cycle">当前准备周期</a>
+        <a href="#source-library">知识文档</a>
+        <a href="#question-bank">题库详情</a>
+        <div class="nav-label">Context</div>
+        <a href="#architecture">系统如何工作</a>
+        <a href="#answer-review">回答复习</a>
+        <a href="#guide">使用指南</a>
+        <a href="#maintenance">维护知识</a>
+      </nav>
+      <div class="health"><span class="dot"></span><strong>DATA LOADED</strong><br><span id="health-summary"></span></div>
+    </aside>
+
+    <main class="main">
+      <div class="content">
+        <header class="topbar">
+          <div>
+            <div class="eyebrow">Context infrastructure / live snapshot</div>
+            <h1>今天该复习什么，<br>仓库已经知道。</h1>
+          </div>
+          <div id="build-meta" class="build-meta"></div>
+        </header>
+
+        <section id="overview" class="section">
+          <div class="section-head"><div><h2>今天练什么</h2><p id="daily-budget">先接着练，再按今天的时间安排任务。</p></div><span class="section-index">01 / TODAY</span></div>
+          <article class="panel" style="padding:24px;margin-bottom:24px">
+            <p id="daily-message"></p>
+            <ol id="daily-tasks"></ol>
+            <label for="practice-command">复制给 Coach 开始练习</label>
+            <textarea id="practice-command" class="search-input" rows="3" readonly style="display:block;width:100%;margin:12px 0"></textarea>
+            <button id="copy-practice" type="button">复制练习指令</button>
+            <p id="copy-status" role="status"></p>
+            <h3>优先改善</h3><div id="daily-gaps"></div>
+            <h3>最近一次进步</h3><p id="daily-improvement"></p>
+            <p id="daily-untested"></p>
+            <p id="daily-not-included"></p>
+            <p id="daily-unavailable"></p>
+            <p id="daily-unverified"></p>
+          </article>
+          <div class="metrics">
+            <a class="metric metric-link" href="#source-library"><span class="metric-label">知识文档</span><strong id="metric-sources" class="metric-value">0</strong><small id="metric-sources-detail" class="metric-detail"></small></a>
+            <a class="metric metric-link" href="#question-details"><span class="metric-label">题库</span><strong id="metric-questions" class="metric-value">0</strong><small id="metric-questions-detail" class="metric-detail"></small></a>
+            <a class="metric metric-link" href="#current-cycle"><span class="metric-label">准备周期</span><strong id="metric-cycles" class="metric-value">0</strong><small id="metric-cycles-detail" class="metric-detail"></small></a>
+            <a class="metric metric-link" href="#answer-review"><span class="metric-label">真实回答</span><strong id="metric-attempts" class="metric-value">0</strong><small id="metric-attempts-detail" class="metric-detail"></small></a>
+          </div>
+        </section>
+
+        <section id="current-cycle" class="section">
+          <div class="section-head"><div><h2>当前准备周期</h2><p>全面摸底关注能力覆盖，日常练习混合到期复习和新题。</p></div><span class="section-index">02 / CURRENT</span></div>
+          <div id="cycle-container"></div>
+        </section>
+
+        <section id="source-library" class="section">
+          <div class="section-head"><div><h2>知识文档</h2><p>Source Catalog 支持 Markdown、PDF、PPTX 和 XMind，并可按标题、路径、格式或主题搜索。</p></div><span class="section-index">03 / SOURCES</span></div>
+          <article class="panel">
+            <div class="panel-head"><h3>文档列表</h3><small>md / pdf / pptx / xmind</small></div>
+            <div class="detail-toolbar"><input id="source-search" class="search-input" type="search" placeholder="搜索标题、路径或主题" aria-label="搜索知识文档"><span id="source-list-count" class="detail-count"></span></div>
+            <div id="source-list" class="directory-list"></div>
+          </article>
+        </section>
+
+        <section id="question-bank" class="section">
+          <div class="section-head"><div><h2>题库详情</h2><p>公开题目可以分享，私人题目只保存在 workspace；两类题目都可以进入准备周期。</p></div><span class="section-index">04 / QUESTIONS</span></div>
+          <div class="split">
+            <article class="panel"><div class="panel-head"><h3>可见性</h3><small>public / private</small></div><div id="question-visibilities" class="status-stack"></div></article>
+            <article class="panel"><div class="panel-head"><h3>主题分布</h3><small id="topic-count-label"></small></div><div id="topic-list" class="topics"></div></article>
+          </div>
+          <article id="question-details" class="panel detail-panel">
+            <div class="panel-head"><h3>完整题库</h3><small>Prompt、来源与维护信息</small></div>
+          <div class="detail-toolbar"><input id="question-search" class="search-input" type="search" placeholder="搜索题目、ID、主题或来源" aria-label="搜索题库"><select id="question-visibility-filter" class="filter-select" aria-label="按可见性筛选题库"><option value="all">全部题目</option><option value="public">公开题目</option><option value="private">私人题目</option></select><span id="question-list-count" class="detail-count"></span></div>
+            <div id="question-detail-list" class="directory-list"></div>
+          </article>
+        </section>
+
+        <section id="architecture" class="section">
+          <div class="section-head"><div><h2>系统如何工作</h2><p>事实、投影和报告分开保存。任何 Agent 都能从同一套协议继续工作。</p></div><span class="section-index">05 / SYSTEM</span></div>
+          <article class="panel">
+            <div class="architecture">
+              <div class="layer-label">Reusable knowledge layer</div>
+              <div class="nodes">
+                <div class="node reusable"><span class="node-type">Source selection</span><h4>source-list.txt</h4><p>用仓库相对路径选择 Markdown、PDF、PPTX 或 XMind。</p></div>
+            <div class="node reusable"><span class="node-type">Public Question</span><h4>library/questions</h4><p>会被 Public Exporter 导出的公开题目。</p></div>
+                <div class="node"><span class="node-type">Protocol</span><h4>Agent 合约</h4><p>选择、评价、写入与重建的统一规则。</p></div>
+              </div>
+              <div class="arrow">↓</div>
+              <div class="privacy">`library/questions/` 保存公开题目。`workspace/questions/` 保存个人经历和项目上下文相关的私人题目。训练时默认同时使用。</div>
+              <div class="layer-label">Personal review layer</div>
+              <div class="nodes">
+                <div class="node personal"><span class="node-type">PreparationCycle</span><h4>准备周期</h4><p>冻结题目范围、准备目的、目标角色与选择策略。</p></div>
+                <div class="node personal"><span class="node-type">PracticeSession</span><h4>连续练习</h4><p>把一次连续对话中的多次回答归为同一组。</p></div>
+                <div class="node personal"><span class="node-type">AttemptEvent</span><h4>真实回答</h4><p>原始答案、提示、评分、遗漏和改进版本。</p></div>
+              </div>
+              <div class="arrow">↓</div>
+              <div class="nodes">
+                <div class="node"><span class="node-type">Projection</span><h4>CycleProgress</h4><p>当前周期覆盖、到期与评分。</p></div>
+                <div class="node"><span class="node-type">Projection</span><h4>MasteryState</h4><p>跨周期的长期掌握状态。</p></div>
+                <div class="node"><span class="node-type">Snapshot</span><h4>CycleReport</h4><p>周期结束时生成固定总结。</p></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel" style="margin-top:14px">
+            <div class="panel-head"><h3>一道题的状态变化</h3><small>knowledge_score = min(recall, correctness, depth)</small></div>
+            <div class="lifecycle">
+              <div class="state"><b>unseen</b><span>本周期还没有完成真实回答</span></div>
+              <div class="state"><b>answered</b><span>写入 AttemptEvent 和四维评价</span></div>
+              <div class="state"><b>covered</b><span>到期前不再主动连续提出</span></div>
+              <div class="state"><b>due</b><span>到达 next_due_at 后重新候选</span></div>
+            </div>
+            <div id="interval-list" class="intervals"></div>
+          </article>
+        </section>
+
+        <section id="history" class="section">
+          <div class="section-head"><div><h2>回答复习与历史</h2><p>逐题对照真实回答、建议表达与注意点。同一道题的多次尝试会保留在一起，便于观察进步。</p></div><span class="section-index">06 / REVIEW</span></div>
+          <article id="answer-review" class="panel detail-panel">
+            <div class="panel-head"><h3>专注复习页</h3><small id="attempt-review-count"></small></div>
+            <div class="review-entry">
+              <div><h4>把长回答留在独立页面</h4><p>完整查看每道题的原回答、建议表达、注意点和教练反馈。支持全文搜索、按准备周期筛选，并保留同一道题的多次尝试。</p></div>
+              <div class="review-actions"><a id="review-page-link" class="review-action primary" href="public-review.html">打开复习页</a><a id="review-notes-link" class="review-action" href="#">打开 Markdown</a></div>
+            </div>
+          </article>
+          <div class="history-grid">
+            <article class="panel"><div class="panel-head"><h3>保存方式</h3><small id="attempt-count-label"></small></div><div id="attempt-history"></div></article>
+            <article class="panel"><div class="panel-head"><h3>复习报告</h3><small id="report-count-label"></small></div><div id="report-history"></div></article>
+          </div>
+        </section>
+
+        <section id="guide" class="section">
+          <div class="section-head"><div><h2>使用指南</h2><p>日常通过 Agent 对话。Python 脚本提供跨 Agent 的确定性后备入口。</p></div><span class="section-index">07 / GUIDE</span></div>
+          <div class="guide-grid">
+            <article class="guide-card"><h3>开始复习</h3><p>Agent 重建状态，从 unseen 或 due 集合选择一道题。</p><div class="command">开始当前准备周期</div></article>
+            <article class="guide-card"><h3>请求提示</h3><p>提示逐级提供，每次使用都会记录到最终 AttemptEvent。</p><div class="command">给我第一级提示</div></article>
+            <article class="guide-card"><h3>查看进度</h3><p>读取当前投影和长期掌握状态，列出覆盖率和薄弱题。</p><div class="command">总结当前准备周期的进度和薄弱题目</div></article>
+            <article class="guide-card"><h3>结束周期</h3><p>写入完成时间并生成 JSON 与 Markdown 固定报告。</p><div class="command">结束当前准备周期，并生成复习报告</div></article>
+            <article class="guide-card"><h3>导入新知识</h3><p>加入 source-list.txt 后，Agent 只处理新增或变化的文档；视觉型 PDF 和 PPTX 会同时检查渲染结果。</p><div class="command">同步 source-list，并把待导入文档抽取成题目</div></article>
+            <article class="guide-card"><h3>刷新 Dashboard</h3><p>先重建状态，再把仓库中的最新数据写入本页面。</p><div class="command">python scripts/build_dashboard.py</div></article>
+            <article class="guide-card"><h3>校验 Context Pack</h3><p>检查 ID、引用、状态、Source 变化和数据范围。</p><div class="command">python scripts/validate.py</div></article>
+          </div>
+        </section>
+
+        <section id="maintenance" class="section">
+          <div class="section-head"><div><h2>维护知识与题库</h2><p>文档可以留在仓库原位置。把路径加入 source-list.txt 后，由 Agent 只处理新增或变化的 Source。</p></div><span class="section-index">08 / MAINTENANCE</span></div>
+          <article class="panel">
+            <div class="maintenance-flow">
+              <div class="maintenance-step"><b>选择 Source</b><span>加入 md、pdf、pptx 或 xmind 路径与 glob</span></div><div class="maintenance-arrow">→</div>
+              <div class="maintenance-step"><b>识别变化</b><span>用内容哈希定位新增或修改的文档</span></div><div class="maintenance-arrow">→</div>
+              <div class="maintenance-step"><b>判断可见性</b><span>公开进入 library，私人进入 workspace</span></div><div class="maintenance-arrow">→</div>
+              <div class="maintenance-step"><b>直接激活</b><span>训练和 Dashboard 中检查实际质量</span></div><div class="maintenance-arrow">→</div>
+              <div class="maintenance-step"><b>进入未来周期</b><span>当前题目快照仅在明确刷新时改变</span></div>
+            </div>
+          </article>
+        </section>
+
+        <footer class="footer"><span>Interview Coach Context Pack · read-only generated dashboard</span><span id="footer-generated"></span></footer>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const dashboardData = {"daily_plan":{"as_of":"2026-10-02","minutes":15,"tasks":[],"gaps":[],"improvement":null,"untested_topics":[],"message":"先试一道题，或开始 8 题短测。","command":"先试一道公共题，回答不写入项目。"},"generated_at":"2026-10-02T21:24:43+08:00","protocol_version":"0.14.0","capabilities":["source.discover","source.select","source.track_changes","source.extract_text","source.inspect_visual","question.select","question.hint","question.propose","question.archive","job.define","job.target","resume.facts.maintain","resume.tailor","resume.export","interview-experience.capture","interview-experience.associate","cycle.start","cycle.complete","attempt.record","state.rebuild","progress.review","report.generate","review.notebook.generate","dashboard.generate","history.review","onboarding.guide","onboarding.persist","candidate.discover","candidate.profile.maintain","coach.observe","coach-model.rebuild","practice.trial","practice.resume","attempt.reevaluate","teaching.start","teaching.resume","teaching.check"],"sources":{"total":0,"statuses":[],"formats":[],"extraction_statuses":[],"items":[]},"questions":{"total":106,"statuses":[{"name":"active","count":106}],"visibilities":[{"name":"public","count":106}],"topics":[{"name":"spark","count":20},{"name":"sql","count":20},{"name":"soft-skill","count":13},{"name":"python","count":10},{"name":"system-design","count":10},{"name":"java","count":7},{"name":"data-modeling","count":5},{"name":"data-quality","count":3},{"name":"hadoop","count":3},{"name":"algorithm","count":2},{"name":"big-data-architecture","count":2},{"name":"distributed-systems","count":2},{"name":"kafka","count":2},{"name":"elasticsearch","count":1},{"name":"hive","count":1},{"name":"iceberg","count":1},{"name":"linux","count":1},{"name":"os","count":1},{"name":"redis","count":1},{"name":"streaming","count":1}],"items":[{"id":"q.algorithm.22be7a8d061f","revision":3,"status":"active","visibility":"public","topic":"algorithm","kind":"coding","difficulty":3,"origin":"generated","prompt":"给定整数数组 nums 和整数 k，返回其中最大的 k 个元素，按降序排列；重复值按出现次数保留。k\u003c=0 时返回空列表，k\u003e=len(nums) 时返回全部元素。请实现并分析复杂度。","evaluation_basis":"rubric","rubric_count":3,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/algorithm/q.algorithm.22be7a8d061f.json"},{"id":"q.algorithm.58cf31a9e620","revision":4,"status":"active","visibility":"public","topic":"algorithm","kind":"coding","difficulty":3,"origin":"explicit-heading","prompt":"请实现单线程 LRUCache(capacity)，容量为非负整数，键和值均为整数。get(key) 返回缓存值，未命中返回 None；put(key,value) 写入或更新并标记为最近使用，超出容量时淘汰最久未使用项。capacity=0 时始终为空。get 和 put 平均时间复杂度要求 O(1)。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/algorithm/q.algorithm.58cf31a9e620.json"},{"id":"q.big-data-architecture.8f3e589a35db","revision":4,"status":"active","visibility":"public","topic":"big-data-architecture","kind":"concept","difficulty":3,"origin":"explicit-heading","prompt":"企业正在业务数据库上运行分析报表。你会根据哪些业务和技术信号，判断是否需要独立的数据仓库？请结合 OLTP 与 OLAP 的访问模式说明收益、代价及暂缓建设的条件。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":1,"source_refs":[],"file_href":"../library/questions/big-data-architecture/q.big-data-architecture.8f3e589a35db.json"},{"id":"q.big-data-architecture.warehouse-lake-lakehouse","revision":1,"status":"active","visibility":"public","topic":"big-data-architecture","kind":"concept","difficulty":3,"origin":"generated","prompt":"请比较数据仓库、数据湖与 Lakehouse 的目标、数据组织方式、事务与治理能力、查询性能和典型工作负载。Iceberg、Delta Lake、Hudi 这类 table format 在其中位于哪一层？为什么说 Iceberg 既不是数据湖本身，也不是一个完整的 Lakehouse？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/big-data-architecture/q.big-data-architecture.warehouse-lake-lakehouse.json"},{"id":"q.data-modeling.dimensional-modeling","revision":2,"status":"active","visibility":"public","topic":"data-modeling","kind":"system-design","difficulty":4,"origin":"generated","prompt":"一个电商业务希望按商品、用户、地区和渠道分析每日成交金额，并按成交时的属性解释历史结果。请先澄清成交口径和订单与订单行的关系，再设计核心事实表与维度，说明每张表的粒度。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/data-modeling/q.data-modeling.dimensional-modeling.json"},{"id":"q.data-modeling.fact-types-additivity","revision":1,"status":"active","visibility":"public","topic":"data-modeling","kind":"scenario","difficulty":3,"origin":"generated","prompt":"仓储业务记录货物入库、出库、库存日终余额、补货申请的各个审批阶段，以及仓库可存放哪些物料。请选择事务事实、周期快照、累积快照与无事实度量表的适用对象并声明粒度，再说明吞吐量、库存、平均等待时间和缺货率如何跨仓库与日期聚合。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/data-modeling/q.data-modeling.fact-types-additivity.json"},{"id":"q.data-modeling.stable-fact-grain","revision":1,"status":"active","visibility":"public","topic":"data-modeling","kind":"scenario","difficulty":3,"origin":"generated","prompt":"预约服务把搜索、预约、支付、取消都存到 activity(actor_id, object_id, type, amount) 中，报表频繁重复计算。请识别业务过程，为事实表逐一声明粒度并选择维度，说明原始事件表如何与分析模型共存。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/data-modeling/q.data-modeling.stable-fact-grain.json"},{"id":"q.data-modeling.temporal-dimension-facts","revision":1,"status":"active","visibility":"public","topic":"data-modeling","kind":"scenario","difficulty":3,"origin":"generated","prompt":"客户所属服务等级会变化，历史账单需要按当时等级分析，同时保存真实收费金额。请设计 SCD Type 2 维度与账单事实，处理一天内多次变化、迟到更正、并发更新和重复执行，并解释账单金额为何仍需保存在事实中。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/data-modeling/q.data-modeling.temporal-dimension-facts.json"},{"id":"q.data-modeling.workload-aware-storage","revision":1,"status":"active","visibility":"public","topic":"data-modeling","kind":"system-design","difficulty":3,"origin":"generated","prompt":"一个订阅业务既要分析季度使用量，又要查询某客户在历史时刻的套餐，还要实时读取当前套餐并搜索套餐描述。请分别选择数据布局与服务存储，解释时间分区、聚簇、历史版本、当前快照、缓存和搜索索引的职责及同步方式。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/data-modeling/q.data-modeling.workload-aware-storage.json"},{"id":"q.data-quality.contracts-observability","revision":2,"status":"active","visibility":"public","topic":"data-quality","kind":"system-design","difficulty":4,"origin":"generated","prompt":"你负责的平台频繁因上游 schema 变化、数据延迟和业务口径漂移产出错误报表。请设计一套数据契约、质量检查和可观测性机制：哪些问题在写入前阻断，哪些允许隔离或降级，怎样定位影响范围并推动长期改进？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/data-quality/q.data-quality.contracts-observability.json"},{"id":"q.data-quality.streaming-completeness","revision":1,"status":"active","visibility":"public","topic":"data-quality","kind":"scenario","difficulty":3,"origin":"generated","prompt":"事件管线需要向分析用户承诺数据完整性。请设计能区分源端未产生、传输丢失、重复摄取、解析失败与合法迟到的证据链，并解释截至某个时间点、某个事件窗口的完整性应如何量化和修正。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/data-quality/q.data-quality.streaming-completeness.json"},{"id":"q.data-quality.timeout-coverage-bias","revision":1,"status":"active","visibility":"public","topic":"data-quality","kind":"scenario","difficulty":3,"origin":"generated","prompt":"假设一个数据富化任务为了按时完成，会跳过超时记录。最近任务成功率提高，但只处理了部分输入。你怎样判断报表和下游判断是否仍可信，并设计覆盖率监控、重试回补与对业务方的结果说明？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/data-quality/q.data-quality.timeout-coverage-bias.json"},{"id":"q.distributed-systems.0d67c05a8185","revision":1,"status":"active","visibility":"public","topic":"distributed-systems","kind":"explanation","difficulty":3,"origin":"generated","prompt":"为什么需要分布式系统？请从并行扩展、容错、地理分布和隔离性出发说明收益，再解释并发、部分失败、一致性与通信成本如何限制这些收益。设计系统时，你会如何在强一致性、可用性、吞吐量和恢复能力之间做取舍？","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.distributed-systems.0d67c05a8185.json"},{"id":"q.distributed-systems.d83ad8e9cbfb","revision":2,"status":"active","visibility":"public","topic":"distributed-systems","kind":"system-design","difficulty":4,"origin":"generated","prompt":"以 GFS 风格的大文件存储系统为例，说明 Master 与 Chunk Server 如何分工，客户端读写为什么尽量绕过 Master，以及 Primary-Backup 复制如何保证多个副本以相同顺序执行写入。请同时讨论 lease、版本号、确认时机和故障切换。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.distributed-systems.d83ad8e9cbfb.json"},{"id":"q.elasticsearch.84d2c09a713f","revision":1,"status":"active","visibility":"public","topic":"elasticsearch","kind":"scenario","difficulty":4,"origin":"generated","prompt":"一个 Elasticsearch 集群执行高基数聚合时频繁 GC，查询延迟明显升高。你会如何检查 JVM heap、off-heap、page cache、fielddata/doc values、bucket 数和 circuit breaker，并在索引设计、聚合参数与节点资源之间调优？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/elasticsearch/q.elasticsearch.84d2c09a713f.json"},{"id":"q.hadoop.71a30d9e4c26","revision":3,"status":"active","visibility":"public","topic":"hadoop","kind":"explanation","difficulty":4,"origin":"generated","prompt":"请以按 key 聚合为例，说明一个 Hadoop MapReduce 作业从 InputSplit 到最终输出的流程。重点解释 Map 输出怎样经历缓冲、分区、排序、spill 与 Shuffle，最后如何交给 Reducer；指出主要磁盘 I/O 发生在哪里。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/hadoop/q.hadoop.71a30d9e4c26.json"},{"id":"q.hadoop.d48f20a17c53","revision":2,"status":"active","visibility":"public","topic":"hadoop","kind":"explanation","difficulty":4,"origin":"generated","prompt":"以副本存储的 HDFS 为范围，请说明客户端写入一个新文件时，NameNode、DataNode 和客户端怎样协作，从分配 Block 到确认写入完成。再简要比较读取路径。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/hadoop/q.hadoop.d48f20a17c53.json"},{"id":"q.hadoop.f2918bc640ae","revision":1,"status":"active","visibility":"public","topic":"hadoop","kind":"scenario","difficulty":3,"origin":"generated","prompt":"一个 HDFS 集群有 n 台 DataNode，每台可用磁盘约 m TiB，默认副本因子为 r、Block 大小为 b。你会如何估算可用数据容量和 Block 数？为什么不能仅用 n*m/b/r 回答“最多能存多少个文件”，小文件又会带来什么限制？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/hadoop/q.hadoop.f2918bc640ae.json"},{"id":"q.hive.30b9e6f12a74","revision":1,"status":"active","visibility":"public","topic":"hive","kind":"explanation","difficulty":3,"origin":"generated","prompt":"请解释 Hive 的核心架构和一条 SQL 的执行路径，并比较 Managed Table 与 External Table 的生命周期。分区目录已经存在但 Metastore 中没有记录，或记录与文件系统不一致时，你会如何安全地同步和修复分区元数据？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/hive/q.hive.30b9e6f12a74.json"},{"id":"q.iceberg.table-format-foundations","revision":2,"status":"active","visibility":"public","topic":"iceberg","kind":"explanation","difficulty":4,"origin":"generated","prompt":"对象存储中已经有一批 Parquet 文件。引入 Apache Iceberg 后，它会怎样把这些文件组织成一张可一致读取和提交更新的分析表？请围绕一次读取和一次写入，解释 catalog、表元数据、snapshot 与 manifest 的关系。","evaluation_basis":"rubric","rubric_count":4,"hint_count":3,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/iceberg/q.iceberg.table-format-foundations.json"},{"id":"q.java.1f0c8a5cd168","revision":3,"status":"active","visibility":"public","topic":"java","kind":"scenario","difficulty":3,"origin":"generated","prompt":"假设使用 HotSpot JDK 8 的 Parallel GC 并开启自适应大小策略。一个 Java 服务每次刷新内存中的 Map 后，操作系统看到的进程内存都会上升，但 GC 后 heap used 反而下降，Survivor/Eden/Old Gen 的 capacity 还会动态变化。你会如何判断这是内存泄漏、JVM 保留内存，还是 AdaptiveSizePolicy 的正常调整？","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/os/q.java.1f0c8a5cd168.json"},{"id":"q.java.267979d9f4cf","revision":2,"status":"active","visibility":"public","topic":"java","kind":"system-design","difficulty":3,"origin":"generated","prompt":"多个 JVM 数据服务频繁读取表结构和分区元数据。请比较普通并发 Map、带加载与淘汰能力的本地缓存及远程缓存，设计容量、过期、失效、并发加载和服务故障下的行为。若使用 Guava Cache，请说明选择它需要验证什么。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/java/q.java.267979d9f4cf.json"},{"id":"q.java.3f8d61e204ba","revision":2,"status":"active","visibility":"public","topic":"java","kind":"explanation","difficulty":4,"origin":"generated","prompt":"一个 JVM 数据服务的停顿影响摄取延迟。请先说明可达性分析、GC Roots 和对象生命周期，再结合分配率、存活集与暂停目标选择调查方法。以历史 HotSpot JDK 8 系统为比较范围，解释 Parallel、CMS 与 G1 的取舍；其他 JDK 版本应先确认可用收集器和日志方式。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/java/q.java.3f8d61e204ba.json"},{"id":"q.java.5a2ef43c8b17","revision":2,"status":"active","visibility":"public","topic":"java","kind":"scenario","difficulty":3,"origin":"generated","prompt":"数据平台的多个接入线程共享一份表元数据 Map，并需要按需加载。多个线程需要高并发读写同一个 Map。请比较 Hashtable、Collections.synchronizedMap 和 ConcurrentHashMap，并解释 Java 8+ ConcurrentHashMap 如何通过 volatile、CAS、桶级同步和协助扩容保证线程安全。哪些复合操作仍需要 compute、merge 或额外协调？","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/java/q.java.5a2ef43c8b17.json"},{"id":"q.java.ba242c599d32","revision":1,"status":"active","visibility":"public","topic":"java","kind":"scenario","difficulty":3,"origin":"generated","prompt":"Java Web 服务的进程仍然存活、CPU 不高，但请求全部无响应。你会如何从线程转储开始定位问题？如果多次 jstack 都显示所有 selector 线程长期停在同一 RUNNABLE 栈帧，你会怎样验证它是应用死锁、I/O 事件循环卡死，还是框架版本缺陷？","evaluation_basis":"rubric","rubric_count":5,"hint_count":1,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/os/q.java.ba242c599d32.json"},{"id":"q.java.c9e52d74a018","revision":2,"status":"active","visibility":"public","topic":"java","kind":"scenario","difficulty":3,"origin":"generated","prompt":"你负责从多个外部数据源并发读取数据，必须保护下游连接数与请求配额。你要为一个突发流量明显、任务耗时不稳定的 Java 服务配置 ThreadPoolExecutor。请解释 corePoolSize、maximumPoolSize、keepAliveTime、workQueue、ThreadFactory 和 RejectedExecutionHandler 如何共同决定行为，并给出容量估算、背压、监控与优雅关闭方案。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/java/q.java.c9e52d74a018.json"},{"id":"q.java.d2470ea9b531","revision":2,"status":"active","visibility":"public","topic":"java","kind":"scenario","difficulty":3,"origin":"generated","prompt":"并行数据摄取任务共享去重状态和成功计数。怎样判断一段 Java 代码是否线程安全，并选择合适的实现方式？请从共享可变状态、原子性、可见性和有序性出发，比较不可变对象、线程封闭、锁、volatile、原子类和并发容器的适用边界。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/java/q.java.d2470ea9b531.json"},{"id":"q.kafka.delivery-reprocessing","revision":1,"status":"active","visibility":"public","topic":"kafka","kind":"system-design","difficulty":4,"origin":"generated","prompt":"请设计一个消费 Kafka 事件并写入数据湖或数据库的管道。你会如何处理 offset、重试、重复、乱序、毒消息、consumer rebalance 和历史重放？请准确说明 at-most-once、at-least-once 与 end-to-end exactly-once 分别需要什么条件。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/kafka/q.kafka.delivery-reprocessing.json"},{"id":"q.kafka.partitioning-ordering","revision":3,"status":"active","visibility":"public","topic":"kafka","kind":"scenario","difficulty":4,"origin":"generated","prompt":"Kafka topic 承载用户行为事件，要求同一用户的事件按照进入日志的顺序被串行处理。允许不同用户并行。你会怎样设计 key、分区和消费方式，并在热点用户出现时控制对其他用户的影响？先说明生产者数量及重试带来的假设。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/kafka/q.kafka.partitioning-ordering.json"},{"id":"q.linux.8bc7e2a4d190","revision":2,"status":"active","visibility":"public","topic":"linux","kind":"scenario","difficulty":3,"origin":"generated","prompt":"一台运行 Java 数据服务的 Linux 机器负载升高、请求变慢。你会按什么顺序区分 CPU、运行队列、内存/Swap、磁盘、网络与 JVM 问题？给出命令、连续采样指标、线程关联方法，以及低风险验证假设的步骤。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/linux/q.linux.8bc7e2a4d190.json"},{"id":"q.os.ddf14465258c","revision":3,"status":"active","visibility":"public","topic":"os","kind":"concept","difficulty":3,"origin":"real-interview","prompt":"单机数据处理管线由多个独立进程完成解析、转换和写出，大批记录需要在进程之间传递。请比较队列、管道、共享内存与 Socket，设计背压、同步、生命周期和某个进程重启后的恢复；再说明跨主机部署会改变哪些选择。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/os/q.os.ddf14465258c.json"},{"id":"q.python.csv-daily-distinct","revision":3,"status":"active","visibility":"public","topic":"python","kind":"coding","difficulty":3,"origin":"generated","prompt":"请实现 daily_distinct(csv_path, timezone)。输入为带表头的 UTF-8 CSV，包含 event_time 和 visitor_key；event_time 是带偏移量的 ISO 8601 时间，timezone 是 IANA 时区名。返回按日期升序排列的 (YYYY-MM-DD, 唯一访客数) 列表，只输出存在有效记录的日期。写代码前请声明空 visitor_key 和坏行的处理策略，并在实现中保持一致。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.csv-daily-distinct.json"},{"id":"q.python.ee452f006c7b","revision":3,"status":"active","visibility":"public","topic":"python","kind":"explanation","difficulty":3,"origin":"explicit-heading","prompt":"在启用 GIL 的 CPython 数据处理服务中，GIL 是什么，它保护了什么，又没有保护什么？请比较 CPU 密集与 I/O 密集任务下线程、多进程、异步 I/O 和原生扩展的选择，并说明你会如何验证瓶颈确实来自 GIL。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/python/q.python.ee452f006c7b.json"},{"id":"q.python.generator-lazy-reuse","revision":1,"status":"active","visibility":"public","topic":"python","kind":"scenario","difficulty":3,"origin":"generated","prompt":"ETL 作业用生成器转换数据，先求和，再把转换结果交给下游。请给出以下代码的完整输出顺序，解释函数调用、next、yield 和函数结束分别发生了什么，并诊断下游读不到数据的原因。如果转换代价很高，或上游只能读取一次，你会如何修改？\n\n```python\ndef transform(records):\n    print('start')\n    for value in records:\n        print('read', value)\n        yield value * value\n\nsource = iter([2, 3])\ng = transform(source)\nprint('created')\nprint(next(g))\nprint(sum(g))\nprint(list(g))\nprint(list(transform(source)))\n```\n\n比较物化结果、重建生成器和单遍同时聚合与输出的时间、内存与副作用成本。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.generator-lazy-reuse.json"},{"id":"q.python.iterator-shared-state","revision":1,"status":"active","visibility":"public","topic":"python","kind":"scenario","difficulty":2,"origin":"generated","prompt":"数据处理任务用一个消费者预览记录，再由另一个消费者处理余下记录。预测下面代码每一行 print 的输出，解释 iterable 与 iterator 的区别、遍历状态属于哪个对象，以及为什么第二个 for 可以接着读取。若两个消费者都需要完整数据，应如何设计接口？\n\n```python\nrecords = [10, 20, 30]\na = iter(records)\nb = iter(a)\nc = iter(records)\nprint(a is b)\nfor value in a:\n    print(value)\n    break\nfor value in b:\n    print(value)\nprint(list(a))\nprint(list(c))\nprint(records)\n```","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.iterator-shared-state.json"},{"id":"q.python.lazy-take-iterator","revision":1,"status":"active","visibility":"public","topic":"python","kind":"coding","difficulty":2,"origin":"generated","prompt":"数据管道需要预览上游的前 limit 条记录，之后让原上游继续供其他处理使用。实现迭代器类 Take(records, limit)，不使用 yield、切片或整体转为 list。records 可以是只能遍历一次的迭代器，记录可包含 None、0、False；limit 已保证为非负整数。Take 每次请求时最多读取一条上游记录，达到 limit 或上游耗尽时结束，并在结束后持续保持耗尽。请实现 __iter__ 和 __next__，解释 for 如何使用它们，并验证空输入、limit 为零、输入不足和重复 next 的行为。\n\n```python\nsource = iter([None, 0, False, 7])\npreview = Take(source, 2)\nassert iter(preview) is preview\nassert list(preview) == [None, 0]\nassert list(source) == [False, 7]\n```","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.lazy-take-iterator.json"},{"id":"q.python.list-augmented-assignment","revision":1,"status":"active","visibility":"public","topic":"python","kind":"scenario","difficulty":2,"origin":"generated","prompt":"数据处理函数需要给一条记录的标签列表追加标记。下面代码只使用 Python 内置 int 和 list。预测两行输出，解释相同 += 在整数和列表上的效果，以及列表 + 与 += 的差异。若要求函数保留输入标签列表原样并返回新列表，应怎样实现？\n\n```python\ndef enrich(n, tags):\n    n += 1\n    tags += [\"checked\"]\n    tags = tags + [\"exported\"]\n    tags += [\"done\"]\n    print(n, tags)\n\na = [10, [\"raw\"]]\nenrich(a[0], a[1])\nprint(a)\n```","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.list-augmented-assignment.json"},{"id":"q.python.nested-list-aliasing","revision":3,"status":"active","visibility":"public","topic":"python","kind":"scenario","difficulty":2,"origin":"generated","prompt":"一个批处理程序让两条记录复用同一个标签列表。以下两段代码分别独立运行。预测各自输出，解释替换外层列表某个位置与修改共享内层列表的区别。如果每条记录应有独立的标签列表，应如何初始化？\n\n```python\n# A\ninner = [10]\nrows = [inner, inner]\nrows[0].append(30)\nprint(rows, inner)\n\n# B（重新初始化）\ninner = [10]\nrows = [inner, inner]\nrows[0] = [99]\nrows[1][0] = 20\nprint(rows, inner)\n```","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.nested-list-aliasing.json"},{"id":"q.python.object-sharing-parameters","revision":1,"status":"active","visibility":"public","topic":"python","kind":"scenario","difficulty":2,"origin":"generated","prompt":"一个 Python 数据清洗函数接收计数值和一条可修改的记录。预测下面两行输出，指出形参和实参，并解释函数内每次赋值写回哪里。若调用方希望同时获得更新后的计数值和一条独立的新记录，你会如何调整函数接口？\n\n```python\ndef clean(count, row):\n    count += 1\n    row[0] += 1\n    row = [99]\n    return count, row\n\na = [10]\ncount = 0\nresult = clean(count, a)\nprint(count, a)\nprint(result)\n```","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.object-sharing-parameters.json"},{"id":"q.python.single-pass-batching","revision":3,"status":"active","visibility":"public","topic":"python","kind":"coding","difficulty":3,"origin":"generated","prompt":"实现 batch_apply(records, batch_size, transform)，返回惰性结果迭代器。records 只能遍历一次；batch_size 必须是正整数（bool 不算），非法值在调用 batch_apply 时抛 ValueError。每次请求一个结果时，从上游取至多 batch_size 条组成独立批次，将该批的 iterator 传给 transform，返回其单个结果；结果不展开。transform 可以只消费部分批次，但不会保留 iterator。整批均视为已消费，下一批从其后开始。空输入不调用 transform，末批不足也处理；异常直接向调用方传播。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.single-pass-batching.json"},{"id":"q.python.stable-first-event","revision":1,"status":"active","visibility":"public","topic":"python","kind":"coding","difficulty":3,"origin":"generated","prompt":"用 Python 处理一条只能遍历一次的事件迭代器，每条记录包含 event_key 和 payload。返回每个 event_key 第一次在输入中出现的完整记录，保持相对顺序。说明空输入、重复键、空间成本，以及相同键保证相邻时能怎样简化。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/python/q.python.stable-first-event.json"},{"id":"q.redis.0e1f6a9c3b72","revision":2,"status":"active","visibility":"public","topic":"redis","kind":"scenario","difficulty":3,"origin":"generated","prompt":"数据平台要提供实时计数、排行榜和结果缓存。请按访问方式选择 Redis 数据结构，并讨论热点、过期与内存成本。若采用主从复制和 Sentinel，故障切换期间客户端怎样恢复，哪些最近写入仍可能丢失，何时应另行考虑分片？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/redis/q.redis.0e1f6a9c3b72.json"},{"id":"q.soft-skill.7d02ecd6ccdd","revision":3,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"你负责数据交付，但依赖团队的优先级或服务承诺与你的需求冲突，且你没有对方的管理权限。请用一次自己的经历说明如何理解双方目标、提出可验证方案、根据反馈调整、形成决定，并处理未能达成一致时的交付风险。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":4,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.7d02ecd6ccdd.json"},{"id":"q.soft-skill.ambiguous-platform-goals","revision":2,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"经理希望你提高数据平台交付效率，但没有给出具体项目。你会怎样了解现状、识别值得解决的问题、提出优先级，与经理校准决策边界，并用第一阶段交付验证方向？可以结合自己的实际经历。","evaluation_basis":"rubric","rubric_count":8,"hint_count":2,"follow_up_count":4,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.ambiguous-platform-goals.json"},{"id":"q.soft-skill.audience-adaptation","revision":2,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请选择一个你熟悉的数据平台，分别用一分钟向技术评审者和准备接入的业务团队负责人介绍。两次使用相同事实，但说明各自需要理解的价值、技术边界、服务承诺、责任和下一步。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.audience-adaptation.json"},{"id":"q.soft-skill.data-integrity-under-pressure","revision":1,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"某数据交付即将用于业务决策，你发现报告遗漏了一批失败样本，修复会错过承诺时间。负责人建议先按当前口径交付，之后再补。你会如何查证影响、沟通风险、提出可执行选择，并决定是否升级？如有类似真实经历，可据实说明。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.data-integrity-under-pressure.json"},{"id":"q.soft-skill.difficult-peer-feedback","revision":1,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请讲述一次你向没有汇报关系的同事提出困难反馈的经历，例如其数据变更反复引发返工或评审沟通影响合作。你如何核实事实、选择沟通方式、共同确定改进，并跟进效果？","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.difficult-peer-feedback.json"},{"id":"q.soft-skill.evidence-bounded-decisions","revision":2,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请讲述一次数据系统发生生产问题、你尚未完全理解根因却必须做决定的经历。说明当时已知和未知的信息、等待的代价、你比较过的选项、做决定所需的最小证据、影响范围和回滚条件，以及后续如何补齐调查。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.evidence-bounded-decisions.json"},{"id":"q.soft-skill.f6ae997e45a3","revision":2,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":4,"origin":"real-interview","prompt":"你接到一个范围复杂、信息不完整、要求 10 天上线的数据项目。你会如何拆解这 10 天？请说明如何澄清目标、识别风险、切出可交付的最小范围、安排设计与实现、持续同步，并在发现无法按原范围交付时如何处理。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.f6ae997e45a3.json"},{"id":"q.soft-skill.failure-accountability-learning","revision":1,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请讲述一次你的判断或行动导致数据项目未达到预期的经历。说明当时为何作出该选择、何时发现偏差、你承担了什么责任、如何控制损失，以及后来在哪次工作中验证了改进。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.failure-accountability-learning.json"},{"id":"q.soft-skill.feedback-driven-change","revision":1,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请讲述一次你收到难以接受、但后来影响了你工作方式的反馈。结合数据工程中的设计、交付或协作，说明你如何核实反馈、决定改变什么，以及如何知道改变有效。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.feedback-driven-change.json"},{"id":"q.soft-skill.mentoring-reduces-key-person-risk","revision":1,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请讲述一次你通过培养同事或转移知识，减少数据团队对你个人依赖的经历。说明最初的能力缺口、你的培养与授权方式、交付风险控制，以及对方后来独立完成工作的证据。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.mentoring-reduces-key-person-risk.json"},{"id":"q.soft-skill.new-team-trust-building","revision":1,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请讲述一次你加入陌生的数据团队或接手遗留平台的经历。面对与你以往习惯不同的架构和流程，你怎样理解现状、建立信任、交付早期成果，再推动较大改变？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.new-team-trust-building.json"},{"id":"q.soft-skill.project-impact-ownership","revision":1,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请用三分钟介绍一个你最有代表性的数据工程项目。说明业务价值、复杂度、你负责的范围、两个关键决策、可验证的结果，以及交付后你继续承担的责任；随后接受对其中一个决策的深入追问。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.project-impact-ownership.json"},{"id":"q.soft-skill.technical-debt-investment","revision":1,"status":"active","visibility":"public","topic":"soft-skill","kind":"behavioral","difficulty":3,"origin":"generated","prompt":"请讲述一次你在数据平台短期交付与长期可靠性、维护成本之间作取舍的经历。你如何证明投入或暂缓技术债治理的价值，争取资源、分阶段实施，并验证收益？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/soft-skill/q.soft-skill.technical-debt-investment.json"},{"id":"q.spark.0be84c49d2ca","revision":3,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":3,"origin":"explicit-heading","prompt":"以 Apache Spark 3.5.x 为范围，解释 Whole-Stage Code Generation 如何将连续支持代码生成的算子组成执行流水线。请说明它减少哪些逐行执行开销，哪些边界会中断融合，以及如何通过生成代码、计划和运行指标验证性能收益或回退。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.0be84c49d2ca.json"},{"id":"q.spark.1fb86bac7d3e","revision":4,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":3,"origin":"explicit-heading","prompt":"以 Spark 3.5.x 为范围，说明一条包含过滤、Join 和聚合的批处理 DataFrame 查询，从构建到由 Action 触发执行，会经历哪些计划阶段。请区分解析、分析、逻辑优化、物理规划和执行前准备，并说明 Catalyst 在其中承担哪些职责。","evaluation_basis":"rubric","rubric_count":4,"hint_count":1,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.1fb86bac7d3e.json"},{"id":"q.spark.22862e4ea305","revision":3,"status":"active","visibility":"public","topic":"spark","kind":"scenario","difficulty":4,"origin":"generated","prompt":"一个 Spark 作业从 5 分钟退化到 45 分钟。请给出一套可重复的诊断流程：如何复现、收集 Spark UI/日志/指标、缩小问题范围、比较逻辑与物理计划、验证修复，并避免只靠反复改配置碰运气？","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/spark/q.spark.22862e4ea305.json"},{"id":"q.spark.2b4f91b1c3c8","revision":2,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":3,"origin":"generated","prompt":"以 Spark 3.5.x 为范围，一条金额计算 SQL 混合使用 Decimal(p,s)、整数和显式 cast，并把结果写入较窄的 Decimal 列。你会如何检查中间类型、精度缩减、舍入与溢出？请用边界样例比较 ANSI 模式和相关精度设置，设计可重复的验收。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.2b4f91b1c3c8.json"},{"id":"q.spark.37ac819e6f02","revision":1,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":2,"origin":"generated","prompt":"Spark RDD 的 Transformation 与 Action 有什么区别？请解释惰性求值、lineage、DAG 和 Job 触发关系，并说明为什么 cache/persist 本身不是 Action，以及重复 Action、宽依赖和副作用代码会带来什么影响。","evaluation_basis":"rubric","rubric_count":6,"hint_count":1,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.37ac819e6f02.json"},{"id":"q.spark.3c26070ac1c9","revision":3,"status":"active","visibility":"public","topic":"spark","kind":"concept","difficulty":3,"origin":"explicit-heading","prompt":"请详细阐述 Spark 中的数据倾斜（Data Skew） 是什么？为什么会发生？你作为一名资深工程师，有哪些行之有效的方法来检测和解决数据倾斜问题？请尽量从实际案例和工程实践的角度来回答。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/spark/q.spark.3c26070ac1c9.json"},{"id":"q.spark.535119bf3b67","revision":3,"status":"active","visibility":"public","topic":"spark","kind":"system-design","difficulty":3,"origin":"explicit-heading","prompt":"以 Spark 3.5.x 为范围，一个团队已有基于 DStream 的微批作业，正在评估迁移到 Structured Streaming。请比较二者的编程模型、状态与恢复方式，并说明为了判断迁移收益，你会收集哪些工作负载和下游写入要求。","evaluation_basis":"rubric","rubric_count":4,"hint_count":1,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.535119bf3b67.json"},{"id":"q.spark.72f0be3a914d","revision":1,"status":"active","visibility":"public","topic":"spark","kind":"scenario","difficulty":3,"origin":"generated","prompt":"同一条批处理数据链路既可以用 Hadoop MapReduce，也可以用 Spark。你会如何从执行模型、DAG 表达能力、中间结果物化、迭代计算、容错、资源与运维成本来选择？请给出一个 Spark 更合适和一个 MapReduce 仍可能合理的场景。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.72f0be3a914d.json"},{"id":"q.spark.85bf856034cf","revision":3,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":3,"origin":"explicit-heading","prompt":"以 Spark 3.5.x RDD 为范围，什么是窄依赖和 Shuffle 依赖？请用 map、union 与按 key 聚合举例，说明父子分区之间的依赖如何影响 Stage 划分和分区丢失后的重算。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.85bf856034cf.json"},{"id":"q.spark.8c76713ff503","revision":2,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":4,"origin":"explicit-heading","prompt":"请详细阐述 Spark 中的内存管理。具体来说，请解释 Unified Memory Management（统一内存管理） 的设计思想。它将 执行内存（Execution Memory）和存储内存（Storage Memory）是如何进行动态平衡的？这种设计解决了哪些问题？","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.8c76713ff503.json"},{"id":"q.spark.9c65eca344e2","revision":3,"status":"active","visibility":"public","topic":"spark","kind":"scenario","difficulty":4,"origin":"generated","prompt":"以 Spark 3.5.x Structured Streaming 的事件时间窗口聚合为例，设计乱序和迟到数据处理。请区分 event time、ingest time 与 processing time，解释 watermark 和状态清理、输出模式的关系，并设计原始数据留存、处理失败隔离和超迟到数据回补。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/spark/q.spark.9c65eca344e2.json"},{"id":"q.spark.9e28a43e64f7","revision":2,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":4,"origin":"generated","prompt":"以 Spark 3.5.x 为范围，AQE 如何利用已经执行阶段的运行时统计调整后续物理计划？请选择分区合并、倾斜 Join 或 Join 策略切换中的两个例子，解释条件、收益及验证方式。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":1,"source_refs":[],"file_href":"../library/questions/spark/q.spark.9e28a43e64f7.json"},{"id":"q.spark.a2e6e3577f1c","revision":4,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":3,"origin":"explicit-heading","prompt":"以 Spark 3.5.x 为范围，假设 Spark 应用已启动且已有可用 Executor。一次 RDD Action 触发 Job 后，DAGScheduler、TaskScheduler 和 SchedulerBackend 怎样协作，把计算交给 Executor 并接收结果？请用含一次 Shuffle 的计算说明 Stage 和 Task 的产生顺序。","evaluation_basis":"rubric","rubric_count":4,"hint_count":3,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.a2e6e3577f1c.json"},{"id":"q.spark.c4e37cba836a","revision":2,"status":"active","visibility":"public","topic":"spark","kind":"system-design","difficulty":4,"origin":"generated","prompt":"一个 Spark 平台希望在计算节点缩容后仍能使用 Shuffle 数据。请设计计算与 Shuffle 存储分离的方案，并以 Celeborn 类远程服务为例，讨论数据推送、复制、背压、容量、故障恢复及运维成本。具体能力需注明所用服务版本。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.c4e37cba836a.json"},{"id":"q.spark.e2d23ccd90d1","revision":1,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":4,"origin":"generated","prompt":"PySpark 作业中，Driver 侧的 Python API、Py4J、JVM SparkContext、Executor 上的 Python worker 和 Catalyst 是如何协作的？普通 Python UDF、Pandas UDF 与原生 Spark SQL 表达式的数据传输和执行成本有什么区别，Apache Arrow 为什么能降低跨语言开销？","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.e2d23ccd90d1.json"},{"id":"q.spark.e4f842352f82","revision":4,"status":"active","visibility":"public","topic":"spark","kind":"scenario","difficulty":4,"origin":"generated","prompt":"你需要降低一组 Spark 批处理任务的成本，同时维持现有吞吐与稳定性。在提出 executor 配置前，你会收集哪些节点规格、价格、负载和运行指标？请说明如何据此设计候选配置及对照实验，并定义接受新配置的标准。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.e4f842352f82.json"},{"id":"q.spark.e9ad98dba094","revision":2,"status":"active","visibility":"public","topic":"spark","kind":"explanation","difficulty":4,"origin":"generated","prompt":"以 Spark 3.5.x 的 RDD 按键排序为范围，解释如何通过采样估计范围边界、按范围重分区并在分区内排序得到全局有序结果。请分析大量重复键、采样误差、倾斜和分区数的影响，并说明怎样验证输出顺序。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.e9ad98dba094.json"},{"id":"q.spark.ffd6ef1303d3","revision":1,"status":"active","visibility":"public","topic":"spark","kind":"scenario","difficulty":3,"origin":"generated","prompt":"你要用 Spark 读取大量来自同一张 3000 列宽表的 Parquet 文件，作业在真正扫描数据前就很慢。你会如何验证是否由 schema merging 引起，并决定 spark.sql.parquet.mergeSchema 应该开启还是关闭？","evaluation_basis":"rubric","rubric_count":5,"hint_count":1,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.ffd6ef1303d3.json"},{"id":"q.spark.ragged-text-aggregation","revision":1,"status":"active","visibility":"public","topic":"spark","kind":"coding","difficulty":3,"origin":"generated","prompt":"文本文件的每行是长度不定的逗号分隔整数序列，格式不支持 CSV 引号或字段内换行。请用 PySpark 计算所有正数的平均值，处理空行、非法 token 和无正数的输入，并说明局部聚合怎样减少传输。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.ragged-text-aggregation.json"},{"id":"q.spark.single-node-platform-tradeoffs","revision":1,"status":"active","visibility":"public","topic":"spark","kind":"scenario","difficulty":3,"origin":"generated","prompt":"假设一个批处理任务的活跃数据集可以放入单机内存，但现有 Spark 平台已经提供数据接入、权限、调度、重试和结果发布。你会如何比较保留平台运行与改成独立 Python 服务？给出性能、运维、迁移和未来增长的判断依据。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/spark/q.spark.single-node-platform-tradeoffs.json"},{"id":"q.sql.7ab69acb4a1e","revision":5,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"real-interview","prompt":"给定 employee(employee_id, department_id, salary)，employee_id 唯一，字段均非 NULL。请分别写 SQL：一，按薪资降序返回每部门最多三名员工，同薪按 employee_id 升序；二，返回每部门前三个不同薪资档位的全部员工。输出全部三列，并解释两种查询在并列时的差别。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":1,"source_refs":[],"file_href":"../library/questions/sql/q.sql.7ab69acb4a1e.json"},{"id":"q.sql.7fcdc6255018","revision":5,"status":"active","visibility":"public","topic":"sql","kind":"explanation","difficulty":3,"origin":"explicit-heading","prompt":"请解释 SQL 窗口函数的语义和执行方式。PARTITION BY、ORDER BY 与 window frame 分别控制什么？它与 GROUP BY 有什么本质区别？请用排名、累计值或滑动窗口举例，并说明常见的正确性与性能陷阱。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/sql/q.sql.7fcdc6255018.json"},{"id":"q.sql.average-adjacent-transaction-interval","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"manual","prompt":"给定 transactions(trans_id, user_id, trans_date, amount)，样例数据为 (1,1,'2024-01-01',100)、(2,1,'2024-01-05',200)、(3,1,'2024-02-01',150)、(4,2,'2024-01-10',300)、(5,2,'2024-02-05',100)、(6,2,'2024-02-10',250)、(7,3,'2024-01-20',400)、(8,3,'2024-02-20',100)。请写 SQL 计算每个用户相邻两次交易之间的平均间隔天数，只返回至少有两次交易的用户，输出 user_id、avg_interval_days 并四舍五入到两位小数。按通常的日期差定义，期望结果为 (1,15.50)、(2,15.50)、(3,31.00)。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.average-adjacent-transaction-interval.json"},{"id":"q.sql.calendar-month-active-users","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"generated","prompt":"访问表 visits(event_id, event_time, user_id, resource_id) 的 event_id 唯一，event_time 为 UTC；user_id 可为 NULL。写 SQL 计算最近三个完整自然月的每月活跃用户数，再为各月返回访问次数最高的三个不同名次的资源，保留并列。月份按指定业务时区计算，NULL 用户不计入活跃用户。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.calendar-month-active-users.json"},{"id":"q.sql.calendar-window-quality","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"generated","prompt":"质量表 quality_day(dataset_id, day, good_rows, total_rows) 中，每个数据集每天至多一行，但日期可能缺失。请写 SQL 计算每条记录当日及之前六个自然日的总 good_rows、total_rows 和加权通过率。规定缺失日期不增加计数，分母为零时通过率为 NULL；说明所用 SQL 方言。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.calendar-window-quality.json"},{"id":"q.sql.conditional-aggregation-pivot","revision":3,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":2,"origin":"manual","prompt":"给定 monthly_sales(product_id, month, revenue)，month 只取 1、2、3，字段均非 NULL。同一产品同一月份可以有多行销售记录，需要累加；某月无记录时输出 0。请写 SQL，每个出现过的 product_id 输出一行 product_id、m1、m2、m3。样例数据为 (100,1,100.00)、(100,2,150.00)、(100,3,200.00)、(200,1,80.00)、(200,2,120.00)、(200,3,90.00)。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":1,"source_refs":[],"file_href":"../library/questions/sql/q.sql.conditional-aggregation-pivot.json"},{"id":"q.sql.consecutive-login-intervals","revision":2,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":4,"origin":"manual","prompt":"给定 logins(user_id, login_date)，样例数据为用户 1 在 2024-01-01、01-02、01-04、01-05、01-06 登录，用户 2 在 01-01、01-02、01-03、01-05 登录，用户 3 在 01-03、01-04 登录。请写 SQL 返回每个用户的所有连续登录区间，连续指相邻自然日相差 1 天。输出 user_id、start_date、end_date、length，按 user_id、start_date 升序；期望区间为用户 1 的 01-01 至 01-02 和 01-04 至 01-06，用户 2 的 01-01 至 01-03 和单日 01-05，用户 3 的 01-03 至 01-04。同一用户同一天可能有重复记录，应先按自然日去重。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/sql/q.sql.consecutive-login-intervals.json"},{"id":"q.sql.cumulative-revenue","revision":3,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"manual","prompt":"给定 sales(sale_id, product_id, sale_date, quantity, price)，sale_id 唯一，sale_date 为 DATE，字段均非 NULL。请按产品逐笔累计 quantity*price，同日多笔按 sale_id 升序。输出 sale_id、product_id、sale_date、cumulative_revenue，并按 product_id、sale_date、sale_id 排序。样例数据为 (1,100,'2024-01-01',2,10.00)、(2,100,'2024-01-05',1,10.00)、(3,100,'2024-02-01',3,10.00)、(4,200,'2024-01-03',5,20.00)、(5,200,'2024-02-02',2,20.00)、(6,200,'2024-02-10',4,20.00)、(7,300,'2024-01-10',1,30.00)、(8,300,'2024-03-01',2,30.00)。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":1,"source_refs":[],"file_href":"../library/questions/sql/q.sql.cumulative-revenue.json"},{"id":"q.sql.customer-product-count-and-spend","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"manual","prompt":"给定 customers(customer_id, customer_name)、orders(order_id, customer_id, order_date) 和 order_items(order_id, product_id, quantity, unit_price)。样例中 Alice 的两笔订单包含 p1:2*100、p2:1*150、p3:1*200；Bob 购买 p1:1*100、p2:2*100；Carol 购买 p1:3*100、p2:1*200。请写 SQL 找出购买至少 3 种不同产品且总消费金额大于 500 的客户，输出 customer_id、customer_name、total_spent、distinct_products_count，并按 total_spent 降序。期望结果只有 Alice，total_spent 为 550，distinct_products_count 为 3。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.customer-product-count-and-spend.json"},{"id":"q.sql.employee-manager-self-join","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":2,"origin":"manual","prompt":"给定 employees(emp_id, emp_name, manager_id, salary)，其中 manager_id 引用同表的 emp_id。样例数据为 (1,'Alice',NULL,10000)、(2,'Bob',1,8000)、(3,'Carol',1,12000)、(4,'Dave',2,9000)、(5,'Eve',2,11000)、(6,'Frank',3,7000)。请写 SQL 找出薪资高于直属经理的员工，输出 emp_name、salary、manager_salary；期望结果为 Carol、Dave、Eve。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.employee-manager-self-join.json"},{"id":"q.sql.first-last-order-interval","revision":2,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":2,"origin":"manual","prompt":"给定 orders(order_id, customer_id, order_date, amount)，样例中客户 1 的订单日期为 2024-01-01、2024-01-10、2024-02-01，客户 2 为 2024-01-05、2024-01-15、2024-02-05，客户 3 为 2024-01-20、2024-02-01、2024-03-01。请写 SQL 返回每个客户第一次订单日期、最后一次订单日期及二者相隔天数，输出 customer_id、first_order_date、last_order_date、days_between，按 customer_id 升序。客户只有一次订单时 days_between 为 0；样例期望间隔为 31、31、41。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.first-last-order-interval.json"},{"id":"q.sql.incremental-deduplication","revision":3,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":4,"origin":"generated","prompt":"给定完整事件历史 events(event_id, entity_id, event_time, ingest_time, operation, payload)，字段均非 NULL，operation 为 UPSERT 或 DELETE，UPSERT 的 payload 是完整状态。同一 event_id 的多条记录是该事件修订，先保留 ingest_time 最大者；同 ID 同摄取时间内容冲突的事件隔离。再按 (event_time, ingest_time, event_id) 字典序确定每个实体的最新事件。请写 SQL 返回 entity_id、is_deleted、payload；DELETE 保留墓碑且 payload=NULL。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.incremental-deduplication.json"},{"id":"q.sql.monthly-threshold-conditional-aggregation","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":2,"origin":"manual","prompt":"给定 orders(order_id, customer_id, order_date, total_amount)，样例数据为 (1,101,'2024-01-05',120.50)、(2,102,'2024-01-06',80.00)、(3,101,'2024-01-10',200.00)、(4,103,'2024-01-12',45.00)、(5,102,'2024-01-15',150.00)、(6,101,'2024-02-01',300.00)、(7,103,'2024-02-05',95.00)、(8,102,'2024-02-10',210.00)。请写 SQL 找出 2024 年 1 月和 2 月的订单总金额分别都大于 150 的客户，输出 customer_id；期望结果为 101、102。order_date 可能是包含时间的 timestamp。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.monthly-threshold-conditional-aggregation.json"},{"id":"q.sql.never-purchased-product","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":2,"origin":"manual","prompt":"给定 customers(customer_id, customer_name)，样例为 (1,'Alice')、(2,'Bob')、(3,'Carol')、(4,'Dave')；orders(order_id, customer_id)，样例为 (101,1)、(102,1)、(103,2)、(104,3)；order_items(order_id, product_id)，其中 Alice 买过 p1、p2、p3，Bob 只买过 p2，Carol 买过 p1、p3，Dave 没有订单。请写 SQL 找出从未购买过产品 p1 的客户，输出 customer_id、customer_name；期望结果为 Bob 和 Dave。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.never-purchased-product.json"},{"id":"q.sql.pipeline-latency-ranking","revision":3,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"generated","prompt":"给定 runs(run_id, owner_id, started_at, finished_at, status, ingest_time)。同 run_id 的 ingest_time 严格不同，先取最新版本；owner_id 非 NULL，status=SUCCESS 表示成功。月份按 started_at 的 UTC 日期确定。请统计上一完整自然月各 owner 的有效成功次数和平均耗时秒数，仅保留至少三次者，并返回平均耗时最短的两个不同名次，保留并列。有效要求起止时间非 NULL 且 finished_at\u003e=started_at，排名使用未舍入均值。另输出异常计数表：同月 SUCCESS 中结束时间缺失或倒置的记录按 owner 计数；开始时间缺失的 SUCCESS 单列为无法归属月份，按 owner 统计全量最新记录中的数量。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.pipeline-latency-ranking.json"},{"id":"q.sql.query-plan-optimization","revision":2,"status":"active","visibility":"public","topic":"sql","kind":"scenario","difficulty":4,"origin":"generated","prompt":"一条原本 10 分钟完成的分析 SQL 变成 90 分钟。请给出从结果正确性、数据变化、统计信息和执行计划入手的诊断流程，并说明如何判断瓶颈来自扫描、过滤、Join、聚合、排序、数据倾斜还是资源竞争。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/sql/q.sql.query-plan-optimization.json"},{"id":"q.sql.request-completion-funnel","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"generated","prompt":"事件表 actions(event_id, account_id, kind, event_time) 使用 UTC 时间，kind 为 REQUEST 或 COMPLETE。对每个账户选择 [start_time,end_time) 内最早的 REQUEST，时间并列以 event_id 升序决胜，再找其后且不超过六小时的最早 COMPLETE。输出请求及匹配完成时间，未完成仍保留。字段均非 NULL 且 event_id 唯一。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.request-completion-funnel.json"},{"id":"q.sql.scd2-event-timeline","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"generated","prompt":"套餐变更历史 plan_events(event_id, account_id, effective_at, received_at, plan_code) 使用 UTC；同一 event_id 的更新按 received_at 取最新，同一事件与接收时间内容冲突则隔离。对同账户同 effective_at 的事件约定按 (received_at,event_id) 最大者决胜。请用 SQL 从完整历史生成 plan_history(account_id, plan_code, valid_from, valid_to, is_current)，只为属性真实变化生成版本，并说明迟到更正后的原子重建方式。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.scd2-event-timeline.json"},{"id":"q.sql.top-product-by-customer-with-ties","revision":2,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"manual","prompt":"给定 orders(order_id, customer_id)，样例为 (101,1)、(102,1)、(103,2)、(104,2)、(105,2)、(106,3)；order_items(order_id, product_id, quantity)，样例为 (101,'p1',5)、(101,'p2',3)、(102,'p1',2)、(102,'p3',4)、(103,'p1',5)、(103,'p2',5)、(104,'p1',6)、(104,'p2',6)、(105,'p3',1)、(106,'p1',1)。请写 SQL 返回每位客户购买总数量最多的产品，并保留并列第一。输出 customer_id、product_id、total_quantity，按 customer_id、product_id 升序。期望结果为 (1,p1,7)、(2,p1,11)、(2,p2,11)、(3,p1,1)。","evaluation_basis":"rubric","rubric_count":5,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.top-product-by-customer-with-ties.json"},{"id":"q.sql.versioned-state-tombstones","revision":1,"status":"active","visibility":"public","topic":"sql","kind":"coding","difficulty":3,"origin":"generated","prompt":"设备状态事件 events(event_id, device_id, version, operation, payload) 可以重复和乱序；同一设备 version 单调表示业务顺序，相同 device_id/version 必须有相同内容，否则隔离。目标 device_state(device_id, version, is_deleted, payload) 保留最新状态与删除墓碑。假设单写者、每批原子提交，请写 SQL 选取本批最终事件并合并，使重跑不改变结果，旧 UPSERT 不会复活已删除设备，更新版本的 UPSERT 可恢复设备。","evaluation_basis":"rubric","rubric_count":8,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/sql/q.sql.versioned-state-tombstones.json"},{"id":"q.streaming.freshness-execution-tradeoffs","revision":1,"status":"active","visibility":"public","topic":"streaming","kind":"scenario","difficulty":3,"origin":"generated","prompt":"假设分析任务目前每日运行，业务希望大多数结果在十五分钟内可见，偶发迟到数据允许次日修正。你会如何比较定时批处理、微批和持续流式执行？说明延迟口径、正确性、恢复、状态成本，以及未来要求数秒延迟时的演进边界。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/streaming/q.streaming.freshness-execution-tradeoffs.json"},{"id":"q.system-design.831963b717f1","revision":2,"status":"active","visibility":"public","topic":"system-design","kind":"system-design","difficulty":4,"origin":"real-interview","prompt":"请设计一个面向多业务数据源的生产级 ETL/ELT 平台。先澄清规模、时效、数据质量和 SLA，再给出摄取、编排、计算、存储、元数据、可观测性与发布架构。最后按优先级说明：如果你指导团队从 MVP 演进到稳定平台，会先保证什么，后建设什么，为什么？","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.831963b717f1.json"},{"id":"q.system-design.controlled-operations-automation","revision":1,"status":"active","visibility":"public","topic":"system-design","kind":"system-design","difficulty":3,"origin":"generated","prompt":"一个数据团队经常跨多个系统排查数据延迟。你会如何从人工运行手册开始建立自动化，决定哪些步骤使用脚本或工作流、哪些需要人工判断，并在引入模型辅助时控制权限、错误传播和不可逆操作？","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.controlled-operations-automation.json"},{"id":"q.system-design.hot-key-online-repartition","revision":1,"status":"active","visibility":"public","topic":"system-design","kind":"system-design","difficulty":4,"origin":"generated","prompt":"某实时数据聚合平台按租户分片，一个大租户贡献了 40% 的写入并拖慢其他租户。请设计定位热点、临时止损和在线迁移方案。说明多 key 分片偏斜与单 key 热点的区别，以及迁移期间怎样维持正确性和控制延迟。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.hot-key-online-repartition.json"},{"id":"q.system-design.latest-state-fanout","revision":1,"status":"active","visibility":"public","topic":"system-design","kind":"system-design","difficulty":4,"origin":"generated","prompt":"设计一个实时设备状态看板：高峰有 100 万在线用户，每人订阅 50 台设备，共有 1000 万台设备；活跃设备平均每秒更新一次，每条状态约 100 字节。看板只需最新状态，目标端到端 p99 新鲜度为两秒；审计端另需保留每次原始变化。请澄清活跃比例和热点分布，设计摄取、聚合、分发、客户端连接及恢复流程。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.latest-state-fanout.json"},{"id":"q.system-design.migration-validation-rollback","revision":1,"status":"active","visibility":"public","topic":"system-design","kind":"system-design","difficulty":3,"origin":"generated","prompt":"假设你要将持续接收增量数据的分析平台迁移到新环境，要求业务查询持续可用，并允许在验收失败时回滚。请设计历史回填、增量追赶、双跑对账、分阶段切换与回滚方案，重点解释如何证明数据语义正确以及处理切换后的新写入。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.migration-validation-rollback.json"},{"id":"q.system-design.self-service-sql-boundaries","revision":1,"status":"active","visibility":"public","topic":"system-design","kind":"system-design","difficulty":3,"origin":"generated","prompt":"为分析人员设计一个自助提交 SQL 数据任务的入口，使其在提交前发现语法、元数据和权限问题，并安全获得执行结果。解释编辑、校验、元数据访问、执行身份、配额与失败反馈如何协作，以及元数据服务暂时不可用时如何降级。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.self-service-sql-boundaries.json"},{"id":"q.system-design.shared-platform-boundaries","revision":1,"status":"active","visibility":"public","topic":"system-design","kind":"scenario","difficulty":3,"origin":"generated","prompt":"多个团队要求相似但不完全一致的数据管道。你如何决定继续逐个交付，还是建设共享组件或平台？说明适用边界、最小公共接口、例外处理、迁移成本和效果验证。","evaluation_basis":"rubric","rubric_count":6,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.shared-platform-boundaries.json"},{"id":"q.system-design.stateful-stream-failover","revision":1,"status":"active","visibility":"public","topic":"system-design","kind":"system-design","difficulty":4,"origin":"generated","prompt":"一个流式处理器按设备聚合多个上游的增量事件并输出最新状态。主备节点各自订阅上游，上游可能乱序、重复或丢包；主节点失联后希望十秒内恢复服务。请设计可验证的恢复与切换方案，说明状态一致性的条件，以及网络分区时如何防止旧主继续产生有效输出。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":3,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.stateful-stream-failover.json"},{"id":"q.system-design.unfamiliar-domain-discovery","revision":3,"status":"active","visibility":"public","topic":"system-design","kind":"scenario","difficulty":3,"origin":"generated","prompt":"一家设备租赁公司希望用数据分析改善经营。请设计它的分析指标与数据模型。你可以先向我澄清业务目标和流程。","evaluation_basis":"rubric","rubric_count":4,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.unfamiliar-domain-discovery.json"},{"id":"q.system-design.workload-evidence-storage-choice","revision":1,"status":"active","visibility":"public","topic":"system-design","kind":"system-design","difficulty":4,"origin":"generated","prompt":"一个三人数据团队要为内部实时指标平台选择服务存储。已知需求是每秒 2 万次更新、峰值每秒 5000 次按租户查询最近一小时的指标，查询 p99 小于 200ms，数据保留 90 天；团队熟悉关系型数据库，有人建议引入新的分布式存储。请澄清缺失约束，提出至少两个方案，并设计能支持选型的验证过程。","evaluation_basis":"rubric","rubric_count":7,"hint_count":2,"follow_up_count":2,"source_refs":[],"file_href":"../library/questions/system-design/q.system-design.workload-evidence-storage-choice.json"}]},"jobs":[],"cycles":[],"primary_cycle":null,"attempts":{"total":0,"latest":[],"review_notes_href":"public-review.md","review_page_href":"public-review.html"},"reports":[],"review_intervals":[{"score":0,"days":1},{"score":1,"days":2},{"score":2,"days":4},{"score":3,"days":10},{"score":4,"days":30}],"score_fields":["recall","correctness","depth","communication"]};
+
+    const byId = id => document.getElementById(id);
+    const formatDate = value => value ? new Intl.DateTimeFormat("zh-CN", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) : "未记录";
+    const countOf = (items, name) => items.find(item => item.name === name)?.count ?? 0;
+    const percent = value => `${Math.round((value ?? 0) * 100)}%`;
+    const shortPrompt = value => value.length > 68 ? `${value.slice(0, 68)}…` : value;
+    const normalized = value => String(value ?? "").toLocaleLowerCase("zh-CN");
+    const questionAnchor = questionId => `question-${questionId.replace(/[^a-zA-Z0-9_-]/g, "-")}`;
+    const formatBytes = value => value < 1024 ? `${value} B` : `${(value / 1024).toFixed(1)} KB`;
+
+    function create(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    function statusPill(status) {
+      return create("span", `pill ${status}`, status);
+    }
+
+    function searchable(items, query, fields) {
+      const needle = normalized(query).trim();
+      if (!needle) return items;
+      return items.filter(item => normalized(fields(item)).includes(needle));
+    }
+
+    function renderOverview() {
+      const plan = dashboardData.daily_plan;
+      if (plan) {
+        byId("daily-budget").textContent = `按 ${plan.minutes} 分钟安排，优先使用当前练习预算。`;
+        byId("daily-message").textContent = `${plan.as_of} 的建议：${plan.message} 页面是生成时的快照，开始练习时会重新核对状态。`;
+        for (const task of plan.tasks) {
+          const item = document.createElement("li");
+          item.textContent = `${task.prompt}（约 ${task.minutes} 分钟）· ${task.reason}`;
+          byId("daily-tasks").append(item);
+        }
+        byId("practice-command").value = plan.command;
+        byId("copy-practice").addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(plan.command);
+            byId("copy-status").textContent = "已复制，粘贴给 Coach 即可。";
+          } catch {
+            byId("practice-command").focus();
+            byId("practice-command").select();
+            byId("copy-status").textContent = "已选中指令，请使用系统复制快捷键。";
+          }
+        });
+        if (!plan.gaps.length) byId("daily-gaps").textContent = "当前没有足够的独立作答低分证据，可继续练习观察。";
+        for (const gap of plan.gaps) {
+          const item = document.createElement("p");
+          const question = dashboardData.questions.items.find(q => q.id === gap.question_id);
+          item.textContent = `${question?.prompt || gap.question_id}：${gap.evidence.join("；")}（${gap.score}/4，依据 ${gap.event_id}）`;
+          byId("daily-gaps").append(item);
+        }
+        const improvement = plan.improvement;
+        byId("daily-improvement").textContent = improvement
+          ? `${improvement.question_id} 最近无提示作答从 ${improvement.from}/4 提升到 ${improvement.to}/4。依据：${improvement.evidence.join("、")}。单次变化仍需后续验证。`
+          : "尚无可比较的无提示进步记录。";
+        byId("daily-untested").textContent = plan.untested_topics.length ? `尚未测到：${plan.untested_topics.join("、")}。这些主题的能力有待观察。` : "";
+        const diagnostic = plan.diagnostic_coverage;
+        const labels = names => names.map(name => plan.capability_labels?.[name] || name).join("、");
+        if (diagnostic) {
+          byId("daily-not-included").textContent = `本次未涉及的能力：${labels(diagnostic.not_included_capabilities) || "无"}。短测完成仅表示所选题目已练完。`;
+          byId("daily-unavailable").textContent = diagnostic.unavailable_capabilities.length ? `当前题库或所选范围缺少：${labels(diagnostic.unavailable_capabilities)}。` : "";
+          byId("daily-unverified").textContent = `尚无独立作答证据的能力：${labels(diagnostic.unverified_capabilities) || "无"}。单题表现只提供初步观察。`;
+        } else if (plan.awaiting_independent_question_ids?.length) {
+          byId("daily-unverified").textContent = `${plan.awaiting_independent_question_ids.length} 道题待独立验证；辅助练习和辅助程度未记录的旧回答均保留原始评分。`;
+        }
+      }
+      byId("metric-sources").textContent = dashboardData.sources.total;
+      const pendingSources = countOf(dashboardData.sources.extraction_statuses, "pending");
+      byId("metric-sources-detail").textContent = `${dashboardData.sources.statuses.map(item => `${item.count} ${item.name}`).join(" · ")} · ${pendingSources} pending`;
+      byId("metric-questions").textContent = dashboardData.questions.total;
+      byId("metric-questions-detail").textContent = dashboardData.questions.visibilities.map(item => `${item.count} ${item.name}`).join(" · ");
+      byId("metric-cycles").textContent = dashboardData.cycles.length;
+      byId("metric-cycles-detail").textContent = `${dashboardData.cycles.filter(item => item.status === "active").length} active · ${dashboardData.reports.length} reports`;
+      byId("metric-attempts").textContent = dashboardData.attempts.total;
+      byId("metric-attempts-detail").textContent = dashboardData.attempts.total ? "全部保存在 append-only Event" : "尚未记录真实回答";
+    byId("health-summary").textContent = `${dashboardData.questions.total} Questions · ${dashboardData.sources.total} Sources\n${countOf(dashboardData.questions.visibilities, "public")} Public · ${countOf(dashboardData.questions.visibilities, "private")} Private`;
+      byId("build-meta").textContent = `PROTOCOL v${dashboardData.protocol_version}\nGENERATED ${formatDate(dashboardData.generated_at)}`;
+      byId("footer-generated").textContent = `Generated ${dashboardData.generated_at}`;
+    }
+
+    function renderCycle() {
+      const container = byId("cycle-container");
+      const cycle = dashboardData.primary_cycle;
+      if (!cycle) {
+        container.append(create("div", "panel empty", "当前没有准备周期。告诉 Agent 目标主题和角色即可创建。"));
+        return;
+      }
+
+      const panel = create("article", "panel");
+      const summary = create("div", "cycle-summary");
+      const main = create("div", "cycle-main");
+      const title = create("div", "cycle-title");
+      title.append(create("h3", "", cycle.name), statusPill(cycle.status));
+      main.append(title, create("div", "cycle-id", cycle.id));
+
+      if (cycle.job) {
+        const jobLine = create("div", "cycle-id");
+        jobLine.append(create("span", "", `${cycle.job.company} · ${cycle.job.role_title} · ${cycle.job.target_level ?? "level TBD"} · `));
+        const brief = create("a", "", "Job Brief");
+        brief.href = cycle.job.brief_href;
+        jobLine.append(brief);
+        if (cycle.job.posting_url) {
+          jobLine.append(create("span", "", " · "));
+          const posting = create("a", "", "Posting");
+          posting.href = cycle.job.posting_url;
+          posting.target = "_blank";
+          posting.rel = "noreferrer";
+          jobLine.append(posting);
+        }
+        main.append(jobLine);
+      }
+
+      const tags = create("div", "cycle-meta");
+      [cycle.kind, ...cycle.topics, ...cycle.target_roles, cycle.review_policy].forEach(value => tags.append(create("span", "tag", value)));
+      main.append(tags);
+
+      const copy = create("div", "progress-copy");
+      copy.append(create("span", "", `${cycle.totals.covered} covered`), create("span", "", `${cycle.totals.unseen} unseen · ${cycle.totals.due} due`));
+      const track = create("div", "progress-track");
+      const fill = create("div", "progress-fill");
+      fill.style.width = percent(cycle.statistics.coverage_rate);
+      track.append(fill);
+      main.append(copy, track);
+
+      const stats = create("div", "cycle-stats");
+      [
+        [cycle.totals.questions, "questions"],
+        [percent(cycle.statistics.coverage_rate), "coverage"],
+        [cycle.statistics.total_attempts, "attempts"],
+        [cycle.statistics.next_due_at ?? "—", "next due"]
+      ].forEach(([value, label]) => {
+        const item = create("div", "cycle-stat");
+        item.append(create("strong", "", value), create("span", "", label));
+        stats.append(item);
+      });
+      summary.append(main, stats);
+      panel.append(summary);
+      container.append(panel);
+
+      const list = create("div", "question-list");
+      const header = create("div", "question-row header");
+      ["Question", "Status", "Score", "Next due"].forEach(value => header.append(create("div", "", value)));
+      list.append(header);
+      cycle.questions.forEach(question => {
+        const row = create("div", "question-row");
+        const prompt = create("div", "question-prompt");
+        const promptLink = create("a", "", question.prompt);
+        promptLink.href = `#${questionAnchor(question.id)}`;
+        prompt.append(promptLink, create("small", "", `${question.id} · ${question.topic} · ${question.visibility} · rev ${question.revision}`));
+        const score = question.knowledge_score === null ? (question.attempt_count ? "待独立验证" : "未作答") : `${question.knowledge_score}/4`;
+        row.append(prompt, statusPill(question.status), create("div", "cell-muted", score), create("div", "cell-muted", question.next_due_at ?? "—"));
+        list.append(row);
+      });
+      container.append(list);
+    }
+
+    function renderSourceList(query = "") {
+      const container = byId("source-list");
+      const items = searchable(
+        dashboardData.sources.items,
+        query,
+        item => [item.title, item.path, item.format, ...item.topics, item.status, item.question_extraction_status].join(" ")
+      );
+      container.replaceChildren();
+      byId("source-list-count").textContent = `${items.length} / ${dashboardData.sources.total} documents`;
+      if (!items.length) {
+        container.append(create("div", "list-empty", "没有匹配的知识文档。"));
+        return;
+      }
+      items.forEach(item => {
+        const row = create("div", "directory-row");
+        const main = create("div", "");
+        const link = create("a", "directory-title", item.title);
+        link.href = item.file_href;
+        main.append(link, create("span", "directory-path", item.path));
+        const tags = create("div", "directory-tags");
+        tags.append(create("span", "meta-chip", item.format));
+        item.topics.forEach(topic => tags.append(create("span", "meta-chip", topic)));
+        main.append(tags);
+
+        const meta = create("div", "directory-meta");
+        meta.append(
+          statusPill(item.status),
+          statusPill(item.question_extraction_status),
+          ...(item.unit_count ? [create("span", "meta-chip", `${item.unit_count} ${item.unit_label}${item.unit_count === 1 ? "" : "s"}`)] : []),
+          create("span", "meta-chip", formatBytes(item.size_bytes)),
+          create("span", "meta-chip", formatDate(item.modified_at))
+        );
+        row.append(main, meta);
+        container.append(row);
+      });
+    }
+
+    function renderSourceLibrary() {
+      const search = byId("source-search");
+      search.addEventListener("input", () => renderSourceList(search.value));
+      renderSourceList();
+    }
+
+    function renderQuestionDetails(query = "", visibility = "all") {
+      const container = byId("question-detail-list");
+      let items = searchable(
+        dashboardData.questions.items,
+        query,
+        item => [
+          item.id,
+          item.prompt,
+          item.topic,
+          item.kind,
+          item.origin,
+          item.visibility,
+          ...item.source_refs.flatMap(reference => [reference.path, reference.heading])
+        ].join(" ")
+      );
+      if (visibility !== "all") items = items.filter(item => item.visibility === visibility);
+      container.replaceChildren();
+      byId("question-list-count").textContent = `${items.length} / ${dashboardData.questions.total} questions`;
+      if (!items.length) {
+        container.append(create("div", "list-empty", "没有匹配的题目。"));
+        return;
+      }
+      items.forEach(item => {
+        const row = create("div", "directory-row");
+        row.id = questionAnchor(item.id);
+        const main = create("div", "");
+        main.append(create("p", "directory-description", item.prompt));
+
+        const fileLink = create("a", "directory-path", `${item.id} · revision ${item.revision} · ${item.evaluation_basis}`);
+        fileLink.href = item.file_href;
+        main.append(fileLink);
+
+        const sourceLinks = create("div", "source-links");
+        item.source_refs.forEach(reference => {
+          const location = reference.unit ? ` · ${reference.unit_label} ${reference.unit}` : "";
+          const sourceLink = create("a", "source-link", `Source: ${reference.path}${location}`);
+          sourceLink.href = reference.file_href;
+          sourceLink.title = reference.heading;
+          sourceLinks.append(sourceLink);
+        });
+        if (item.source_refs.length) main.append(sourceLinks);
+
+        const meta = create("div", "directory-meta");
+        meta.append(
+          statusPill(item.visibility),
+          statusPill(item.status),
+          create("span", "meta-chip", item.topic),
+          create("span", "meta-chip", item.kind),
+          create("span", "meta-chip", `difficulty ${item.difficulty}`),
+          create("span", "meta-chip", `${item.rubric_count} rubric`),
+          create("span", "meta-chip", `${item.hint_count} hints`),
+          create("span", "meta-chip", `${item.follow_up_count} follow-ups`)
+        );
+        row.append(main, meta);
+        container.append(row);
+      });
+    }
+
+    function renderQuestionBank() {
+      const visibilities = byId("question-visibilities");
+      dashboardData.questions.visibilities.forEach(item => {
+        const row = create("div", "status-item");
+        row.append(statusPill(item.name), create("b", "", item.count));
+        visibilities.append(row);
+      });
+
+      const topics = byId("topic-list");
+      const max = Math.max(...dashboardData.questions.topics.map(item => item.count), 1);
+      dashboardData.questions.topics.forEach(item => {
+        const row = create("div", "topic-row");
+        const track = create("div", "topic-track");
+        const fill = create("div", "topic-fill");
+        fill.style.width = `${item.count / max * 100}%`;
+        track.append(fill);
+        row.append(create("span", "", item.name), track, create("span", "topic-count", item.count));
+        topics.append(row);
+      });
+      byId("topic-count-label").textContent = `${dashboardData.questions.topics.length} topics`;
+
+      const search = byId("question-search");
+      const visibility = byId("question-visibility-filter");
+      const refresh = () => renderQuestionDetails(search.value, visibility.value);
+      search.addEventListener("input", refresh);
+      visibility.addEventListener("change", refresh);
+      refresh();
+    }
+
+    function renderIntervals() {
+      const container = byId("interval-list");
+      dashboardData.review_intervals.forEach(item => {
+        const cell = create("div", "interval");
+        cell.append(create("strong", "", item.score), create("span", "", `知识分 · ${item.days} 天后`));
+        container.append(cell);
+      });
+    }
+
+    function initializeAnswerReview() {
+      byId("review-page-link").href = dashboardData.attempts.review_page_href;
+      byId("review-notes-link").href = dashboardData.attempts.review_notes_href;
+      byId("attempt-review-count").textContent = `${dashboardData.attempts.total} attempts`;
+    }
+
+    function renderHistory() {
+      const attempts = byId("attempt-history");
+      byId("attempt-count-label").textContent = `${dashboardData.attempts.total} events`;
+      if (!dashboardData.attempts.latest.length) {
+        attempts.append(create("div", "empty", "完成第一道题后，原回答和评价会保存为 AttemptEvent。"));
+      } else {
+        const list = create("div", "history-list");
+        const facts = create("div", "history-item");
+        facts.append(create("b", "", `${dashboardData.attempts.total} 次回答已持久化`), create("small", "", "原回答、评分、遗漏点、反馈和建议表达保存在 workspace/events/ 的只追加 JSON 中。"));
+        const projection = create("div", "history-item");
+        projection.append(create("b", "", "Dashboard 与 Markdown 都是可重建视图"), create("small", "", "刷新 Dashboard 时会从 AttemptEvent 重新生成，不依赖对话记录，也不会覆盖原始事实。"));
+        list.append(facts, projection);
+        attempts.append(list);
+      }
+
+      const reports = byId("report-history");
+      byId("report-count-label").textContent = `${dashboardData.reports.length} reports`;
+      if (!dashboardData.reports.length) {
+        reports.append(create("div", "empty", "准备周期结束后，这里会出现固定的 JSON 和 Markdown 总结。"));
+      } else {
+        const list = create("div", "history-list");
+        dashboardData.reports.forEach(item => {
+          const row = create("div", "history-item");
+          const link = create("a", "", item.name);
+          link.href = item.markdown_path;
+          row.append(link, create("small", "", `${formatDate(item.completed_at)} · ${item.totals.covered}/${item.totals.questions} covered`));
+          list.append(row);
+        });
+        reports.append(list);
+      }
+    }
+
+    function watchNavigation() {
+      const links = [...document.querySelectorAll(".nav a")];
+      const sections = links.map(link => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+      let scheduled = false;
+      const update = () => {
+        const marker = window.scrollY + Math.min(window.innerHeight * .3, 240);
+        let current = sections[0];
+        sections.forEach(section => {
+          if (section.offsetTop <= marker) current = section;
+        });
+        links.forEach(link => link.classList.toggle("active", link.getAttribute("href") === `#${current.id}`));
+        scheduled = false;
+      };
+      window.addEventListener("scroll", () => {
+        if (scheduled) return;
+        scheduled = true;
+        window.requestAnimationFrame(update);
+      }, { passive: true });
+      window.addEventListener("hashchange", update);
+      update();
+    }
+
+    renderOverview();
+    renderCycle();
+    renderSourceLibrary();
+    renderQuestionBank();
+    renderIntervals();
+    initializeAnswerReview();
+    renderHistory();
+    watchNavigation();
+  </script>
+</body>
+</html>

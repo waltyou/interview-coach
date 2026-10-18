@@ -2,7 +2,11 @@
 
 Interview Coach 是一个由 Git 仓库保存长期上下文、由你自己的 Agent 执行的面试教练。内置内容以 **Senior Big Data Engineer** 为默认基本盘，你也可以导入简历、目标职位、学习资料和面试复盘，把它扩展成只属于你的私人 Coach。
 
+这个上游仓库是供所有人 fork、clone 和 pull 更新的公共基础仓库，只提供公共题库、工具与空白工作区，不包含私人学习记录。请把个人资料和练习记录保存在你自己的私人副本中。
+
 它不是一个需要安装的 npm 或 Python 包。克隆仓库后，让 Agent 读取 `AGENTS.md` 即可开始。首次使用的引导进度会保存在仓库中，换 Agent 或下一次继续时不需要重新回答。
+
+公共基础仓库随附 [公共题库预览](dashboard/public.html)，展示本次发布的公共题库和空白学习状态。个人练习后运行 `python scripts/build_dashboard.py` 生成自己的 `dashboard/index.html`；公共预览与个人页面分开保存。
 
 ## 快速开始
 
