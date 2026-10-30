@@ -21,5 +21,3 @@ reports/answer-review.md 由全部 AttemptEvent 自动生成的逐题回答复�
 `profile/candidate.json` 只保存用户确认的事实；`profile/observations/` 保存有证据的教练判断；`state/coach-model.json` 是可重建视图。`events/` 是原回答和评价的事实来源。`reports/answer-review.md` 与 Dashboard 回答复习区也都是可重建视图，不应手工修改来替代事实来源。
 
 `resume/Markdown/master/` 是职业事实来源，`resume/Markdown/tailored/` 是面向 Job 的派生版本，`resume/PDF/` 是可重建输出。通用规则与导出器位于相邻的 `../resume/` 工具目录。职位上下文统一保存在 `jobs/`，新的岗位简历应在对应 Job Brief 中记录路径。
-
-导出公共 Context Pack 时排除整个 `workspace/`，并提供一个空白模板。

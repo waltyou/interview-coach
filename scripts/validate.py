@@ -805,6 +805,19 @@ def validate_dashboard(
 ) -> None:
     template_path = DASHBOARD_ROOT / "template.html"
     output_path = DASHBOARD_ROOT / "index.html"
+    public_path = DASHBOARD_ROOT / "public.html"
+    has_workspace_data = any(
+        path.is_file() and path.name not in {"README.md", ".gitkeep"}
+        for path in (PACK_ROOT / "workspace").rglob("*")
+    )
+    public_preview = (
+        not output_path.is_file() and public_path.is_file()
+        and not has_workspace_data and not cycles and not events
+        and not validation.counts.get("sources") and not validation.counts.get("jobs")
+        and all(question.get("visibility") == "public" for question in questions.values())
+    )
+    if public_preview:
+        output_path = public_path
     marker = "__INTERVIEW_COACH_DASHBOARD_DATA__"
     if not template_path.is_file():
         validation.error(template_path, "Dashboard template does not exist")
@@ -831,6 +844,15 @@ def validate_dashboard(
         validation.error(output_path, f"invalid embedded Dashboard data: {error}")
         return
     validation.counts["dashboards"] += 1
+    if public_preview and (
+        data.get("sources", {}).get("total") or data.get("sources", {}).get("items")
+        or data.get("primary_cycle") or data.get("reports")
+        or data.get("daily_plan", {}).get("tasks") or data.get("daily_plan", {}).get("gaps")
+        or data.get("daily_plan", {}).get("improvement")
+        or any(item.get("visibility") != "public" or item.get("source_refs")
+               for item in data.get("questions", {}).get("items", []))
+    ):
+        validation.error(output_path, "public preview contains personal data")
     if data.get("protocol_version") != EXPECTED_PROTOCOL_VERSION:
         validation.error(output_path, "Dashboard protocol version is stale")
     if data.get("questions", {}).get("total") != len(questions):
@@ -848,7 +870,7 @@ def validate_dashboard(
         validation.error(output_path, "Dashboard AttemptEvent count is stale")
 
     review_template_path = DASHBOARD_ROOT / "review-template.html"
-    review_output_path = DASHBOARD_ROOT / "review.html"
+    review_output_path = DASHBOARD_ROOT / ("public-review.html" if public_preview else "review.html")
     review_marker = "__INTERVIEW_COACH_REVIEW_DATA__"
     if not review_template_path.is_file():
         validation.error(review_template_path, "answer review template does not exist")
@@ -878,6 +900,8 @@ def validate_dashboard(
                     )
                 else:
                     validation.counts["review_pages"] += 1
+                    if public_preview and (review_data.get("question_count") or review_data.get("review_groups")):
+                        validation.error(review_output_path, "public review contains personal data")
                     review_event_ids = {
                         attempt.get("id")
                         for group in review_data.get("review_groups", [])
@@ -891,7 +915,10 @@ def validate_dashboard(
                     if review_data.get("attempt_count") != len(attempt_ids):
                         validation.error(review_output_path, "answer review count is stale")
 
-    review_notes_path = PACK_ROOT / "workspace" / "reports" / "answer-review.md"
+    review_notes_path = (
+        DASHBOARD_ROOT / "public-review.md" if public_preview
+        else PACK_ROOT / "workspace" / "reports" / "answer-review.md"
+    )
     if not review_notes_path.is_file():
         validation.error(review_notes_path, "generated answer review notebook does not exist")
     else:

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "generator": "scripts/export_public.py",
-  "content_sha256": "acae5875ccb7d8daa98241e02801c59adece424a2f6c3e1d6c84c06262769954",
+  "content_sha256": "ecaf7c41ac1ab459f3f99207facee636bf5cf9f78508e842f9763e6f8c00a288",
   "files": [
     {
       "path": ".github/workflows/platforms.yml",
@@ -30,8 +30,8 @@
     },
     {
       "path": "dashboard/README.md",
-      "sha256": "09ce59dc628f4603fb886861f3b5b24d08c20ca68dd328f5fc1b0bb58b55241f",
-      "size_bytes": 1131
+      "sha256": "dfc97f27915e7320835a6a00aa9a59dd7001bf5c6d55bb5e1aaf8ac8cba9eadb",
+      "size_bytes": 1342
     },
     {
       "path": "dashboard/public-review.html",
@@ -60,8 +60,8 @@
     },
     {
       "path": "docs/HANDBOOK.md",
-      "sha256": "9508ec33e45d809ba1cc3182187dc97dcccfc0120cdf1fa8d5b157cf1b5c7339",
-      "size_bytes": 13616
+      "sha256": "73bf90775ca529c23e9ee839f38788d2c22b9637dac2495f9da1491a1863f57c",
+      "size_bytes": 13810
     },
     {
       "path": "docs/PLATFORMS.md",
@@ -975,8 +975,8 @@
     },
     {
       "path": "scripts/validate.py",
-      "sha256": "8139b623f5b1c1190a06ce907aed1113f469c7a7624093848688134cfae69f1b",
-      "size_bytes": 42669
+      "sha256": "07d2afdbf92bb220abdd47188327283565882849c20bff2854de631ee2a04591",
+      "size_bytes": 44199
     },
     {
       "path": "source-list.txt",
@@ -985,16 +985,11 @@
     },
     {
       "path": "workspace/README.md",
-      "sha256": "dee656e249370065134c00baf46d15508beabdaf6f41095b1f841b2a6d8420ba",
-      "size_bytes": 1733
+      "sha256": "ca408fa003f0323c6894f73029e24dfd1b386084ce9cc2d5d26bba7363ea8db8",
+      "size_bytes": 1644
     },
     {
       "path": "workspace/cycles/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "size_bytes": 0
-    },
-    {
-      "path": "workspace/events/.gitkeep",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "size_bytes": 0
     },
@@ -1005,11 +1000,6 @@
     },
     {
       "path": "workspace/jobs/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "size_bytes": 0
-    },
-    {
-      "path": "workspace/profile/.gitkeep",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "size_bytes": 0
     },
@@ -1027,11 +1017,6 @@
       "path": "workspace/reports/README.md",
       "sha256": "99b8c098520e5ec87eeaf83140822e878f885014ed1aacdb203c070228cdfe17",
       "size_bytes": 439
-    },
-    {
-      "path": "workspace/reports/cycles/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "size_bytes": 0
     },
     {
       "path": "workspace/reports/cycles/README.md",
@@ -1065,8 +1050,8 @@
     },
     {
       "path": "workspace/sessions/README.md",
-      "sha256": "0a056404955211c66680b6206c46f9dfba4f1c0804ef5d6c9044b2133fe3554e",
-      "size_bytes": 1246
+      "sha256": "5c16fafc77a3ef0413f02bee810f713c710767b36e4b6b55a0c35fe2cf9c2e67",
+      "size_bytes": 1226
     },
     {
       "path": "workspace/sources/.gitkeep",
